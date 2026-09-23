@@ -1,0 +1,40 @@
+{% extends "_modele.jinja" %}
+{% block contenu %}
+
+<a href="#"><img src="#" alt="logo"></a>
+<h2>Créer un compte</h2>
+
+<form method="post" action="" novalidate>
+    <div>
+        <label for="nom">Nom d'utilisateur:</label>
+        <input type="text" name="nom" id="nom">
+    </div>
+    <div>
+        <label for="courriel">Courriel:</label>
+        <input type="email" name="courriel" id="courriel">
+    </div>
+    <div>
+        <label for="ville">Votre ville:</label>
+        <select name="ville" id="ville">
+            <option value="default"></option>
+            <option value="quebec">Québec</option>
+            <option value="levis">Lévis</option>
+            <option value="montreal">Montréal</option>
+        </select>
+    </div>
+    <div>
+        <label for="mdp1">Mot de passe:</label>
+        <input type="text" name="mdp1" id="mdp1">
+    </div>
+    <div>
+        <label for="mdp2">Valider le mot de passe:</label>
+        <input type="text" name="mdp2" id="mdp2">
+    </div>
+    <div>
+        <input type="checkbox" name="souvenir" id="souvenir">
+        <label for="souvenir">Se souvenir de moi</label>
+    </div>
+    <button type="submit" id="compteSoumis">Soumettre</button>
+
+</form>
+{% endblock %}
