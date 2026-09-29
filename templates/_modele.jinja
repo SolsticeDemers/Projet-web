@@ -1,14 +1,94 @@
-<!DOCTYPE html>
-<html lang="fr">
-
 <head>
-    <title>{{nom_page}}</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-</head>    
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {{ titre }} | Vintage Market
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/styles.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+</head>
+
+
 <body>
-{% block contenu %}
-{% endblock %}
+
+<header>
+
+    <nav class="navigation container-fluid">
+
+        <a href="/" class="logo">
+
+            <img
+                src="{{ url_for('static', filename='css/images/logo.png') }}"
+                alt="Vintage Market"
+            >
+
+        </a>
+
+
+        <form
+            action="/produits/recherche"
+            method="get"
+            class="recherche"
+        >
+
+            <input
+                type="search"
+                name="mot_cle"
+                placeholder="Rechercher un produit"
+            >
+
+            <button type="submit">
+                Rechercher
+            </button>
+
+        </form>
+
+
+        <div class="connexion">
+
+            <a href="/compte/authentification">
+                Se connecter
+            </a>
+
+        </div>
+
+    </nav>
+
+</header>
+
+
+<main>
+
+    {% block contenu %}
+
+    {% endblock %}
+
+</main>
+
+
+<footer>
+
+    <p>
+        Vintage Market © 2026
+    </p>
+
+</footer>
+
 </body>
 
 </html>
