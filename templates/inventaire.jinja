@@ -1,0 +1,25 @@
+{% extends "_modele.jinja" %}
+
+{% block contenu %}
+
+<h2>Mon inventaire</h2>
+
+{% if produits %}
+<div class="row">
+    {% for produit in produits %}
+    <div class="col-md-4 mb-3">
+        <div class="border p-2">
+            <h3>{{ produit.nom }}</h3>
+            <p>Prix : {{ produit.prix }} $</p>
+            <a href="{{ url_for('produits.details_produit', id=produit.id_produit) }}" class="btn btn-outline-dark">
+                Voir le détail
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p>Vous n'avez aucun produit dans votre inventaire.</p>
+{% endif %}
+
+{% endblock %}
