@@ -38,25 +38,30 @@
 
             </form>
 
-            {% if session['id_utilisateur'] %}
             <div class="connexion">
+                {# {% if session['id_utilisateur'] %}
+
 
                 <a href="#">
                     {{session['nom']}}
                 </a>
 
-            </div>
 
 
-            {% else %}
-            <div class="connexion">
+
+                {% else %}
+
 
                 <a href="/compte/authentification">
                     Se connecter
                 </a>
 
+
+                {% endif%} #}
+                 <a href="/compte/authentification">
+                    Se connecter
+                </a>
             </div>
-            {% endif%}
         </nav>
 
     </header>

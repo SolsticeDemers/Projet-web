@@ -10,13 +10,14 @@ import mysql.connector
 def _creer_connexion():
     """Pour créer une connexion à la BD"""
 
-   conn = mysql.connector.connect(
+    conn = mysql.connector.connect(
         user = os.getenv("BD_UTILISATEUR"),
         password= os.getenv("BD_MDP"),
         host=os.getenv("BD_SERVEUR"),
         database=os.getenv("BD_NOM_SCHEMA"),
         raise_on_warnings=True
     )
+
 
     try:
         yield conn

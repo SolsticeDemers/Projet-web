@@ -33,9 +33,9 @@ def authentification():
     with bd.creer_curseur() as curseur:
         utilisateur = bd.get_utilisateur(curseur, nom, mdp)
     if utilisateur is not None:
-        session.permanent = True
-        session['id_utilisateur'] = utilisateur['id_utilisateur']
-        session['nom'] = utilisateur['nom']
+        # session.permanent = True
+        # session['id_utilisateur'] = utilisateur['id_utilisateur']
+        # session['nom'] = utilisateur['nom']
         return redirect('/', code=303)
     
     print("Problème avec GET 2.0")
