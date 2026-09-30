@@ -1,0 +1,173 @@
+{% extends "_modele.jinja" %}
+
+{% block contenu %}
+
+<section class="section-produits">
+
+    <div class="d-flex justify-content-end mb-4">
+
+        <form
+            method="get"
+            action="/produits/recherche"
+            class="d-flex gap-2"
+        >
+
+            <input
+                type="hidden"
+                name="mot_cle"
+                value="{{ mot_cle }}"
+            >
+
+            <input
+                type="number"
+                name="prix_min"
+                value="{{ prix_min }}"
+                class="form-control form-control-sm filtre"
+                placeholder="Min"
+            >
+
+            <input
+                type="number"
+                name="prix_max"
+                value="{{ prix_max }}"
+                class="form-control form-control-sm filtre"
+                placeholder="Max"
+            >
+
+            <button class="btn btn-sm btn-secondary">
+                Filtrer
+            </button>
+
+        </form>
+
+    </div>
+
+
+    {% if mot_cle %}
+
+        <h2>
+            Résultats pour "{{ mot_cle }}"
+        </h2>
+
+    {% else %}
+
+        <h2>
+            Tous les produits
+        </h2>
+
+    {% endif %}
+
+
+    <div class="grille-produits">
+
+        {% for produit in produits %}
+
+            <div class="carte-produit">
+
+                <div class="image-produit">
+
+                    {% if produit.src %}
+
+                        <img
+                            src="{{ produit.src }}"
+                            alt="{{ produit.nom }}"
+                        >
+
+                    {% endif %}
+
+
+                    <span class="badge-statut
+                        {% if produit.nom_statut == 'En vente' %}
+                            badge-vente
+                        {% elif produit.nom_statut == 'Aux enchères' %}
+                            badge-enchere
+                        {% elif produit.nom_statut == 'À échanger' %}
+                            badge-echange
+                        {% endif %}
+                    ">
+                        {{ produit.nom_statut }}
+                    </span>
+
+                </div>
+
+
+                <div class="contenu-produit">
+
+                    <h3>
+                        {{ produit.nom }}
+                    </h3>
+
+                    <p class="prix">
+                        {{ produit.prix }} $
+                    </p>
+
+                    <div class="actions">
+
+                        <button>
+                            Ajouter
+                        </button>
+
+                        <a href="/produits/{{ produit.id_produit }}">
+                            Détails
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% else %}
+
+            <p>
+                Aucun produit disponible
+            </p>
+
+        {% endfor %}
+
+    </div>
+
+
+    <nav class="mt-5">
+
+        <ul class="pagination justify-content-center">
+
+            <li class="page-item {% if page <= 1 %}disabled{% endif %}">
+
+                <a
+                    class="page-link"
+                    href="/produits/recherche?mot_cle={{ mot_cle }}&prix_min={{ prix_min }}&prix_max={{ prix_max }}&page={{ page - 1 }}"
+                >
+                    &laquo;
+                </a>
+
+            </li>
+
+
+            <li class="page-item">
+
+                <span class="page-link">
+                    {{ page }}
+                </span>
+
+            </li>
+
+
+            <li class="page-item {% if produits|length < limite %}disabled{% endif %}">
+
+                <a
+                    class="page-link"
+                    href="/produits/recherche?mot_cle={{ mot_cle }}&prix_min={{ prix_min }}&prix_max={{ prix_max }}&page={{ page + 1 }}"
+                >
+                    &raquo;
+                </a>
+
+            </li>
+
+        </ul>
+
+    </nav>
+
+</section>
+
+{% endblock %}
