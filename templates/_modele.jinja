@@ -39,7 +39,7 @@
             </form>
 
             <div class="connexion">
-                {# {% if session['id_utilisateur'] %}
+                {% if session['id_utilisateur'] %}
 
 
                 <a href="#">
@@ -57,10 +57,10 @@
                 </a>
 
 
-                {% endif%} #}
-                 <a href="/compte/authentification">
+                {% endif%}
+                 {# <a href="/compte/authentification">
                     Se connecter
-                </a>
+                </a> #}
             </div>
         </nav>
 

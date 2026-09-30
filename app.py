@@ -7,7 +7,7 @@ from compte import bp_compte
 
 app = Flask(__name__, static_url_path='')
 app.register_blueprint(bp_compte, url_prefix='/compte')
-# app.secret_key = os.getenv("SECRET_SESSION")
+app.secret_key = os.getenv("SECRET_SESSION")
 
 app.config["ROUTE_IMAGES"] = "/css/images/utiles/"
 

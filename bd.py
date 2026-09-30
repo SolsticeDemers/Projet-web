@@ -17,18 +17,13 @@ def _creer_connexion():
         database=os.getenv("BD_NOM_SCHEMA"),
         raise_on_warnings=True
     )
-
-
     try:
         yield conn
-
     except Exception:
         conn.rollback()
         raise
-
     else:
         conn.commit()
-
     finally:
         conn.close()
 
