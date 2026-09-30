@@ -5,14 +5,25 @@
     <title>{{nom_page}}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-</head>    
+</head>
+
 <body>
+    <header>
+        <div class="connexion">
+            {% if session['id_utilisateur'] %}
+            <a href="#">
+                {{session['nom']}}
+            </a>
+            {% else %}
+            <a href="/compte/authentification">
+                Se connecter
+            </a>
+            {% endif%}
+    </header>
 
+    {% block contenu %}
 
-{% block contenu %}
-{# Lien temporaire #}
-<a href="/compte/authentification">Se connecter</a>
-{% endblock %}
+    {% endblock %}
 </body>
 
 </html>

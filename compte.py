@@ -48,7 +48,7 @@ def creer_compte():
         return render_template("compte/creer_compte.jinja", page="Créer un compte")
     nom= request.form.get("nom")
     courriel= request.form.get("courriel")
-    ville= request.form.get("ville")
+    # ville= request.form.get("ville")
     mdp1= request.form.get("mdp1")
     mdp2= request.form.get("mdp2")
 
@@ -86,16 +86,16 @@ def creer_compte():
         return render_template("compte/creer_compte.jinja",
             page="Créer un compte")
 
-    if ville == "default":
-        return render_template("compte/creer_compte.jinja",
-            page="Créer un compte")
+    # if ville == "default":
+    #     return render_template("compte/creer_compte.jinja",
+    #         page="Créer un compte")
 
     mdp1 = hacher_mdp(mdp1)
     mdp2 = hacher_mdp(mdp2)
 
     if a_une_erreur is False:
         with bd.creer_curseur() as curseur:
-            id_util =  bd.inserer_utilisateur_bd(curseur, courriel, mdp1, nom, ville)
+            id_util =  bd.inserer_utilisateur_bd(curseur, nom, courriel, mdp1)
             session.permanent = True
             session['id_utilisateur'] = id_util
             session['nom'] = nom

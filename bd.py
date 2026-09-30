@@ -46,3 +46,13 @@ def get_utilisateur(curseur, nom, mdp):
                         'mdp': mdp
                     })
     return curseur.fetchone()
+
+def inserer_utilisateur_bd(curseur, nom, courriel, mdp):
+    """Créer un utilisateur dans la bd"""
+    curseur.execute("INSERT INTO utilisateur (nom, courriel, mdp )"
+                    "VALUES(%(nom)s, %(courriel)s, %(mdp)s);", {
+                        'nom': nom,
+                        'courriel': courriel,
+                        'mdp': mdp,
+                    })
+    return curseur.lastrowid
