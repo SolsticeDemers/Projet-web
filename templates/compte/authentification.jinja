@@ -1,0 +1,23 @@
+{% extends "_modele.jinja" %}
+
+{% block contenu %}
+
+<h2>Se connecter</h2>
+
+<form method="post" action="" novalidate>
+    <div>
+        <label for="nom">Nom d'utilisateur ou courriel:</label>
+        <input type="text" name="nom" id="nom">
+    </div>
+    <div>
+        <label for="mdp">Mot de passe:</label>
+        <input type="text" name="mdp" id="mdp">
+    </div>
+    <button type="submit">Se connecter</button>
+
+    <p>Vous n'avez pas de compte ? <a href="#">Me créer un compte</a></p>
+
+</form>
+
+
+{% endblock %}
