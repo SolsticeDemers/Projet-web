@@ -228,10 +228,31 @@ def get_utilisateur(curseur, nom, mdp):
 
 def inserer_utilisateur_bd(curseur, nom, courriel, mdp):
     """Créer un utilisateur dans la bd"""
-    curseur.execute("INSERT INTO utilisateur (nom, courriel, mdp )"
+    curseur.execute("INSERT INTO utilisateur (nom, courriel, mot_de_passe )"
                     "VALUES(%(nom)s, %(courriel)s, %(mdp)s);", {
                         'nom': nom,
                         'courriel': courriel,
                         'mdp': mdp,
                     })
     return curseur.lastrowid
+
+def get_nom_unique(curseur, nom):
+    """Vérifie l'existance d'un nom"""
+    curseur.execute("SELECT id_utilisateur, nom FROM utilisateur WHERE nom=%(nom)s ;",
+                    {
+                        'nom': nom
+                    })
+    return curseur.fetchone()
+
+def get_courriel_unique(curseur, courriel):
+    """Vérifie l'existance d'un courriel"""
+    curseur.execute("SELECT id_utilisateur, courriel FROM utilisateur WHERE courriel=%(courriel)s;",
+                    {
+                        'courriel': courriel
+                    })
+    return curseur.fetchone()
+
+def get_nom_utiliser(curseur):
+    """Dictionnaire de nom et courriel déjà utilisé"""
+    curseur.execute("SELECT id_utilisateur, nom, courriel FROM utilisateur;")
+    return curseur.fetchall()
