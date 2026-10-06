@@ -60,13 +60,13 @@ def get_produit(curseur, id):
     return curseur.fetchone()
 
 
-def get_vendeur(curseur, id_vendeur):
+def get_vendeur(curseur, id_utilisateur):
     """Permet d'obtenir un vendeur par son identifiant"""
     curseur.execute("""
         SELECT *
-        FROM vendeur WHERE id_vendeur=%(id_vendeur)s
+        FROM utilisateur WHERE id_utilisateur=%(id_utilisateur)s
              """, {
-                 'id_vendeur': id_vendeur,
+                 'id_utilisateur': id_utilisateur,
         })
     return curseur.fetchone()
 
