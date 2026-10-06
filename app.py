@@ -1,13 +1,22 @@
+"Projet web"
+
 import os
-
-from flask import Flask
-
+import logging
+from flask import Flask, render_template
+import bd
+from compte import bp_compte
 from produits import produits_bp
 
 app = Flask(__name__, static_url_path='')
+app.register_blueprint(bp_compte, url_prefix='/compte')
+app.register_blueprint(produits_bp, url_prefix='/produits')
+
 app.secret_key = os.environ.get("SECRET_KEY", "dev")
 
-app.config["CHEMIN_POUR_AJOUT"] = os.path.join(app.static_folder, "images")
-app.config["ROUTE_POUR_AJOUT"] = "/images/"
+@app.route('/')
+def index():
+    return render_template('_modele.jinja', nom_page= 'Accueil')
 
-app.register_blueprint(produits_bp, url_prefix='/produits')
+@app.route('/erreur')
+def erreur():
+    return render_template('erreur.jinja', nom_page= 'erreur')
