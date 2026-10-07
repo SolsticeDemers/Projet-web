@@ -34,6 +34,8 @@ def index():
 
         produits_aleatoires = bd.get_produits_aleatoires(curseur)
 
+        encheres_futures = bd.get_enchere_future(curseur)
+
 
     for produit in nouveaux_produits:
 
@@ -56,6 +58,28 @@ def index():
                 app.config["ROUTE_IMAGES"]
                 + nom_image
             )
+
+    for produit in encheres_futures:
+
+        produit["src"] = None
+
+        nom_image = (
+            "produit_"
+            + str(produit["id_produit"])
+            + ".png"
+        )
+
+        chemin_image = os.path.join(
+            app.config["CHEMIN_IMAGES"],
+            nom_image
+        )
+
+        if os.path.exists(chemin_image):
+
+            produit["src"] = (
+            app.config["ROUTE_IMAGES"]
+            + nom_image
+        )
 
 
     for produit in produits_aleatoires:
@@ -107,6 +131,7 @@ def index():
         "index.jinja",
         titre="Accueil",
         nouveaux_produits=nouveaux_produits,
+        encheres_futures=encheres_futures,
         vendeurs=vendeurs,
         produit_du_jour=produit_du_jour,
         produits_aleatoires=produits_aleatoires
