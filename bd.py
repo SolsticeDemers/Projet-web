@@ -158,7 +158,7 @@ def get_produits(curseur, prix_min, prix_max, limite, offset):
         JOIN statut_produit s
             ON p.id_statut = s.id_statut
 
-        WHERE p.prix BETWEEN %(min)s AND %(max)s
+        WHERE p.prix BETWEEN %(min)s AND %(max)s AND s.nom_statut <> 'Vendu'
 
         ORDER BY p.nom ASC
 
@@ -200,6 +200,7 @@ def get_produits_recherche_filtre(
         WHERE (
             p.nom LIKE %(mot_cle)s
             OR p.description LIKE %(mot_cle)s
+            AND s.nom_statut <> 'Vendu'
         )
 
         AND p.prix BETWEEN %(min)s AND %(max)s
