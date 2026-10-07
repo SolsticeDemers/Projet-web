@@ -180,3 +180,12 @@ def creer_compte():
             session['id_utilisateur'] = id_util
             session['nom'] = nom
         return redirect("/", code=303)
+
+@bp_compte.route('/deconnection')
+def deconnection():
+    """Détruit la session"""
+    if session is not None:
+        session.pop("nom", default=None)
+        session.pop("id_utilisateur", default=None)
+        session.clear()
+    return redirect("/", code=303)
