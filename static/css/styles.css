@@ -12732,4 +12732,8 @@ footer {
   .produit-vedette {
     grid-template-columns: 1fr;
   }
+}
+p a {
+  color: blue;
+  text-decoration: underline;
 }/*# sourceMappingURL=styles.css.map */

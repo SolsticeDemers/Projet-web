@@ -6,6 +6,9 @@ import hashlib
 from flask import Blueprint, render_template, request, redirect, session
 import bd
 
+regex_courriel = re.compile(
+    r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
+
 bp_compte = Blueprint('compte', __name__)
 
 
@@ -21,14 +24,12 @@ def authentification():
     if request.method == 'GET':
         return render_template("compte/authentification.jinja", nom_page="Authentification")
 
-    print("Problème avec GET")
     nom = request.form.get("nom")
     mdp = request.form.get("mdp")
 
-   
     # valider que les champs ne sont pas vide
 
-    # mdp = hacher_mdp(mdp)
+    mdp = hacher_mdp(mdp)
 
     with bd.creer_curseur() as curseur:
         utilisateur = bd.get_utilisateur(curseur, nom, mdp)
@@ -37,6 +38,111 @@ def authentification():
         session['id_utilisateur'] = utilisateur['id_utilisateur']
         session['nom'] = utilisateur['nom']
         return redirect('/', code=303)
-    
-    print("Problème avec GET 2.0")
+
     return render_template("compte/authentification.jinja", nom_page="Marche pas")
+
+
+@bp_compte.route('/creer_compte', methods=['GET', 'POST'])
+def creer_compte():
+    """Affiche un formulaire"""
+    if request.method == 'GET':
+        return render_template("compte/creer_compte.jinja", page="Créer un compte")
+    nom = request.form.get("nom")
+    courriel = request.form.get("courriel")
+    # ville= request.form.get("ville")
+    mdp1 = request.form.get("mdp1")
+    mdp2 = request.form.get("mdp2")
+
+    classe_nom = ""
+    classe_courriel = ""
+    # classe_ville =""
+    classe_mdp1 = ""
+    classe_mdp2 = ""
+
+    liste_courriel = []
+    liste_nom = []
+
+    erreur = False
+    num_nom_erreur = 0
+    num_courriel_erreur = 0
+    num_mdp_erreur = 0
+
+    with bd.creer_curseur() as curseur:
+        dict_compte = bd.get_nom_utiliser(curseur)
+
+    for u in dict_compte:
+        liste_courriel.append(u['courriel'])
+
+    for u in dict_compte:
+        liste_nom.append(u['nom'])
+
+    if nom == "" or nom is None:
+        classe_nom = "is-invalid"
+        erreur = True
+        num_nom_erreur = 1
+    elif nom in liste_nom:
+        classe_nom = "is-invalid"
+        erreur = True
+        num_nom_erreur = 2
+
+    if courriel == "" or courriel is None:
+        classe_courriel = "is-invalid"
+        erreur = True
+        num_courriel_erreur = 1
+    elif not regex_courriel.fullmatch(courriel):
+        classe_courriel = "is-invalid"
+        erreur = True
+        num_courriel_erreur = 2
+    elif courriel in liste_courriel:
+        classe_courriel = "is-invalid"
+        erreur = True
+        num_courriel_erreur = 3
+    else:
+        classe_courriel = "is-valid"
+
+    if mdp1 == "" or mdp1 is None:
+        classe_mdp1 = "is-invalid"
+        erreur = True
+    else:
+        classe_mdp1 = "is-valid"
+    
+    if mdp2 == "" or mdp2 is None:
+        classe_mdp2 = "is-invalid"
+        erreur = True
+        num_mdp_erreur = 1
+    elif mdp2 != mdp1:
+        classe_mdp2 = "is-invalid"
+        erreur = True
+        num_mdp_erreur = 2
+    else:
+        classe_mdp2 = "is-valid"    
+
+    # if ville == "default":
+    #     return render_template("compte/creer_compte.jinja",
+    #         page="Créer un compte")
+
+   
+
+    if erreur is True:
+        return render_template("compte/creer_compte.jinja",
+                page="Créer un compte",
+                classe_mdp2=classe_mdp2,
+                classe_mdp1=classe_mdp1,
+                classe_nom=classe_nom,
+                classe_courriel=classe_courriel,
+                num_mdp_erreur=num_mdp_erreur,
+                num_nom_erreur=num_nom_erreur,
+                num_courriel_erreur=num_courriel_erreur,
+                nom=nom,
+                courriel=courriel,
+                mdp1=mdp1,
+                mdp2=mdp2)
+    else:
+        mdp1 = hacher_mdp(mdp1)
+        with bd.creer_curseur() as curseur:
+            id_util = bd.inserer_utilisateur_bd(curseur, nom, courriel, mdp1)
+            session.permanent = True
+            session['id_utilisateur'] = id_util
+            session['nom'] = nom
+
+    return redirect("/", code=303)
