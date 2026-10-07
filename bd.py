@@ -158,7 +158,7 @@ def get_produits(curseur, prix_min, prix_max, limite, offset):
         JOIN statut_produit s
             ON p.id_statut = s.id_statut
 
-        WHERE p.prix BETWEEN %(min)s AND %(max)s
+        WHERE p.prix BETWEEN %(min)s AND %(max)s AND s.nom_statut <> 'Vendu'
 
         ORDER BY p.nom ASC
 
@@ -225,3 +225,24 @@ def get_utilisateur(curseur, nom, mdp):
                         'mdp': mdp
                     })
     return curseur.fetchone()
+
+
+def get_enchere_future(curseur):
+    """Permet d'obtenir les 4 prochains produits mis aux enchères"""
+    curseur.execute("""
+        SELECT
+            p.id_produit,
+            p.nom,
+            p.description,
+            p.prix,
+            p.date,
+            s.nom_statut
+        FROM produit p
+        JOIN statut_produit s
+            ON p.id_statut = s.id_statut
+        WHERE s.nom_statut = 'Aux enchères' AND NOW() < p.date
+        ORDER BY p.date DESC
+        LIMIT 4
+    """)
+
+    return curseur.fetchall()
