@@ -34,6 +34,36 @@
                 placeholder="Max"
             >
 
+            <select
+                name="trier_par"
+                class="form-select form-select-sm filtre"
+            >
+
+                <option value="nom" {% if trier_par == "nom" %}selected{% endif %}>
+                    Nom
+                </option>
+
+                <option value="prix" {% if trier_par == "prix" %}selected{% endif %}>
+                    Prix
+                </option>
+
+            </select>
+
+            <select
+                name="ordre"
+                class="form-select form-select-sm filtre"
+            >
+
+                <option value="ASC" {% if ordre == "ASC" %}selected{% endif %}>
+                    Croissant
+                </option>
+
+                <option value="DESC" {% if ordre == "DESC" %}selected{% endif %}>
+                    Décroissant
+                </option>
+
+            </select>
+
             <button class="btn btn-sm btn-secondary">
                 Filtrer
             </button>
@@ -75,7 +105,6 @@
 
                     {% endif %}
 
-
                     <span class="badge-statut
                         {% if produit.nom_statut == 'En vente' %}
                             badge-vente
@@ -103,9 +132,25 @@
 
                     <div class="actions">
 
-                        <button>
-                            Ajouter
-                        </button>
+                        {% if produit.nom_statut == "En vente" %}
+
+                            <button>
+                                Acheter
+                            </button>
+
+                        {% elif produit.nom_statut == "Aux enchères" %}
+
+                            <button>
+                                Enchérir
+                            </button>
+
+                        {% elif produit.nom_statut == "À échanger" %}
+
+                            <button>
+                                Échanger
+                            </button>
+
+                        {% endif %}
 
                         <a href="/produits/{{ produit.id_produit }}">
                             Détails
@@ -136,7 +181,7 @@
 
                 <a
                     class="page-link"
-                    href="/produits/recherche?mot_cle={{ mot_cle }}&prix_min={{ prix_min }}&prix_max={{ prix_max }}&page={{ page - 1 }}"
+                    href="/produits/recherche?mot_cle={{ mot_cle }}&prix_min={{ prix_min }}&prix_max={{ prix_max }}&trier_par={{ trier_par }}&ordre={{ ordre }}&page={{ page - 1 }}"
                 >
                     &laquo;
                 </a>
@@ -157,7 +202,7 @@
 
                 <a
                     class="page-link"
-                    href="/produits/recherche?mot_cle={{ mot_cle }}&prix_min={{ prix_min }}&prix_max={{ prix_max }}&page={{ page + 1 }}"
+                    href="/produits/recherche?mot_cle={{ mot_cle }}&prix_min={{ prix_min }}&prix_max={{ prix_max }}&trier_par={{ trier_par }}&ordre={{ ordre }}&page={{ page + 1 }}"
                 >
                     &raquo;
                 </a>

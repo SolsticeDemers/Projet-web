@@ -2,12 +2,10 @@ import os
 
 from flask import Flask, render_template, request
 import bd
-from compte import bp_compte
 
 
 app = Flask(__name__, static_url_path='')
-app.register_blueprint(bp_compte, url_prefix='/compte')
-app.secret_key = os.getenv("SECRET_SESSION")
+
 
 app.config["ROUTE_IMAGES"] = "/css/images/utiles/"
 
@@ -103,6 +101,7 @@ def index():
                 + nom_image
             )
 
+
     return render_template(
         "index.jinja",
         titre="Accueil",
@@ -115,9 +114,12 @@ def index():
 
 @app.route("/produits/recherche")
 def recherche_produits():
-    """Permet de rechercher plusieurs produits"""
+    """Permet de rechercher et trier les produits"""
 
-    mot_cle = request.args.get("mot_cle", "")
+    mot_cle = request.args.get(
+        "mot_cle",
+        ""
+    )
 
     prix_min = request.args.get(
         "prix_min",
@@ -127,6 +129,16 @@ def recherche_produits():
     prix_max = request.args.get(
         "prix_max",
         type=float
+    )
+
+    trier_par = request.args.get(
+        "trier_par",
+        "nom"
+    )
+
+    ordre = request.args.get(
+        "ordre",
+        "ASC"
     )
 
     page = request.args.get(
@@ -162,15 +174,10 @@ def recherche_produits():
                 prix_min,
                 prix_max,
                 limite,
-                offset
+                offset,
+                trier_par,
+                ordre
             )
-
-            if produits is None:
-                produits = []
-
-            produits = produits[
-                offset:offset + limite
-            ]
 
         else:
 
@@ -180,11 +187,14 @@ def recherche_produits():
                 prix_min,
                 prix_max,
                 limite,
-                offset
+                offset,
+                trier_par,
+                ordre
             )
 
-            if produits is None:
-                produits = []
+
+    if produits is None:
+        produits = []
 
 
     for produit in produits:
@@ -217,6 +227,8 @@ def recherche_produits():
         mot_cle=mot_cle,
         prix_min=prix_min,
         prix_max=prix_max,
+        trier_par=trier_par,
+        ordre=ordre,
         page=page,
         limite=limite
     )

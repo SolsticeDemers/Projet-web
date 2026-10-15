@@ -1,6 +1,7 @@
 """
 Connexion à la BD
 """
+
 import os
 import contextlib
 import mysql.connector
@@ -11,19 +12,23 @@ def _creer_connexion():
     """Pour créer une connexion à la BD"""
 
     conn = mysql.connector.connect(
-        user = os.getenv("BD_UTILISATEUR"),
-        password= os.getenv("BD_MDP"),
+        user=os.getenv("BD_UTILISATEUR"),
+        password=os.getenv("BD_MDP"),
         host=os.getenv("BD_SERVEUR"),
         database=os.getenv("BD_NOM_SCHEMA"),
         raise_on_warnings=True
     )
+
     try:
         yield conn
+
     except Exception:
         conn.rollback()
         raise
+
     else:
         conn.commit()
+
     finally:
         conn.close()
 
@@ -110,6 +115,8 @@ def get_produits_aleatoires(curseur):
     """)
 
     return curseur.fetchall()
+
+
 def get_utilisateurs_populaires(curseur):
     """Retourne les 3 vendeurs les plus populaires"""
 
@@ -141,10 +148,36 @@ def get_utilisateurs_populaires(curseur):
 
     return curseur.fetchall()
 
-def get_produits(curseur, prix_min, prix_max, limite, offset):
-    """Permet d'obtenir tous les produits"""
 
-    curseur.execute("""
+def get_produits(
+    curseur,
+    prix_min,
+    prix_max,
+    limite,
+    offset,
+    trier_par,
+    ordre
+):
+    """Permet d'obtenir et de trier les produits"""
+
+    if trier_par == "prix":
+
+        if ordre == "DESC":
+            tri = "ORDER BY p.prix DESC"
+
+        else:
+            tri = "ORDER BY p.prix ASC"
+
+    else:
+
+        if ordre == "DESC":
+            tri = "ORDER BY p.nom DESC"
+
+        else:
+            tri = "ORDER BY p.nom ASC"
+
+
+    requete = """
         SELECT
             p.id_produit,
             p.nom,
@@ -159,11 +192,15 @@ def get_produits(curseur, prix_min, prix_max, limite, offset):
             ON p.id_statut = s.id_statut
 
         WHERE p.prix BETWEEN %(min)s AND %(max)s
+        AND s.nom_statut <> 'Vendu'
 
-        ORDER BY p.nom ASC
+        """ + tri + """
 
         LIMIT %(limite)s OFFSET %(offset)s
-    """, {
+    """
+
+
+    curseur.execute(requete, {
         "min": prix_min,
         "max": prix_max,
         "limite": limite,
@@ -179,11 +216,30 @@ def get_produits_recherche_filtre(
     prix_min,
     prix_max,
     limite,
-    offset
+    offset,
+    trier_par,
+    ordre
 ):
-    """Permet de rechercher des produits"""
+    """Permet de rechercher et de trier les produits"""
 
-    curseur.execute("""
+    if trier_par == "prix":
+
+        if ordre == "DESC":
+            tri = "ORDER BY p.prix DESC"
+
+        else:
+            tri = "ORDER BY p.prix ASC"
+
+    else:
+
+        if ordre == "DESC":
+            tri = "ORDER BY p.nom DESC"
+
+        else:
+            tri = "ORDER BY p.nom ASC"
+
+
+    requete = """
         SELECT
             p.id_produit,
             p.nom,
@@ -203,11 +259,15 @@ def get_produits_recherche_filtre(
         )
 
         AND p.prix BETWEEN %(min)s AND %(max)s
+        AND s.nom_statut <> 'Vendu'
 
-        ORDER BY p.nom ASC
+        """ + tri + """
 
         LIMIT %(limite)s OFFSET %(offset)s
-    """, {
+    """
+
+
+    curseur.execute(requete, {
         "mot_cle": "%" + mot_cle + "%",
         "min": prix_min,
         "max": prix_max,
@@ -217,11 +277,23 @@ def get_produits_recherche_filtre(
 
     return curseur.fetchall()
 
+
 def get_utilisateur(curseur, nom, mdp):
-    curseur.execute("SELECT nom, id_utilisateur FROM utilisateur "
-                    "WHERE  (courriel = %(nom)s OR nom=%(nom)s) AND mot_de_passe=%(mdp)s;",
-                    {
-                        'nom': nom,
-                        'mdp': mdp
-                    })
+    """Permet d'obtenir un utilisateur avec son nom/courriel et mot de passe"""
+
+    curseur.execute("""
+        SELECT
+            nom,
+            id_utilisateur
+        FROM utilisateur
+        WHERE (
+            courriel = %(nom)s
+            OR nom = %(nom)s
+        )
+        AND mot_de_passe = %(mdp)s
+    """, {
+        "nom": nom,
+        "mdp": mdp
+    })
+
     return curseur.fetchone()
