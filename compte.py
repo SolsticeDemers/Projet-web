@@ -27,8 +27,6 @@ def authentification():
     nom = request.form.get("nom")
     mdp = request.form.get("mdp")
 
-    # valider que les champs ne sont pas vide
-
     mdp = hacher_mdp(mdp)
 
     with bd.creer_curseur() as curseur:
@@ -181,6 +179,7 @@ def creer_compte():
             session['nom'] = nom
         return redirect("/", code=303)
 
+
 @bp_compte.route('/deconnection')
 def deconnection():
     """Détruit la session"""
@@ -189,3 +188,29 @@ def deconnection():
         session.pop("id_utilisateur", default=None)
         session.clear()
     return redirect("/", code=303)
+
+
+@bp_compte.route('/echange')
+def echange():
+    status= 'Échange'
+    with bd.creer_curseur() as curseur:
+                notification = bd.get_notification(
+                    curseur)
+
+    with bd.creer_curseur() as curseur:
+        proprio = bd.get_utilisateur_name (curseur, notification['proprio'])  
+              
+    with bd.creer_curseur() as curseur:
+        produit_echange = bd.get_produit_by_id (curseur, notification['produit_echange'])            
+    with bd.creer_curseur() as curseur:
+        produit_offert = bd.get_produit_by_id (curseur, notification['produit_offert'])   
+
+    notifications =  {
+        "proprio" : proprio,
+        "echange_nom" : produit_echange['nom'],
+        "offert_nom" : produit_offert['nom'],
+        "commentaire" : produit_offert['description'],
+    }            
+
+    return render_template("compte/profil.jinja",
+                               page="Profil", notifications = notifications, status = status)

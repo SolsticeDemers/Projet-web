@@ -1,0 +1,30 @@
+{% extends "_modele.jinja" %}
+
+{% block contenu %}
+
+<section>
+<h2>Notification</h2>
+<ul>
+{% for notif in notifications %}
+<li>
+<div>
+<h3>{{status}}</h3>
+
+{% if status == "Échange"%}
+<p><strong>{{notif.proprio}}</strong></p>
+<p>Votre produit: {{notif.echange_nom}}</p>
+<p>Le produit offert: {{notif.offert_nom}}</p>
+<p>Commentaire du produit:</p>
+<p>{{notif.commentaire}}</p>
+<button type="submit" id="echange_accepter">Accepter</button>
+<button type="submit" id="echange_refuser">Refuser</button>
+{% endif %}
+</div>
+</li>
+{% endfor %}
+</ul>
+</section>
+
+
+
+{% endblock %}

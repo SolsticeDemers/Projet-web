@@ -256,3 +256,21 @@ def get_nom_utiliser(curseur):
     """Dictionnaire de nom et courriel déjà utilisé"""
     curseur.execute("SELECT id_utilisateur, nom, courriel FROM utilisateur;")
     return curseur.fetchall()
+
+def get_notification(curseur):
+    curseur.execute("SELECT proprio, id_utilisateur, produit_echange, produit_offert, commentaire FROM echange;")
+    return curseur.fetchall()
+
+def get_utilisateur_name(curseur, id):
+    curseur.execute("SELECT nom FROM utilisateur WHERE id_utilisateur = %(id)s;",
+                    {
+                        'id' : id
+                    })
+    return curseur.fetchone()
+
+def get_produit_by_id(curseur, id):
+    curseur.execute("SELECT * FROM produit WHERE id_produit = %(id)s;",
+                    {
+                        'id' : id
+                    })
+    return curseur.fetchall()
