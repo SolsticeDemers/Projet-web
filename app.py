@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session
 import bd
 from compte import bp_compte
 from produits import bp_produits
@@ -27,15 +27,10 @@ def index():
     """Affiche la page d'accueil"""
 
     with bd.creer_curseur() as curseur:
-
         nouveaux_produits = bd.get_nouveaux_produits(curseur)
-
         vendeurs = bd.get_utilisateurs_populaires(curseur)
-
         produit_du_jour = bd.get_produit_aleatoire(curseur)
-
         produits_aleatoires = bd.get_produits_aleatoires(curseur)
-
 
     for produit in nouveaux_produits:
 
@@ -273,6 +268,14 @@ def erreur_500(e):
         message="Le serveur a rencontré une erreur"
     ), 500
 
+##### TEMPORAIRE : simule un utilisateur connecté. À effacer lorsque authentification est ok
+@app.before_request
+def session_temporaire():
+    """TEMPORAIRE : simule un utilisateur connecté. À RETIRER avant le commit"""
+    session["id_utilisateur"] = 1
+    session["nom"] = "Test"
+##### FIN TEMPORAIRE
 
 if __name__ == "__main__":
     app.run(debug=True)
+

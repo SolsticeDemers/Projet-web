@@ -256,10 +256,22 @@ def get_nom_utiliser(curseur):
     """Dictionnaire de nom et courriel déjà utilisé"""
     curseur.execute("SELECT id_utilisateur, nom, courriel FROM utilisateur;")
     return curseur.fetchall()
+
 def get_produits_par_vendeur(curseur, id_vendeur):
     """Retourne la liste des produits pour un vendeur donné"""
     curseur.execute(
-        "SELECT * FROM produits WHERE id_vendeur = %s",
-        (id_vendeur,)
+        """
+        SELECT
+            p.id_produit,
+            p.nom,
+            p.description,
+            p.prix,
+            s.nom_statut
+        FROM produit p
+        JOIN statut_produit s
+            ON p.id_statut = s.id_statut
+        WHERE p.id_vendeur = %(id_vendeur)s
+        """,
+        {'id_vendeur': id_vendeur}
     )
     return curseur.fetchall()
