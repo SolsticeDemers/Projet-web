@@ -42,20 +42,25 @@ def authentification():
     return render_template("compte/authentification.jinja", nom_page="Marche pas")
 
 
+
+
 @bp_compte.route('/creer_compte', methods=['GET', 'POST'])
 def creer_compte():
     """Affiche un formulaire"""
+
     if request.method == 'GET':
-        return render_template("compte/creer_compte.jinja", page="Créer un compte")
+        return render_template(
+            "compte/creer_compte.jinja",
+            page="Créer un compte"
+        )
+
     nom = request.form.get("nom")
     courriel = request.form.get("courriel")
-    # ville= request.form.get("ville")
     mdp1 = request.form.get("mdp1")
     mdp2 = request.form.get("mdp2")
 
     classe_nom = ""
     classe_courriel = ""
-    # classe_ville =""
     classe_mdp1 = ""
     classe_mdp2 = ""
 
@@ -76,116 +81,154 @@ def creer_compte():
     for u in dict_compte:
         liste_nom.append(u['nom'])
 
+
     if mdp1 == "" or mdp1 is None:
         classe_mdp1 = "is-invalid"
         erreur = True
-        return render_template("compte/creer_compte.jinja", page="Créer un compte",
-                               classe_mdp1=classe_mdp1, nom=nom, courriel=courriel)
+
+        return render_template(
+            "compte/creer_compte.jinja",
+            page="Créer un compte",
+            classe_mdp1=classe_mdp1,
+            nom=nom,
+            courriel=courriel
+        )
+
     else:
         classe_mdp1 = "is-valid"
+
 
     if mdp2 == "" or mdp2 is None:
         classe_mdp2 = "is-invalid"
         erreur = True
         num_mdp_erreur = 1
-        return render_template("compte/creer_compte.jinja",
-                               page="Créer un compte",
-                               classe_mdp2=classe_mdp2,
-                               num_mdp_erreur=num_mdp_erreur,
-                               nom=nom,
-                               courriel=courriel,
-                               mdp1=mdp1)
+
+        return render_template(
+            "compte/creer_compte.jinja",
+            page="Créer un compte",
+            classe_mdp2=classe_mdp2,
+            num_mdp_erreur=num_mdp_erreur,
+            nom=nom,
+            courriel=courriel,
+            mdp1=mdp1
+        )
+
     elif mdp2 != mdp1:
         classe_mdp2 = "is-invalid"
         erreur = True
         num_mdp_erreur = 2
-        return render_template("compte/creer_compte.jinja",
-                               page="Créer un compte",
-                               classe_mdp2=classe_mdp2,
-                               num_mdp_erreur=num_mdp_erreur,
-                               nom=nom,
-                               courriel=courriel)
+
+        return render_template(
+            "compte/creer_compte.jinja",
+            page="Créer un compte",
+            classe_mdp2=classe_mdp2,
+            num_mdp_erreur=num_mdp_erreur,
+            nom=nom,
+            courriel=courriel
+        )
+
     else:
         classe_mdp2 = "is-valid"
+
 
     if nom == "" or nom is None:
         classe_nom = "is-invalid"
         erreur = True
         num_nom_erreur = 1
-        return render_template("compte/creer_compte.jinja",
-                               page="Créer un compte",
-                               classe_nom=classe_nom,
-                               num_nom_erreur=num_nom_erreur,
-                               mdp1=mdp1,
-                               mdp2=mdp2,
-                               courriel=courriel)
+
+        return render_template(
+            "compte/creer_compte.jinja",
+            page="Créer un compte",
+            classe_nom=classe_nom,
+            num_nom_erreur=num_nom_erreur,
+            mdp1=mdp1,
+            mdp2=mdp2,
+            courriel=courriel
+        )
+
     elif nom in liste_nom:
         classe_nom = "is-invalid"
         erreur = True
         num_nom_erreur = 2
-        return render_template("compte/creer_compte.jinja",
-                               page="Créer un compte",
-                               classe_nom=classe_nom,
-                               num_nom_erreur=num_nom_erreur,
-                               mdp1=mdp1,
-                               mdp2=mdp2,
-                               courriel=courriel)
+
+        return render_template(
+            "compte/creer_compte.jinja",
+            page="Créer un compte",
+            classe_nom=classe_nom,
+            num_nom_erreur=num_nom_erreur,
+            mdp1=mdp1,
+            mdp2=mdp2,
+            courriel=courriel
+        )
 
     if courriel == "" or courriel is None:
         classe_courriel = "is-invalid"
         erreur = True
         num_courriel_erreur = 1
-        return render_template("compte/creer_compte.jinja",
-                               page="Créer un compte",
-                               classe_courriel=classe_courriel,
-                               num_courriel_erreur=num_courriel_erreur,
-                               mdp1=mdp1,
-                               mdp2=mdp2,
-                               nom=nom)
-    elif regex_courriel.match(courriel) is True:
+
+        return render_template(
+            "compte/creer_compte.jinja",
+            page="Créer un compte",
+            classe_courriel=classe_courriel,
+            num_courriel_erreur=num_courriel_erreur,
+            mdp1=mdp1,
+            mdp2=mdp2,
+            nom=nom
+        )
+
+    elif not re.match(
+        r"^[^@\s]+@[^@\s]+\.[^@\s]+$",
+        courriel
+    ):
         classe_courriel = "is-invalid"
         erreur = True
         num_courriel_erreur = 2
-        return render_template("compte/creer_compte.jinja",
-                               page="Créer un compte",
-                               classe_courriel=classe_courriel,
-                               num_courriel_erreur=num_courriel_erreur,
-                               mdp1=mdp1,
-                               mdp2=mdp2,
-                               nom=nom)
+
+        return render_template(
+            "compte/creer_compte.jinja",
+            page="Créer un compte",
+            classe_courriel=classe_courriel,
+            num_courriel_erreur=num_courriel_erreur,
+            mdp1=mdp1,
+            mdp2=mdp2,
+            nom=nom
+        )
+
     elif courriel in liste_courriel:
         classe_courriel = "is-invalid"
         erreur = True
         num_courriel_erreur = 3
-        return render_template("compte/creer_compte.jinja",
-                               page="Créer un compte",
-                               classe_courriel=classe_courriel,
-                               num_courriel_erreur=num_courriel_erreur,
-                               mdp1=mdp1,
-                               mdp2=mdp2,
-                               nom=nom)
+
+        return render_template(
+            "compte/creer_compte.jinja",
+            page="Créer un compte",
+            classe_courriel=classe_courriel,
+            num_courriel_erreur=num_courriel_erreur,
+            mdp1=mdp1,
+            mdp2=mdp2,
+            nom=nom
+        )
+
     else:
         classe_courriel = "is-valid"
 
-    # if ville == "default":
-    #     return render_template("compte/creer_compte.jinja",
-    #         page="Créer un compte")
 
     mdp1 = hacher_mdp(mdp1)
 
+
     if erreur is False:
+
         with bd.creer_curseur() as curseur:
-            id_util = bd.inserer_utilisateur_bd(curseur, nom, courriel, mdp1)
+
+            id_util = bd.inserer_utilisateur_bd(
+                curseur,
+                nom,
+                courriel,
+                mdp1
+            )
+
             session.permanent = True
             session['id_utilisateur'] = id_util
             session['nom'] = nom
-        return redirect("/", code=303)
 
-@bp_compte.route('/deconnection')
-def deconnection():
-    """Détruit la session"""
-    if session is not None:
-        session.pop("nom", default=None)
-        session.pop("id_utilisateur", default=None)
-        session.clear()
-    return redirect("/", code=303)
+        return redirect("/", code=303)
