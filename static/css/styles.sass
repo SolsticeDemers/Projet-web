@@ -32,7 +32,7 @@ header
     min-height: 105px
     padding: 20px 55px
     display: grid
-    grid-template-columns: 250px 1fr 200px
+    grid-template-columns: 250px 1fr 240px
     align-items: center
     gap: 40px
 
@@ -63,12 +63,22 @@ header
 
 .connexion
     text-align: right
-
+    
     a
         border: 1px solid $creme
         border-radius: 25px
         padding: 12px 22px
         color: $creme
+    
+.connecter
+    display: grid
+    grid-template-columns:  1fr 1fr
+    align-items: center
+    gap: 10px    
+
+.btn_deconnection
+    max-height: 50px
+    min-width: 170px
 
 .hero
     min-height: calc(100vh - 105px)
