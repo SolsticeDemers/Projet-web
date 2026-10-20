@@ -18,9 +18,9 @@ def details_produit(id):
 
         vendeur = bd.get_vendeur(curseur, produit['id_vendeur'])
 
-    nom_image = "produit_" + str(id)
+    nom_image = "produit_" + str(id) + ".png"
     chemin_image = os.path.join(
-        current_app.config["CHEMIN_POUR_AJOUT"],
+        current_app.config["CHEMIN_IMAGES"],
         nom_image
     )
 
@@ -30,7 +30,7 @@ def details_produit(id):
         est_connecte = False
 
     if os.path.exists(chemin_image):
-        img_source = current_app.config["ROUTE_POUR_AJOUT"] + nom_image
+        img_source = current_app.config["ROUTE_IMAGES"] + nom_image
     else:
         img_source = url_for("static", filename="images/default.png")
 

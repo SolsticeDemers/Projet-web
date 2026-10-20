@@ -14,16 +14,18 @@ def hacher_mdp(mdp_en_clair):
     return hashlib.sha512(mdp_en_clair.encode()).hexdigest()
 
 
-@bp_compte.route('/authentification', methods= ['GET', 'POST'])
+@bp_compte.route('/authentification', methods=['GET', 'POST'])
 def authentification():
     """Formulaire d'authentification"""
 
     if request.method == 'GET':
         return render_template("compte/authentification.jinja", nom_page="Authentification")
 
+    print("Problème avec GET")
     nom = request.form.get("nom")
     mdp = request.form.get("mdp")
 
+   
     # valider que les champs ne sont pas vide
 
     # mdp = hacher_mdp(mdp)
@@ -31,9 +33,10 @@ def authentification():
     with bd.creer_curseur() as curseur:
         utilisateur = bd.get_utilisateur(curseur, nom, mdp)
     if utilisateur is not None:
-        # session.permanent = True
-        # session['id_utilisateur'] = utilisateur['id_utilisateur']
-        # session['nom'] = utilisateur['nom']
+        session.permanent = True
+        session['id_utilisateur'] = utilisateur['id_utilisateur']
+        session['nom'] = utilisateur['nom']
         return redirect('/', code=303)
-
-    return redirect('/erreur')
+    
+    print("Problème avec GET 2.0")
+    return render_template("compte/authentification.jinja", nom_page="Marche pas")

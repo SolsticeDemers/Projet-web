@@ -1,0 +1,256 @@
+@use "bootstrap"
+
+$bleu: #323550
+$gris: #7E7B85
+$vert: #B0E6C7
+$creme: #F9F8F3
+$orange: #DE7452
+$blanc: #FFFFFF
+$noir: #111111
+
+*
+    box-sizing: border-box
+
+body
+    margin: 0
+    font-family: Arial, sans-serif
+    background: $creme
+    color: $noir
+
+a
+    text-decoration: none
+    color: inherit
+
+header
+    background: $bleu
+    color: $creme
+    position: relative
+    z-index: 5
+
+.navigation
+    width: 100%
+    min-height: 105px
+    padding: 20px 55px
+    display: grid
+    grid-template-columns: 250px 1fr 200px
+    align-items: center
+    gap: 40px
+
+.logo img
+    max-width: 3000px
+    max-height: 200px
+    object-fit: contain
+
+.recherche
+    width: 100%
+    max-width: 850px
+    margin: auto
+    display: flex
+
+    input
+        flex: 1
+        padding: 16px 22px
+        border: 0
+        border-radius: 28px 0 0 28px
+        font-size: 16px
+
+    button
+        padding: 0 30px
+        border: 0
+        border-radius: 0 28px 28px 0
+        background: $gris
+        color: $blanc
+
+.connexion
+    text-align: right
+
+    a
+        border: 1px solid $creme
+        border-radius: 25px
+        padding: 12px 22px
+        color: $creme
+
+.hero
+    min-height: calc(100vh - 105px)
+    padding: 130px 40px 90px
+    text-align: center
+    background-color: $bleu
+    background-image: linear-gradient(rgba(50,53,80,.72), rgba(50,53,80,.72)), url("#")
+    background-size: cover
+    background-position: center
+    background-attachment: fixed
+    color: $creme
+    position: sticky
+    top: 0
+    z-index: 0
+
+.hero h1
+    margin: 0
+    font: 86px Georgia, serif
+    color: $creme
+
+.hero-texte p
+    font-size: 20px
+
+.vendeurs-populaires
+    margin-top: 100px
+    display: flex
+    justify-content: center
+    gap: 40px
+
+.vendeur-card
+    width: 230px
+    min-height: 220px
+    padding: 25px
+    border-radius: 18px
+    background: $creme
+    color: $noir
+
+    img
+        width: 120px
+        height: 120px
+        border-radius: 50%
+        object-fit: cover
+
+    h3
+        font-size: 20px
+        margin-bottom: 0
+
+.section-produits
+    width: 100%
+    padding: 90px 6%
+    background: $creme
+    color: $noir
+    position: relative
+    z-index: 2
+
+.section-produits h2
+    max-width: 1500px
+    margin: 0 auto 35px
+    font: 46px Georgia, serif
+
+.grille-produits
+    max-width: 1500px
+    margin: auto
+    display: grid
+    grid-template-columns: repeat(4, 1fr)
+    gap: 30px
+
+.carte-produit
+    background: $blanc
+    border-radius: 18px
+    overflow: hidden
+    box-shadow: 0 7px 20px rgba(0,0,0,.08)
+
+.image-produit
+    height: 280px
+    position: relative
+    background: $vert
+
+    img
+        width: 100%
+        height: 100%
+        object-fit: cover
+
+.badge-statut
+    position: absolute
+    top: 15px
+    left: 15px
+    padding: 7px 13px
+    border-radius: 20px
+    color: $blanc
+    font-size: 12px
+
+.badge-vente
+    background: $vert
+    color: $noir
+
+.badge-enchere
+    background: $orange
+
+.badge-echange
+    background: $bleu
+
+.contenu-produit
+    padding: 22px
+
+    h3
+        min-height: 48px
+        font-size: 20px
+
+.prix
+    font-size: 23px
+    font-weight: bold
+
+.actions
+    display: flex
+    gap: 10px
+
+    button,
+    a
+        padding: 12px 18px
+        border: 0
+        border-radius: 8px
+        text-align: center
+
+    button
+        background: $bleu
+        color: $blanc
+
+    a
+        background: $gris
+        color: $blanc
+
+.produit-vedette
+    width: 100%
+    min-height: 550px
+    display: grid
+    grid-template-columns: 1fr 1fr
+    background: $bleu
+    color: $blanc
+    position: relative
+    z-index: 2
+
+.vedette-info
+    padding: 90px 7%
+
+    h2
+        font: 50px Georgia, serif
+
+    > .badge-statut
+        position: static
+        display: inline-block
+
+    .prix
+        color: $vert
+        font-size: 32px
+
+.vedette-image
+    min-height: 550px
+    background: $gris
+
+    img
+        width: 100%
+        height: 100%
+        object-fit: cover
+
+footer
+    position: relative
+    z-index: 2
+    padding: 30px
+    background: $bleu
+    color: $creme
+    text-align: center
+
+@media (max-width: 900px)
+    .navigation
+        grid-template-columns: 1fr
+
+    .connexion
+        text-align: center
+
+    .grille-produits
+        grid-template-columns: repeat(2, 1fr)
+
+    .produit-vedette
+        grid-template-columns: 1fr
