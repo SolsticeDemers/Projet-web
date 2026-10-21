@@ -174,13 +174,13 @@ def get_produits(curseur, prix_min, prix_max, limite, offset):
 
 
 def get_produits_recherche_filtre(
-    curseur,
-    mot_cle,
-    prix_min,
-    prix_max,
-    limite,
-    offset
-):
+        curseur,
+        mot_cle,
+        prix_min,
+        prix_max,
+        limite,
+        offset
+    ):
     """Permet de rechercher des produits"""
 
     curseur.execute("""
@@ -226,6 +226,25 @@ def get_utilisateur(curseur, nom, mdp):
                     })
     return curseur.fetchone()
 
+def get_produit(curseur, id_produit):
+    """Permet d'obtenir un produit par son identifiant"""
+    curseur.execute("""
+        SELECT *
+        FROM produit WHERE id_produit=%(id_produit)s
+             """, {
+                 'id_produit': id_produit,
+        })
+    return curseur.fetchone()
+
+def get_vendeur(curseur, id_utilisateur):
+    """Permet d'obtenir un vendeur par son identifiant"""
+    curseur.execute("""
+        SELECT *
+        FROM utilisateur WHERE id_utilisateur=%(id_utilisateur)s
+             """, {
+                 'id_utilisateur': id_utilisateur,
+        })
+    return curseur.fetchone()
 def inserer_utilisateur_bd(curseur, nom, courriel, mdp):
     """Créer un utilisateur dans la bd"""
     curseur.execute("INSERT INTO utilisateur (nom, courriel, mot_de_passe )"
