@@ -150,7 +150,6 @@ def creer_compte():
             mdp2=mdp2
         )
 
-    mdp1 = hacher_mdp(mdp1)
 
     with bd.creer_curseur() as curseur:
 
