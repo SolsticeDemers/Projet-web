@@ -257,8 +257,11 @@ def get_nom_utiliser(curseur):
     curseur.execute("SELECT id_utilisateur, nom, courriel FROM utilisateur;")
     return curseur.fetchall()
 
-def get_notification(curseur):
-    curseur.execute("SELECT proprio, id_utilisateur, produit_echange, produit_offert, commentaire FROM echange;")
+def get_notification(curseur, id_utilisateur):
+    curseur.execute("SELECT * FROM echange WHERE proprio = %(id_utilisateur)s;",
+                    {
+                        'id_utilisateur' : id_utilisateur
+                    })
     return curseur.fetchall()
 
 def get_utilisateur_name(curseur, id):

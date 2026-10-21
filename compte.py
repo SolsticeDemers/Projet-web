@@ -193,24 +193,35 @@ def deconnection():
 @bp_compte.route('/echange')
 def echange():
     status= 'Échange'
+    
+    notifications = [
+    ]
     with bd.creer_curseur() as curseur:
                 notification = bd.get_notification(
-                    curseur)
+                    curseur, session['id_utilisateur'])
 
-    with bd.creer_curseur() as curseur:
-        proprio = bd.get_utilisateur_name (curseur, notification['proprio'])  
-              
-    with bd.creer_curseur() as curseur:
-        produit_echange = bd.get_produit_by_id (curseur, notification['produit_echange'])            
-    with bd.creer_curseur() as curseur:
-        produit_offert = bd.get_produit_by_id (curseur, notification['produit_offert'])   
+    for notif in notification:
+        with bd.creer_curseur() as curseur:
+            offrant = bd.get_utilisateur_name (curseur, notif['id_utilisateur'])  
+            offrant = offrant['nom']
+        with bd.creer_curseur() as curseur:
+            produit_echange = bd.get_produit_by_id (curseur, notif['produit_echange'])            
+        with bd.creer_curseur() as curseur:
+            produit_offert = bd.get_produit_by_id (curseur, notif['produit_offert'])   
 
-    notifications =  {
-        "proprio" : proprio,
-        "echange_nom" : produit_echange['nom'],
-        "offert_nom" : produit_offert['nom'],
-        "commentaire" : produit_offert['description'],
-    }            
+        une_notification =  {
+            "offrant" : offrant,
+            "echange_nom" : produit_echange[0]['nom'],
+            "offert_nom" : produit_offert[0]['nom'],
+            "commentaire" : produit_offert[0]['description'],
+        }            
+        notifications.append(une_notification)
 
     return render_template("compte/profil.jinja",
                                page="Profil", notifications = notifications, status = status)
+
+@bp_compte.route('/faire_echange', methods=['GET', 'POST'])
+def faire_echange():
+    if request.method == 'GET':
+        return render_template("compte/faire_echange.jinja", page="Créer un compte")
+    nom = request.form.get("nom")
