@@ -63,18 +63,18 @@ header
 
 .connexion
     text-align: right
-    
+
     a
         border: 1px solid $creme
         border-radius: 25px
         padding: 12px 22px
         color: $creme
-    
+
 .connecter
     display: grid
     grid-template-columns:  1fr 1fr
     align-items: center
-    gap: 10px    
+    gap: 10px
 
 .btn_deconnection
     max-height: 50px
@@ -269,3 +269,18 @@ p
     a
         color: blue
         text-decoration: underline
+
+.choix-badge
+    position: static
+    display: inline-block
+    margin-right: 8px
+    cursor: pointer
+    opacity: 0.6
+    border: 2px solid transparent
+
+.btn-check:checked + .choix-badge
+    opacity: 1
+    border-color: $noir
+
+.btn-check:focus-visible + .choix-badge
+    outline: 2px solid $noir

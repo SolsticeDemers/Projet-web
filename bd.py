@@ -11,8 +11,8 @@ def _creer_connexion():
     """Pour créer une connexion à la BD"""
 
     conn = mysql.connector.connect(
-        user = os.getenv("BD_UTILISATEUR"),
-        password= os.getenv("BD_MDP"),
+        user=os.getenv("BD_UTILISATEUR"),
+        password=os.getenv("BD_MDP"),
         host=os.getenv("BD_SERVEUR"),
         database=os.getenv("BD_NOM_SCHEMA"),
         raise_on_warnings=True
@@ -110,6 +110,8 @@ def get_produits_aleatoires(curseur):
     """)
 
     return curseur.fetchall()
+
+
 def get_utilisateurs_populaires(curseur):
     """Retourne les 3 vendeurs les plus populaires"""
 
@@ -140,6 +142,7 @@ def get_utilisateurs_populaires(curseur):
     """)
 
     return curseur.fetchall()
+
 
 def get_produits(curseur, prix_min, prix_max, limite, offset):
     """Permet d'obtenir tous les produits"""
@@ -174,13 +177,13 @@ def get_produits(curseur, prix_min, prix_max, limite, offset):
 
 
 def get_produits_recherche_filtre(
-        curseur,
-        mot_cle,
-        prix_min,
-        prix_max,
-        limite,
-        offset
-    ):
+    curseur,
+    mot_cle,
+    prix_min,
+    prix_max,
+    limite,
+    offset
+):
     """Permet de rechercher des produits"""
 
     curseur.execute("""
@@ -217,6 +220,7 @@ def get_produits_recherche_filtre(
 
     return curseur.fetchall()
 
+
 def get_utilisateur(curseur, nom, mdp):
     curseur.execute("SELECT nom, id_utilisateur FROM utilisateur "
                     "WHERE  (courriel = %(nom)s OR nom=%(nom)s) AND mot_de_passe=%(mdp)s;",
@@ -226,15 +230,17 @@ def get_utilisateur(curseur, nom, mdp):
                     })
     return curseur.fetchone()
 
+
 def get_produit(curseur, id_produit):
     """Permet d'obtenir un produit par son identifiant"""
     curseur.execute("""
         SELECT *
         FROM produit WHERE id_produit=%(id_produit)s
              """, {
-                 'id_produit': id_produit,
-        })
+        'id_produit': id_produit,
+    })
     return curseur.fetchone()
+
 
 def get_vendeur(curseur, id_utilisateur):
     """Permet d'obtenir un vendeur par son identifiant"""
@@ -242,9 +248,11 @@ def get_vendeur(curseur, id_utilisateur):
         SELECT *
         FROM utilisateur WHERE id_utilisateur=%(id_utilisateur)s
              """, {
-                 'id_utilisateur': id_utilisateur,
-        })
+        'id_utilisateur': id_utilisateur,
+    })
     return curseur.fetchone()
+
+
 def inserer_utilisateur_bd(curseur, nom, courriel, mdp):
     """Créer un utilisateur dans la bd"""
     curseur.execute("INSERT INTO utilisateur (nom, courriel, mot_de_passe )"
@@ -255,6 +263,7 @@ def inserer_utilisateur_bd(curseur, nom, courriel, mdp):
                     })
     return curseur.lastrowid
 
+
 def get_nom_unique(curseur, nom):
     """Vérifie l'existance d'un nom"""
     curseur.execute("SELECT id_utilisateur, nom FROM utilisateur WHERE nom=%(nom)s ;",
@@ -262,6 +271,7 @@ def get_nom_unique(curseur, nom):
                         'nom': nom
                     })
     return curseur.fetchone()
+
 
 def get_courriel_unique(curseur, courriel):
     """Vérifie l'existance d'un courriel"""
@@ -271,7 +281,26 @@ def get_courriel_unique(curseur, courriel):
                     })
     return curseur.fetchone()
 
+
 def get_nom_utiliser(curseur):
     """Dictionnaire de nom et courriel déjà utilisé"""
     curseur.execute("SELECT id_utilisateur, nom, courriel FROM utilisateur;")
+    return curseur.fetchall()
+
+
+def ajouter_produit(curseur, id_vendeur, nom, description, prix, id_statut):
+    """Ajouter un produit dans la bd"""
+    curseur.execute("INSERT INTO produit (id_vendeur, nom, description, prix, id_statut, date) "
+                    "VALUES(%(id_vendeur)s, %(nom)s, %(description)s, %(prix)s, %(id_statut)s, CURDATE());", {
+                        'id_vendeur': id_vendeur,
+                        'nom': nom,
+                        'description': description,
+                        'prix': prix,
+                        'id_statut': id_statut
+                    })
+    return curseur.lastrowid
+
+def get_statuts(curseur):
+    """Retourne tous les statuts de produit"""
+    curseur.execute("SELECT id_statut, nom_statut FROM statut_produit")
     return curseur.fetchall()
