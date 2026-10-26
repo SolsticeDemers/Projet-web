@@ -281,6 +281,7 @@ def echange():
         une_notification =  {
             "offrant" : offrant,
             "echange_nom" : produit_echange[0]['nom'],
+            "echange_statut" : produit_echange[0]['id_statut'],
             "offert_nom" : produit_offert[0]['nom'],
             "commentaire" : produit_offert[0]['description'],
         }            
@@ -294,3 +295,7 @@ def faire_echange():
     if request.method == 'GET':
         return render_template("compte/faire_echange.jinja", page="Créer un compte")
     nom = request.form.get("nom")
+
+
+
+

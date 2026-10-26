@@ -3,26 +3,36 @@
 {% block contenu %}
 
 <section>
-<h2>Notification</h2>
-<ul>
-{% for notif in notifications %}
-<li>
-<div>
-<h3>{{status}}</h3>
+    <h2>Notification</h2>
+    <ul>
+        {% for notif in notifications %}
+        <li>
+            <div>
+                <span class="badge-statut-notif
+                        {% if notif.echange_statut == 1 %}
+                            badge-vente
+                        {% elif notif.echange_statut == 2 %}
+                            badge-enchere
+                        {% elif notif.echange_statut == 3 %}
+                            badge-echange
+                        {% endif %}
+                    ">
+                    {{ status }}
+                </span>
 
-{% if status == "Échange" %}
-<p><strong>{{notif.offrant}}</strong></p>
-<p>Votre produit: {{notif.echange_nom}}</p>
-<p>Le produit offert: {{notif.offert_nom}}</p>
-<p>Commentaire du produit:</p>
-<p>{{notif.commentaire}}</p>
-<button type="submit" id="echange_accepter">Accepter</button>
-<button type="submit" id="echange_refuser">Refuser</button>
-{% endif %}
-</div>
-</li>
-{% endfor %}
-</ul>
+                {% if status == "Échange" %}
+                <p><strong>{{notif.offrant}}</strong></p>
+                <p>Votre produit: {{notif.echange_nom}}</p>
+                <p>Le produit offert: {{notif.offert_nom}}</p>
+                <p>Commentaire du produit:</p>
+                <p>{{notif.commentaire}}</p>
+                <button type="submit" id="echange_accepter">Accepter</button>
+                <button type="submit" id="echange_refuser">Refuser</button>
+                {% endif %}
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
 </section>
 
 
