@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request
 import bd
 from compte import bp_compte
 from produits import bp_produits
@@ -31,6 +31,9 @@ def index():
         produit_du_jour = bd.get_produit_aleatoire(curseur)
         produits_aleatoires = bd.get_produits_aleatoires(curseur)
 
+        encheres_futures = bd.get_enchere_future(curseur)
+
+
     for produit in nouveaux_produits:
 
         produit["src"] = None
@@ -52,6 +55,28 @@ def index():
                 app.config["ROUTE_IMAGES"]
                 + nom_image
             )
+
+    for produit in encheres_futures:
+
+        produit["src"] = None
+
+        nom_image = (
+            "produit_"
+            + str(produit["id_produit"])
+            + ".png"
+        )
+
+        chemin_image = os.path.join(
+            app.config["CHEMIN_IMAGES"],
+            nom_image
+        )
+
+        if os.path.exists(chemin_image):
+
+            produit["src"] = (
+            app.config["ROUTE_IMAGES"]
+            + nom_image
+        )
 
 
     for produit in produits_aleatoires:
@@ -99,21 +124,25 @@ def index():
                 + nom_image
             )
 
+
     return render_template(
         "index.jinja",
         titre="Accueil",
         nouveaux_produits=nouveaux_produits,
+        encheres_futures=encheres_futures,
         vendeurs=vendeurs,
         produit_du_jour=produit_du_jour,
         produits_aleatoires=produits_aleatoires
     )
 
-
 @app.route("/produits/recherche")
 def recherche_produits():
-    """Permet de rechercher plusieurs produits"""
+    """Permet de rechercher et trier les produits"""
 
-    mot_cle = request.args.get("mot_cle", "")
+    mot_cle = request.args.get(
+        "mot_cle",
+        ""
+    )
 
     prix_min = request.args.get(
         "prix_min",
@@ -123,6 +152,11 @@ def recherche_produits():
     prix_max = request.args.get(
         "prix_max",
         type=float
+    )
+
+    tri = request.args.get(
+        "tri",
+        "nom_ASC"
     )
 
     page = request.args.get(
@@ -136,12 +170,42 @@ def recherche_produits():
         page = 1
 
 
+    prix_min_affichage = prix_min
+    prix_max_affichage = prix_max
+
+
     if prix_min is None:
         prix_min = 0
 
 
     if prix_max is None:
         prix_max = 999999999
+
+
+    if prix_max < prix_min:
+        prix_max = prix_min
+        prix_max_affichage = prix_min
+
+
+    if tri == "nom_DESC":
+
+        trier_par = "nom"
+        ordre = "DESC"
+
+    elif tri == "prix_ASC":
+
+        trier_par = "prix"
+        ordre = "ASC"
+
+    elif tri == "prix_DESC":
+
+        trier_par = "prix"
+        ordre = "DESC"
+
+    else:
+
+        trier_par = "nom"
+        ordre = "ASC"
 
 
     limite = 12
@@ -158,15 +222,10 @@ def recherche_produits():
                 prix_min,
                 prix_max,
                 limite,
-                offset
+                offset,
+                trier_par,
+                ordre
             )
-
-            if produits is None:
-                produits = []
-
-            produits = produits[
-                offset:offset + limite
-            ]
 
         else:
 
@@ -176,11 +235,14 @@ def recherche_produits():
                 prix_min,
                 prix_max,
                 limite,
-                offset
+                offset,
+                trier_par,
+                ordre
             )
 
-            if produits is None:
-                produits = []
+
+    if produits is None:
+        produits = []
 
 
     for produit in produits:
@@ -211,8 +273,9 @@ def recherche_produits():
         titre="Recherche de produits",
         produits=produits,
         mot_cle=mot_cle,
-        prix_min=prix_min,
-        prix_max=prix_max,
+        prix_min=prix_min_affichage,
+        prix_max=prix_max_affichage,
+        tri=tri,
         page=page,
         limite=limite
     )
@@ -266,14 +329,6 @@ def erreur_500(e):
         code=500,
         message="Le serveur a rencontré une erreur"
     ), 500
-
-##### TEMPORAIRE : simule un utilisateur connecté. À effacer lorsque authentification est ok
-@app.before_request
-def session_temporaire():
-    """TEMPORAIRE : simule un utilisateur connecté. À RETIRER avant le commit"""
-    session["id_utilisateur"] = 1
-    session["nom"] = "Test"
-##### FIN TEMPORAIRE
 
 if __name__ == "__main__":
     app.run(debug=True)
