@@ -174,13 +174,13 @@ def get_produits(curseur, prix_min, prix_max, limite, offset):
 
 
 def get_produits_recherche_filtre(
-    curseur,
-    mot_cle,
-    prix_min,
-    prix_max,
-    limite,
-    offset
-):
+        curseur,
+        mot_cle,
+        prix_min,
+        prix_max,
+        limite,
+        offset
+    ):
     """Permet de rechercher des produits"""
 
     curseur.execute("""
@@ -226,6 +226,56 @@ def get_utilisateur(curseur, nom, mdp):
                     })
     return curseur.fetchone()
 
+def get_produit(curseur, id_produit):
+    """Permet d'obtenir un produit par son identifiant"""
+    curseur.execute("""
+        SELECT *
+        FROM produit WHERE id_produit=%(id_produit)s
+             """, {
+                 'id_produit': id_produit,
+        })
+    return curseur.fetchone()
+
+def get_vendeur(curseur, id_utilisateur):
+    """Permet d'obtenir un vendeur par son identifiant"""
+    curseur.execute("""
+        SELECT *
+        FROM utilisateur WHERE id_utilisateur=%(id_utilisateur)s
+             """, {
+                 'id_utilisateur': id_utilisateur,
+        })
+    return curseur.fetchone()
+def inserer_utilisateur_bd(curseur, nom, courriel, mdp):
+    """Créer un utilisateur dans la bd"""
+    curseur.execute("INSERT INTO utilisateur (nom, courriel, mot_de_passe )"
+                    "VALUES(%(nom)s, %(courriel)s, %(mdp)s);", {
+                        'nom': nom,
+                        'courriel': courriel,
+                        'mdp': mdp,
+                    })
+    return curseur.lastrowid
+
+def get_nom_unique(curseur, nom):
+    """Vérifie l'existance d'un nom"""
+    curseur.execute("SELECT id_utilisateur, nom FROM utilisateur WHERE nom=%(nom)s ;",
+                    {
+                        'nom': nom
+                    })
+    return curseur.fetchone()
+
+def get_courriel_unique(curseur, courriel):
+    """Vérifie l'existance d'un courriel"""
+    curseur.execute("SELECT id_utilisateur, courriel FROM utilisateur WHERE courriel=%(courriel)s;",
+                    {
+                        'courriel': courriel
+                    })
+    return curseur.fetchone()
+
+def get_nom_utiliser(curseur):
+    """Dictionnaire de nom et courriel déjà utilisé"""
+    curseur.execute("SELECT id_utilisateur, nom, courriel FROM utilisateur;")
+    return curseur.fetchall()
+
 
 def get_enchere_future(curseur):
     """Permet d'obtenir les 4 prochains produits mis aux enchères"""
@@ -241,7 +291,7 @@ def get_enchere_future(curseur):
         JOIN statut_produit s
             ON p.id_statut = s.id_statut
         WHERE s.nom_statut = 'Aux enchères' AND NOW() < p.date
-        ORDER BY p.date DESC
+        ORDER BY p.date ASC
         LIMIT 4
     """)
 

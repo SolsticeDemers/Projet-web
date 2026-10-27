@@ -23,7 +23,7 @@
 
             <a href="/" class="logo">
 
-                <img src="{{ url_for('static', filename='css/images/logo.png') }}" alt="Vintage Market">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Vintage Market">
 
             </a>
 
@@ -38,30 +38,28 @@
 
             </form>
 
-            <div class="connexion">
-                {% if session['id_utilisateur'] %}
+            {% if session['id_utilisateur'] %}
+            <div class="connexion connecter">
+                
 
 
                 <a href="#">
                     {{session['nom']}}
                 </a>
 
+                <a href="/compte/deconnection" class="btn_deconnection">
+                    Se déconnecter
+                </a>
+            </div>
+            {% else %}
 
-
-
-                {% else %}
-
-
+            <div class="connexion">
                 <a href="/compte/authentification">
                     Se connecter
                 </a>
-
-
-                {% endif%}
-                 {# <a href="/compte/authentification">
-                    Se connecter
-                </a> #}
             </div>
+
+            {% endif%}
         </nav>
 
     </header>
@@ -85,5 +83,4 @@
     </footer>
 
 </body>
-
 </html>
