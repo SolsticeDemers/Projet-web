@@ -12748,4 +12748,8 @@ footer {
 p a {
   color: blue;
   text-decoration: underline;
+}
+
+.image-actuelle {
+  max-width: 300px;
 }/*# sourceMappingURL=styles.css.map */

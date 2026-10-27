@@ -275,3 +275,23 @@ def get_nom_utiliser(curseur):
     """Dictionnaire de nom et courriel déjà utilisé"""
     curseur.execute("SELECT id_utilisateur, nom, courriel FROM utilisateur;")
     return curseur.fetchall()
+
+def get_statuts(curseur):
+    """Retourne tous les statuts de produit"""
+    curseur.execute("SELECT id_statut, nom_statut FROM statut_produit")
+    return curseur.fetchall()
+
+def modifier_produit(curseur, id_produit, nom, description, prix, id_statut):
+    """Modifier un produit dans la bd"""
+    curseur.execute(
+        "UPDATE produit SET nom = %(nom)s, description = %(description)s, "
+        "prix = %(prix)s, id_statut = %(id_statut)s "
+        "WHERE id_produit = %(id_produit)s",
+        {
+            "id_produit": id_produit,
+            "nom": nom,
+            "description": description,
+            "prix": prix,
+            "id_statut": id_statut
+        }
+    )

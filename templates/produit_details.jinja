@@ -22,6 +22,9 @@
             </div>
             <div class="actions">
                 <button type="submit" class="button">Acheter</button>
+                {% if est_connecte and produit.id_vendeur == session.id_utilisateur %}
+                    <a href="/produits/{{ id }}/modifier" class="button">Modifier</a>
+                {% endif %}
             </div>
 
         </div>
