@@ -1,0 +1,78 @@
+{% extends "_modele.jinja" %}
+
+{% block contenu %}
+
+<section class="container my-4">
+
+    <h2 class="m-5">Mon panier</h2>
+
+    {% if achat_reussi %}
+    <div class="alert alert-success">
+        Votre achat a été effectué avec succès
+    </div>
+    {% endif %}
+
+    {% if produits %}
+    <div class="liste-mes-produits">
+
+        {% for p in produits %}
+        <div class="carte-produit ligne-panier">
+
+            <div class="image-produit">
+                {% if p.archive or p.id_statut == 4 %}
+                {% if p.src %}
+                <img src="{{ p.src }}" alt="{{ p.nom }}">
+                {% endif %}
+                {% else %}
+                <a href="/produits/{{ p.id_produit }}">
+                    <img src="{{ p.src }}" alt="{{ p.nom }}">
+                </a>
+                {% endif %}
+            </div>
+
+            <div class="contenu-produit">
+                <h3>{{ p.nom }}</h3>
+                <p>{{ p.description }}</p>
+
+                {% if p.archive or p.id_statut == 4 %}
+                <p class="text-danger">
+                    Ce produit n'est plus disponible. Veuillez le retirer de votre panier.
+                </p>
+                {% else %}
+                <p class="prix">{{ p.prix }} $</p>
+                {% endif %}
+            </div>
+
+            <div class="actions">
+                <form method="POST" action="/panier/retirer/{{ p.id_produit }}">
+                    {{ form.hidden_tag() }}
+                    <button type="submit" class="bouton-secondaire">Retirer</button>
+                </form>
+            </div>
+
+        </div>
+        {% endfor %}
+
+    </div>
+
+    <div class="d-flex justify-content-end align-items-center gap-4 mt-4">
+        <p class="prix mb-0">Total : {{ total }} $</p>
+
+        {% if not est_indisponible %}
+        <div class="actions">
+            <form method="POST" action="/panier/confirmer">
+                {{ form.hidden_tag() }}
+                <button type="submit" class="button">Confirmer votre achat</button>
+            </form>
+        </div>
+
+        {% endif %}
+    </div>
+
+    {% else %}
+    <p>Votre panier est vide.</p>
+    {% endif %}
+
+</section>
+
+{% endblock contenu %}

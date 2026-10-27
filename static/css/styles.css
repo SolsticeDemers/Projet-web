@@ -12669,6 +12669,9 @@ header {
   display: flex;
   gap: 10px;
 }
+.actions form {
+  display: contents;
+}
 .actions button,
 .actions a {
   padding: 12px 18px;
@@ -12678,6 +12681,10 @@ header {
 }
 .actions button {
   background: #323550;
+  color: #FFFFFF;
+}
+.actions .bouton-secondaire {
+  background: #7E7B85;
   color: #FFFFFF;
 }
 .actions a {
@@ -12748,4 +12755,49 @@ footer {
 p a {
   color: blue;
   text-decoration: underline;
+}
+
+.liste-mes-produits {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.carte-mon-produit {
+  display: grid;
+  grid-template-columns: 250px 1fr auto;
+  align-items: center;
+  height: 200px;
+}
+.carte-mon-produit .image-produit {
+  height: 100%;
+}
+
+.icone-panier {
+  color: #F9F8F3;
+  font-size: 1.5rem;
+  text-align: center;
+}
+.icone-panier:hover {
+  color: #DE7452;
+}
+
+.ligne-panier {
+  display: grid;
+  grid-template-columns: 250px 1fr auto;
+  align-items: center;
+  height: 200px;
+}
+.ligne-panier .image-produit {
+  height: 100%;
+}
+.ligne-panier .actions {
+  padding: 22px;
+}
+
+.nb-articles {
+  margin-left: 4px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #F9F8F3;
 }/*# sourceMappingURL=styles.css.map */

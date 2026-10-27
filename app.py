@@ -1,14 +1,17 @@
 import os
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session
 import bd
 from compte import bp_compte
 from produits import produits_bp
+from panier import bp_panier
+from forms import PanierForm
 
 
 app = Flask(__name__, static_url_path='')
 app.register_blueprint(bp_compte, url_prefix='/compte')
 app.register_blueprint(produits_bp, url_prefix='/produits')
+app.register_blueprint(bp_panier, url_prefix='/panier')
 app.secret_key = os.getenv("SECRET_SESSION")
 
 app.config["ROUTE_IMAGES"] = "/images/utiles/"
@@ -221,6 +224,17 @@ def recherche_produits():
         page=page,
         limite=limite
     )
+
+@app.context_processor
+def compter_nb_articles():
+    """Ajoute le nombre d'articles du panier à tous les gabarits"""
+    nb_articles = 0
+
+    if "id_utilisateur" in session:
+        with bd.creer_curseur() as curseur:
+            nb_articles = bd.get_nb_articles_panier(curseur, session["id_utilisateur"])
+
+    return {"nb_articles": nb_articles, "form_panier": PanierForm()}
 
 
 @app.errorhandler(400)

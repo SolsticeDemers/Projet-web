@@ -21,7 +21,16 @@
                 <p>{{ produit.description }}</p>
             </div>
             <div class="actions">
-                <button type="submit" class="button">Acheter</button>
+                {% if not est_disponible %}
+                    <p class="text-danger">Ce produit n'est plus disponible.</p>
+                {% elif not est_connecte %}
+                    <a href="/compte/authentification" class="button">Connectez-vous pour acheter</a>
+                {% elif not est_vendeur %}
+                    <form method="POST" action="/panier/ajouter/{{ produit.id_produit }}">
+                        {{ form.hidden_tag() }}
+                        <button type="submit" class="button">Ajouter au panier</button>
+                    </form>
+                {% endif %}
             </div>
 
         </div>
