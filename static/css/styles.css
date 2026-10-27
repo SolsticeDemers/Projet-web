@@ -12652,6 +12652,14 @@ header {
   background: #323550;
 }
 
+.badge-statut-notif {
+  margin: 15px 0px 15px 0px;
+  padding: 7px 13px;
+  border-radius: 20px;
+  color: #FFFFFF;
+  font-size: 12px;
+}
+
 .contenu-produit {
   padding: 22px;
 }
@@ -12748,4 +12756,11 @@ footer {
 p a {
   color: blue;
   text-decoration: underline;
+}
+
+#creer-compte-formulaire {
+  margin-left: 200px;
+}
+#creer-compte-formulaire div, #creer-compte-formulaire button {
+  margin-top: 20px;
 }/*# sourceMappingURL=styles.css.map */
