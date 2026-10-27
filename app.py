@@ -3,10 +3,12 @@ import os
 from flask import Flask, render_template, request
 import bd
 from compte import bp_compte
+from produits import bp_produits
 
 
 app = Flask(__name__, static_url_path='')
 app.register_blueprint(bp_compte, url_prefix='/compte')
+app.register_blueprint(bp_produits, url_prefix='/produits')
 app.secret_key = os.getenv("SECRET_SESSION")
 
 app.config["ROUTE_IMAGES"] = "/images/utiles/"
@@ -24,13 +26,9 @@ def index():
     """Affiche la page d'accueil"""
 
     with bd.creer_curseur() as curseur:
-
         nouveaux_produits = bd.get_nouveaux_produits(curseur)
-
         vendeurs = bd.get_utilisateurs_populaires(curseur)
-
         produit_du_jour = bd.get_produit_aleatoire(curseur)
-
         produits_aleatoires = bd.get_produits_aleatoires(curseur)
 
         encheres_futures = bd.get_enchere_future(curseur)
@@ -332,6 +330,6 @@ def erreur_500(e):
         message="Le serveur a rencontré une erreur"
     ), 500
 
-
 if __name__ == "__main__":
     app.run(debug=True)
+

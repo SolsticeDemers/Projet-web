@@ -394,6 +394,25 @@ def get_nom_utiliser(curseur):
 
     return curseur.fetchall()
 
+def get_produits_par_vendeur(curseur, id_vendeur):
+    """Retourne la liste des produits pour un vendeur donné"""
+    curseur.execute(
+        """
+        SELECT
+            p.id_produit,
+            p.nom,
+            p.description,
+            p.prix,
+            s.nom_statut
+        FROM produit p
+        JOIN statut_produit s
+            ON p.id_statut = s.id_statut
+        WHERE p.id_vendeur = %(id_vendeur)s
+        """,
+        {'id_vendeur': id_vendeur}
+    )
+    return curseur.fetchall()
+
 
 def get_enchere_future(curseur):
     """Permet d'obtenir les 4 prochains produits mis aux enchères"""
