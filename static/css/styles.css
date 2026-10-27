@@ -12528,6 +12528,7 @@ header {
   grid-template-columns: 1fr 1fr;
   align-items: center;
   gap: 10px;
+  text-align: center;
 }
 
 .btn_deconnection {
@@ -12652,6 +12653,10 @@ header {
   background: #323550;
 }
 
+.badge-vendu {
+  background: #7E7B85;
+}
+
 .contenu-produit {
   padding: 22px;
 }
@@ -12683,6 +12688,18 @@ header {
 .actions a {
   background: #7E7B85;
   color: #FFFFFF;
+}
+.actions .btn-modifier {
+  background: #7E7B85;
+}
+.actions .btn-modifier:hover {
+  background: #5F5C67;
+}
+.actions .btn-supprimer {
+  background: #323550;
+}
+.actions .btn-supprimer:hover {
+  background: #C0392B;
 }
 .actions .bouton-supprimer {
   background: #DE7452;
@@ -12749,6 +12766,25 @@ footer {
     grid-template-columns: 1fr;
   }
 }
+.liste-mes-produits {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.carte-mon-produit {
+  display: grid;
+  grid-template-columns: 250px 1fr auto;
+  align-items: center;
+  height: 200px;
+}
+.carte-mon-produit .image-produit {
+  height: 100%;
+}
+.carte-mon-produit .actions {
+  padding: 22px;
+}
+
 p a {
   color: blue;
   text-decoration: underline;
