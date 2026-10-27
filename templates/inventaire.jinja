@@ -26,25 +26,52 @@
 
             <div class="contenu-produit">
                 <h3>
-                    <a href="/produits/{{ produit.id_produit }}">{{ produit.nom }}</a>
+                    <a href="/produits/{{ produit.id_produit }}">
+                        {{ produit.nom }}
+                    </a>
                 </h3>
 
-                <p>{{ produit.description }}</p>
+                <p>
+                    {{ produit.description }}
+                </p>
 
-                <p class="prix">{{ produit.prix }} $</p>
+                <p class="prix">
+                    {{ produit.prix }} $
+                </p>
             </div>
 
             <div class="actions">
-                <button class="btn-modifier" href="#">Modifier</button>
-                <button class="btn-supprimer">Supprimer</button>
+
+                <button class="btn-modifier">
+                    Modifier
+                </button>
+
+                <form
+                    action="{{ url_for('produits.archiver_produit', id=produit.id_produit) }}"
+                    method="post"
+                >
+
+                    {{ form_archiver.hidden_tag() }}
+
+                    <button type="submit" class="btn-supprimer">
+                        Supprimer
+                    </button>
+
+                </form>
+
             </div>
 
         </div>
         {% endfor %}
 
     </div>
+
     {% else %}
-    <p>Vous n'avez ajouté aucun produit.</p>
+
+    <p>
+        Vous n'avez ajouté aucun produit.
+    </p>
+
     {% endif %}
 
 </section>

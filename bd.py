@@ -66,6 +66,7 @@ def get_nouveaux_produits(curseur):
         JOIN statut_produit s
             ON p.id_statut = s.id_statut
         WHERE s.nom_statut <> 'Vendu'
+        AND p.archive = FALSE
         ORDER BY p.date DESC
         LIMIT 4
     """)
@@ -88,6 +89,7 @@ def get_produit_aleatoire(curseur):
         JOIN statut_produit s
             ON p.id_statut = s.id_statut
         WHERE s.nom_statut <> 'Vendu'
+        AND p.archive = FALSE
         ORDER BY RAND()
         LIMIT 1
     """)
@@ -110,6 +112,7 @@ def get_produits_aleatoires(curseur):
         JOIN statut_produit s
             ON p.id_statut = s.id_statut
         WHERE s.nom_statut <> 'Vendu'
+        AND p.archive = FALSE
         ORDER BY RAND()
         LIMIT 4
     """)
@@ -193,6 +196,7 @@ def get_produits(
 
         WHERE p.prix BETWEEN %(min)s AND %(max)s
         AND s.nom_statut <> 'Vendu'
+        AND p.archive = FALSE
 
         """ + tri + """
 
@@ -260,6 +264,7 @@ def get_produits_recherche_filtre(
 
         AND p.prix BETWEEN %(min)s AND %(max)s
         AND s.nom_statut <> 'Vendu'
+        AND p.archive = FALSE
 
         """ + tri + """
 
@@ -396,6 +401,7 @@ def get_nom_utiliser(curseur):
 
 def get_produits_par_vendeur(curseur, id_vendeur):
     """Retourne la liste des produits pour un vendeur donné"""
+
     curseur.execute(
         """
         SELECT
@@ -408,9 +414,13 @@ def get_produits_par_vendeur(curseur, id_vendeur):
         JOIN statut_produit s
             ON p.id_statut = s.id_statut
         WHERE p.id_vendeur = %(id_vendeur)s
+        AND p.archive = FALSE
         """,
-        {'id_vendeur': id_vendeur}
+        {
+            'id_vendeur': id_vendeur
+        }
     )
+
     return curseur.fetchall()
 
 
@@ -428,8 +438,24 @@ def get_enchere_future(curseur):
         JOIN statut_produit s
             ON p.id_statut = s.id_statut
         WHERE s.nom_statut = 'Aux enchères' AND NOW() < p.date
+        AND p.archive = FALSE
         ORDER BY p.date ASC
         LIMIT 4
     """)
 
     return curseur.fetchall()
+
+def archiver_produit(curseur, id_produit):
+    """Archive un produit"""
+
+    curseur.execute(
+        """
+        UPDATE produit
+        SET archive = TRUE
+        WHERE id_produit = %(id_produit)s
+        """,
+        {
+            "id_produit": id_produit
+        }
+    )
+

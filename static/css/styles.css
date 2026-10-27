@@ -12701,6 +12701,10 @@ header {
 .actions .btn-supprimer:hover {
   background: #C0392B;
 }
+.actions .bouton-supprimer {
+  background: #DE7452;
+  color: #FFFFFF;
+}
 
 .produit-vedette {
   width: 100%;
@@ -12779,4 +12783,9 @@ footer {
 }
 .carte-mon-produit .actions {
   padding: 22px;
+}
+
+p a {
+  color: blue;
+  text-decoration: underline;
 }/*# sourceMappingURL=styles.css.map */
