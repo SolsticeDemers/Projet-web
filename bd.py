@@ -393,3 +393,24 @@ def get_nom_utiliser(curseur):
     """)
 
     return curseur.fetchall()
+
+
+def get_enchere_future(curseur):
+    """Permet d'obtenir les 4 prochains produits mis aux enchères"""
+    curseur.execute("""
+        SELECT
+            p.id_produit,
+            p.nom,
+            p.description,
+            p.prix,
+            p.date,
+            s.nom_statut
+        FROM produit p
+        JOIN statut_produit s
+            ON p.id_statut = s.id_statut
+        WHERE s.nom_statut = 'Aux enchères' AND NOW() < p.date
+        ORDER BY p.date ASC
+        LIMIT 4
+    """)
+
+    return curseur.fetchall()
