@@ -19,18 +19,16 @@
 
         {% for vendeur in vendeurs %}
 
-            <div class="vendeur-card">
+        <div class="vendeur-card">
 
-                <img
-                    src="{{ url_for('static', filename='images/utiles/vendeur_' ~ vendeur.id_utilisateur ~ '.png') }}"
-                    alt="{{ vendeur.nom }}"
-                >
+            <img src="{{ url_for('static', filename='images/utiles/vendeur_' ~ vendeur.id_utilisateur ~ '.png') }}"
+                alt="{{ vendeur.nom }}">
 
-                <h3>
-                    {{ vendeur.nom }}
-                </h3>
+            <h3>
+                {{ vendeur.nom }}
+            </h3>
 
-            </div>
+        </div>
 
         {% endfor %}
 
@@ -50,52 +48,52 @@
 
         {% for produit in nouveaux_produits %}
 
-            <div class="carte-produit">
+        <div class="carte-produit">
 
-                <div class="image-produit">
+            <div class="image-produit">
 
-                    {% if produit.src %}
+                {% if produit.src %}
 
-                        <img
-                            src="{{ produit.src }}"
-                            alt="{{ produit.nom }}"
-                        >
+                <img src="{{ produit.src }}" alt="{{ produit.nom }}">
 
-                    {% endif %}
+                {% endif %}
 
-                    <span>
-                        {{ produit.nom_statut }}
-                    </span>
+                <span>
+                    {{ produit.nom_statut }}
+                </span>
 
-                </div>
+            </div>
 
 
-                <div class="contenu-produit">
+            <div class="contenu-produit">
 
-                    <h3>
-                        {{ produit.nom }}
-                    </h3>
+                <h3>
+                    {{ produit.nom }}
+                </h3>
 
-                    <p class="prix">
-                        {{ produit.prix }} $
-                    </p>
+                <p class="prix">
+                    {{ produit.prix }} $
+                </p>
 
 
-                    <div class="actions">
+                <div class="actions">
 
-                        <button>
-                            Ajouter
-                        </button>
+                    {% if session['id_utilisateur'] and produit.id_statut != 4 %}
+                        <form method="POST" action="/panier/ajouter/{{ produit.id_produit }}">
+                            {{ form_panier.hidden_tag() }}
+                            <button type="submit">Ajouter</button>
+                        </form>
+                        {% endif %}
 
-                        <a href="/produits/{{ produit.id_produit }}">
-                            Détails
-                        </a>
-
-                    </div>
+                    <a href="/produits/{{ produit.id_produit }}">
+                        Détails
+                    </a>
 
                 </div>
 
             </div>
+
+        </div>
 
         {% endfor %}
 
@@ -135,21 +133,21 @@
 
             {% if produit_du_jour.nom_statut == "En vente" %}
 
-                <button>
-                    Acheter
-                </button>
+            <button>
+                Acheter
+            </button>
 
             {% elif produit_du_jour.nom_statut == "Aux enchères" %}
 
-                <button>
-                    Enchérir
-                </button>
+            <button>
+                Enchérir
+            </button>
 
             {% elif produit_du_jour.nom_statut == "À échanger" %}
 
-                <button>
-                    Échanger
-                </button>
+            <button>
+                Échanger
+            </button>
 
             {% endif %}
 
@@ -167,10 +165,7 @@
 
         {% if produit_du_jour.src %}
 
-            <img
-                src="{{ produit_du_jour.src }}"
-                alt="{{ produit_du_jour.nom }}"
-            >
+        <img src="{{ produit_du_jour.src }}" alt="{{ produit_du_jour.nom }}">
 
         {% endif %}
 
@@ -193,52 +188,52 @@
 
         {% for produit in produits_aleatoires %}
 
-            <div class="carte-produit">
+        <div class="carte-produit">
 
-                <div class="image-produit">
+            <div class="image-produit">
 
-                    {% if produit.src %}
+                {% if produit.src %}
 
-                        <img
-                            src="{{ produit.src }}"
-                            alt="{{ produit.nom }}"
-                        >
+                <img src="{{ produit.src }}" alt="{{ produit.nom }}">
 
-                    {% endif %}
+                {% endif %}
 
-                    <span>
-                        {{ produit.nom_statut }}
-                    </span>
+                <span>
+                    {{ produit.nom_statut }}
+                </span>
 
-                </div>
+            </div>
 
 
-                <div class="contenu-produit">
+            <div class="contenu-produit">
 
-                    <h3>
-                        {{ produit.nom }}
-                    </h3>
+                <h3>
+                    {{ produit.nom }}
+                </h3>
 
-                    <p class="prix">
-                        {{ produit.prix }} $
-                    </p>
+                <p class="prix">
+                    {{ produit.prix }} $
+                </p>
 
 
-                    <div class="actions">
+                <div class="actions">
 
-                        <button>
-                            Ajouter
-                        </button>
+                    {% if session['id_utilisateur'] and produit.id_statut != 4 %}
+                        <form method="POST" action="/panier/ajouter/{{ produit.id_produit }}">
+                            {{ form_panier.hidden_tag() }}
+                            <button type="submit">Ajouter</button>
+                        </form>
+                        {% endif %}
 
-                        <a href="/produits/{{ produit.id_produit }}">
-                            Détails
-                        </a>
-
-                    </div>
+                    <a href="/produits/{{ produit.id_produit }}">
+                        Détails
+                    </a>
 
                 </div>
 
             </div>
+
+        </div>
 
         {% endfor %}
 

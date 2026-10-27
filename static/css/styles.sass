@@ -63,18 +63,18 @@ header
 
 .connexion
     text-align: right
-    
+
     a
         border: 1px solid $creme
         border-radius: 25px
         padding: 12px 22px
         color: $creme
-    
+
 .connecter
     display: grid
     grid-template-columns:  1fr 1fr
     align-items: center
-    gap: 10px    
+    gap: 10px
 
 .btn_deconnection
     max-height: 50px
@@ -196,6 +196,9 @@ header
     display: flex
     gap: 10px
 
+    form
+        display: contents
+
     button,
     a
         padding: 12px 18px
@@ -205,6 +208,10 @@ header
 
     button
         background: $bleu
+        color: $blanc
+
+    .bouton-secondaire
+        background: $gris
         color: $blanc
 
     a
@@ -269,3 +276,44 @@ p
     a
         color: blue
         text-decoration: underline
+
+.liste-mes-produits
+    display: flex
+    flex-direction: column
+    gap: 20px
+
+.carte-mon-produit
+    display: grid
+    grid-template-columns: 250px 1fr auto
+    align-items: center
+    height: 200px
+
+    .image-produit
+        height: 100%
+
+.icone-panier
+    color: $creme
+    font-size: 1.5rem
+    text-align: center
+
+    &:hover
+        color: $orange
+
+.ligne-panier
+    display: grid
+    grid-template-columns: 250px 1fr auto
+    align-items: center
+    height: 200px
+
+    .image-produit
+        height: 100%
+
+    .actions
+        padding: 22px
+
+.nb-articles
+    margin-left: 4px
+    font-size: 1rem
+    font-weight: bold
+    color: $creme
+

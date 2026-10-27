@@ -103,9 +103,12 @@
 
                     <div class="actions">
 
-                        <button>
-                            Ajouter
-                        </button>
+                        {% if session['id_utilisateur'] and produit.id_statut != 4 %}
+                        <form method="POST" action="/panier/ajouter/{{ produit.id_produit }}">
+                            {{ form_panier.hidden_tag() }}
+                            <button type="submit">Ajouter</button>
+                        </form>
+                        {% endif %}
 
                         <a href="/produits/{{ produit.id_produit }}">
                             Détails
