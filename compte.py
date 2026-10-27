@@ -306,6 +306,6 @@ def accepter_echange(id_proposition, approuve):
     else:
         reponse = 0
     with bd.creer_curseur() as curseur:
-        echange = bd.update_offer(curseur, id_proposition, reponse)
+        bd.update_offer(curseur, id_proposition, reponse)
 
     return redirect("/compte/echange", code=303)
