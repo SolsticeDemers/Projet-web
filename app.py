@@ -3,12 +3,10 @@ import os
 from flask import Flask, render_template, request
 import bd
 from compte import bp_compte
-from produits import produits_bp
 
 
 app = Flask(__name__, static_url_path='')
 app.register_blueprint(bp_compte, url_prefix='/compte')
-app.register_blueprint(produits_bp, url_prefix='/produits')
 app.secret_key = os.getenv("SECRET_SESSION")
 
 app.config["ROUTE_IMAGES"] = "/images/utiles/"
@@ -128,6 +126,7 @@ def index():
                 + nom_image
             )
 
+
     return render_template(
         "index.jinja",
         titre="Accueil",
@@ -138,12 +137,14 @@ def index():
         produits_aleatoires=produits_aleatoires
     )
 
-
 @app.route("/produits/recherche")
 def recherche_produits():
-    """Permet de rechercher plusieurs produits"""
+    """Permet de rechercher et trier les produits"""
 
-    mot_cle = request.args.get("mot_cle", "")
+    mot_cle = request.args.get(
+        "mot_cle",
+        ""
+    )
 
     prix_min = request.args.get(
         "prix_min",
@@ -153,6 +154,11 @@ def recherche_produits():
     prix_max = request.args.get(
         "prix_max",
         type=float
+    )
+
+    tri = request.args.get(
+        "tri",
+        "nom_ASC"
     )
 
     page = request.args.get(
@@ -166,12 +172,42 @@ def recherche_produits():
         page = 1
 
 
+    prix_min_affichage = prix_min
+    prix_max_affichage = prix_max
+
+
     if prix_min is None:
         prix_min = 0
 
 
     if prix_max is None:
         prix_max = 999999999
+
+
+    if prix_max < prix_min:
+        prix_max = prix_min
+        prix_max_affichage = prix_min
+
+
+    if tri == "nom_DESC":
+
+        trier_par = "nom"
+        ordre = "DESC"
+
+    elif tri == "prix_ASC":
+
+        trier_par = "prix"
+        ordre = "ASC"
+
+    elif tri == "prix_DESC":
+
+        trier_par = "prix"
+        ordre = "DESC"
+
+    else:
+
+        trier_par = "nom"
+        ordre = "ASC"
 
 
     limite = 12
@@ -188,15 +224,10 @@ def recherche_produits():
                 prix_min,
                 prix_max,
                 limite,
-                offset
+                offset,
+                trier_par,
+                ordre
             )
-
-            if produits is None:
-                produits = []
-
-            produits = produits[
-                offset:offset + limite
-            ]
 
         else:
 
@@ -206,11 +237,14 @@ def recherche_produits():
                 prix_min,
                 prix_max,
                 limite,
-                offset
+                offset,
+                trier_par,
+                ordre
             )
 
-            if produits is None:
-                produits = []
+
+    if produits is None:
+        produits = []
 
 
     for produit in produits:
@@ -241,8 +275,9 @@ def recherche_produits():
         titre="Recherche de produits",
         produits=produits,
         mot_cle=mot_cle,
-        prix_min=prix_min,
-        prix_max=prix_max,
+        prix_min=prix_min_affichage,
+        prix_max=prix_max_affichage,
+        tri=tri,
         page=page,
         limite=limite
     )
