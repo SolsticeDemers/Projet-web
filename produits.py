@@ -1,8 +1,10 @@
 import os
 import logging
+from forms import ArchiverProduitForm
 
 from flask import Blueprint, abort, render_template, redirect
 from flask import request, session, current_app, url_for
+
 import bd
 
 produits_bp = Blueprint('produits', __name__)
@@ -10,6 +12,7 @@ produits_bp = Blueprint('produits', __name__)
 @produits_bp.route('/<int:id>', methods=['GET', 'POST'])
 def details_produit(id):
     """Permet de voir les détails d'un produit"""
+    form = ArchiverProduitForm()
     with bd.creer_curseur() as curseur:
         produit = bd.get_produit(curseur, id)
 
@@ -36,8 +39,32 @@ def details_produit(id):
 
 
     return render_template('produit_details.jinja',
+        id=id,
         produit=produit,
         vendeur=vendeur,
         img_source=img_source,
-        est_connecte=est_connecte
+        est_connecte=est_connecte,
+        form_archiver=form
     )
+
+@produits_bp.route("/<int:id>/archiver", methods=['POST'])
+def archiver_produit(id):
+    """Permet d'archiver un produit"""
+    if "id_utilisateur" not in session:
+        abort(401)
+
+    form = ArchiverProduitForm()
+    if not form.validate_on_submit():
+        abort(400)
+
+    with bd.creer_curseur() as curseur:
+        produit = bd.get_produit(curseur, id)
+
+        if produit is None:
+            abort(404)
+        if produit['id_vendeur'] != session['id_utilisateur']:
+            abort(403)
+
+        bd.archiver_produit(curseur, id)
+
+    return redirect(url_for("compte.profil"))

@@ -61,6 +61,7 @@ def get_nouveaux_produits(curseur):
         JOIN statut_produit s
             ON p.id_statut = s.id_statut
         WHERE s.nom_statut <> 'Vendu'
+        AND p.archive = FALSE
         ORDER BY p.date DESC
         LIMIT 4
     """)
@@ -83,6 +84,7 @@ def get_produit_aleatoire(curseur):
         JOIN statut_produit s
             ON p.id_statut = s.id_statut
         WHERE s.nom_statut <> 'Vendu'
+        AND p.archive = FALSE
         ORDER BY RAND()
         LIMIT 1
     """)
@@ -105,6 +107,7 @@ def get_produits_aleatoires(curseur):
         JOIN statut_produit s
             ON p.id_statut = s.id_statut
         WHERE s.nom_statut <> 'Vendu'
+        AND p.archive = FALSE
         ORDER BY RAND()
         LIMIT 4
     """)
@@ -159,6 +162,7 @@ def get_produits(curseur, prix_min, prix_max, limite, offset):
             ON p.id_statut = s.id_statut
 
         WHERE p.prix BETWEEN %(min)s AND %(max)s
+        AND p.archive = FALSE
 
         ORDER BY p.nom ASC
 
@@ -275,3 +279,10 @@ def get_nom_utiliser(curseur):
     """Dictionnaire de nom et courriel déjà utilisé"""
     curseur.execute("SELECT id_utilisateur, nom, courriel FROM utilisateur;")
     return curseur.fetchall()
+
+def archiver_produit(curseur, id_produit):
+    """Archive un produit"""
+    curseur.execute(
+        "UPDATE produit SET archive = true WHERE id_produit = %(id_produit)s",
+        {"id_produit": id_produit}
+    )

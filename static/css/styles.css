@@ -12684,6 +12684,10 @@ header {
   background: #7E7B85;
   color: #FFFFFF;
 }
+.actions .bouton-supprimer {
+  background: #DE7452;
+  color: #FFFFFF;
+}
 
 .produit-vedette {
   width: 100%;
