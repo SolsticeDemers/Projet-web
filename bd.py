@@ -275,3 +275,15 @@ def get_nom_utiliser(curseur):
     """Dictionnaire de nom et courriel déjà utilisé"""
     curseur.execute("SELECT id_utilisateur, nom, courriel FROM utilisateur;")
     return curseur.fetchall()
+
+
+def modifier_prix_produit(curseur, id_produit, nouveau_prix):
+    """Modifie le prix actuel d'un produit"""
+    curseur.execute("""
+        UPDATE produit
+        SET prix = %(nouveau_prix)s
+        WHERE id_produit = %(id_produit)s
+    """, {
+        "nouveau_prix": nouveau_prix,
+        "id_produit": id_produit
+    })

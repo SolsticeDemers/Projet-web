@@ -10,6 +10,9 @@ produits_bp = Blueprint('produits', __name__)
 @produits_bp.route('/<int:id>', methods=['GET', 'POST'])
 def details_produit(id):
     """Permet de voir les détails d'un produit"""
+
+    erreur = ""
+
     with bd.creer_curseur() as curseur:
         produit = bd.get_produit(curseur, id)
 
@@ -18,7 +21,21 @@ def details_produit(id):
 
         vendeur = bd.get_vendeur(curseur, produit['id_vendeur'])
 
+        if request.method == "POST":
+            mise = request.form.get("mise", type=float)
+
+            if mise is None:
+                erreur = "Veuillez entrer une mise."
+
+            elif mise <= produit["prix"]:
+                erreur = "La mise doit être supérieure au prix actuel."
+
+            else:
+                bd.modifier_prix_produit(curseur, id, mise)
+                return redirect(url_for("produits.details_produit", id=id))
+
     nom_image = "produit_" + str(id) + ".png"
+
     chemin_image = os.path.join(
         current_app.config["CHEMIN_IMAGES"],
         nom_image
@@ -34,10 +51,11 @@ def details_produit(id):
     else:
         img_source = url_for("static", filename="images/default.png")
 
-
-    return render_template('produit_details.jinja',
+    return render_template(
+        'produit_details.jinja',
         produit=produit,
         vendeur=vendeur,
         img_source=img_source,
-        est_connecte=est_connecte
+        est_connecte=est_connecte,
+        erreur=erreur
     )
