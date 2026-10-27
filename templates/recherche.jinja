@@ -103,9 +103,23 @@
 
                     <div class="actions">
 
-                        <button>
+                        {% if produit.nom_statut == 'En vente' %}
+                    <button>
                             Ajouter
                         </button>
+                        {% endif %}
+
+                    {% if produit.nom_statut == 'Aux enchères' %}
+                    <button>
+                            Enchérir
+                        </button>
+                        {% endif %}
+
+                    {% if produit.nom_statut == 'À échanger' %}
+                    <button>
+                            Échanger
+                        </button>
+                        {% endif %}
 
                         <a href="/produits/{{ produit.id_produit }}">
                             Détails
