@@ -1,4 +1,6 @@
+.env
 __pycache__/
 .vscode/
 *.pyc
-.env
+styles.css
+styles.css.map

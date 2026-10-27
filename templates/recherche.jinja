@@ -21,45 +21,52 @@
             <input
                 type="number"
                 name="prix_min"
-                value="{{ prix_min }}"
+                value="{{ prix_min if prix_min is not none else '' }}"
                 class="form-control form-control-sm filtre"
                 placeholder="Min"
+                min="0"
             >
 
             <input
                 type="number"
                 name="prix_max"
-                value="{{ prix_max }}"
+                value="{{ prix_max if prix_max is not none else '' }}"
                 class="form-control form-control-sm filtre"
                 placeholder="Max"
+                min="0"
             >
 
             <select
-                name="trier_par"
+                name="tri"
                 class="form-select form-select-sm filtre"
             >
 
-                <option value="nom" {% if trier_par == "nom" %}selected{% endif %}>
-                    Nom
+                <option
+                    value="nom_ASC"
+                    {% if tri == "nom_ASC" %}selected{% endif %}
+                >
+                    Trier : A - Z
                 </option>
 
-                <option value="prix" {% if trier_par == "prix" %}selected{% endif %}>
-                    Prix
+                <option
+                    value="nom_DESC"
+                    {% if tri == "nom_DESC" %}selected{% endif %}
+                >
+                    Trier : Z - A
                 </option>
 
-            </select>
-
-            <select
-                name="ordre"
-                class="form-select form-select-sm filtre"
-            >
-
-                <option value="ASC" {% if ordre == "ASC" %}selected{% endif %}>
-                    Croissant
+                <option
+                    value="prix_ASC"
+                    {% if tri == "prix_ASC" %}selected{% endif %}
+                >
+                    Prix : moins cher en premier
                 </option>
 
-                <option value="DESC" {% if ordre == "DESC" %}selected{% endif %}>
-                    Décroissant
+                <option
+                    value="prix_DESC"
+                    {% if tri == "prix_DESC" %}selected{% endif %}
+                >
+                    Prix : plus cher en premier
                 </option>
 
             </select>
@@ -105,6 +112,7 @@
 
                     {% endif %}
 
+
                     <span class="badge-statut
                         {% if produit.nom_statut == 'En vente' %}
                             badge-vente
@@ -130,6 +138,7 @@
                         {{ produit.prix }} $
                     </p>
 
+
                     <div class="actions">
 
                         {% if produit.nom_statut == "En vente" %}
@@ -152,6 +161,7 @@
 
                         {% endif %}
 
+
                         <a href="/produits/{{ produit.id_produit }}">
                             Détails
                         </a>
@@ -161,6 +171,7 @@
                 </div>
 
             </div>
+
 
         {% else %}
 
@@ -177,11 +188,12 @@
 
         <ul class="pagination justify-content-center">
 
+
             <li class="page-item {% if page <= 1 %}disabled{% endif %}">
 
                 <a
                     class="page-link"
-                    href="/produits/recherche?mot_cle={{ mot_cle }}&prix_min={{ prix_min }}&prix_max={{ prix_max }}&trier_par={{ trier_par }}&ordre={{ ordre }}&page={{ page - 1 }}"
+                    href="/produits/recherche?mot_cle={{ mot_cle }}&prix_min={{ prix_min if prix_min is not none else '' }}&prix_max={{ prix_max if prix_max is not none else '' }}&tri={{ tri }}&page={{ page - 1 }}"
                 >
                     &laquo;
                 </a>
@@ -202,7 +214,7 @@
 
                 <a
                     class="page-link"
-                    href="/produits/recherche?mot_cle={{ mot_cle }}&prix_min={{ prix_min }}&prix_max={{ prix_max }}&trier_par={{ trier_par }}&ordre={{ ordre }}&page={{ page + 1 }}"
+                    href="/produits/recherche?mot_cle={{ mot_cle }}&prix_min={{ prix_min if prix_min is not none else '' }}&prix_max={{ prix_max if prix_max is not none else '' }}&tri={{ tri }}&page={{ page + 1 }}"
                 >
                     &raquo;
                 </a>
