@@ -19,25 +19,22 @@
 
         {% for vendeur in vendeurs %}
 
-            <div class="vendeur-card">
+        <div class="vendeur-card">
 
-                <img
-                    src="{{ url_for('static', filename='css/images/utiles/vendeur_' ~ vendeur.id_utilisateur ~ '.png') }}"
-                    alt="{{ vendeur.nom }}"
-                >
+            <img src="{{ url_for('static', filename='images/utiles/vendeur_' ~ vendeur.id_utilisateur ~ '.png') }}"
+                alt="{{ vendeur.nom }}">
 
-                <h3>
-                    {{ vendeur.nom }}
-                </h3>
+            <h3>
+                {{ vendeur.nom }}
+            </h3>
 
-            </div>
+        </div>
 
         {% endfor %}
 
     </div>
 
 </section>
-
 
 
 <section class="section-produits">
@@ -50,52 +47,156 @@
 
         {% for produit in nouveaux_produits %}
 
-            <div class="carte-produit">
+        <div class="carte-produit">
 
-                <div class="image-produit">
+            <div class="image-produit">
 
-                    {% if produit.src %}
+                {% if produit.src %}
 
-                        <img
-                            src="{{ produit.src }}"
-                            alt="{{ produit.nom }}"
-                        >
+                <img src="{{ produit.src }}" alt="{{ produit.nom }}">
+
+                {% endif %}
+
+
+                <span class="badge-statut
+                        {% if produit.nom_statut == 'En vente' %}
+                            badge-vente
+                        {% elif produit.nom_statut == 'Aux enchères' %}
+                            badge-enchere
+                        {% elif produit.nom_statut == 'À échanger' %}
+                            badge-echange
+                        {% endif %}
+                    ">
+                    {{ produit.nom_statut }}
+                </span>
+
+            </div>
+
+
+            <div class="contenu-produit">
+
+                <h3>
+                    {{ produit.nom }}
+                </h3>
+
+                <p class="prix">
+                    {{ produit.prix }} $
+                </p>
+
+                <div class="actions">
+                    {% if produit.nom_statut == "En vente" %}
+
+                    <button>
+                        Acheter
+                    </button>
+
+                    {% elif produit.nom_statut == "Aux enchères" %}
+
+                    <button>
+                        Enchérir
+                    </button>
+
+                    {% elif produit.nom_statut == "À échanger" %}
+
+                    <button>
+                        Échanger
+                    </button>
 
                     {% endif %}
 
-                    <span>
-                        {{ produit.nom_statut }}
-                    </span>
-
-                </div>
-
-
-                <div class="contenu-produit">
-
-                    <h3>
-                        {{ produit.nom }}
-                    </h3>
-
-                    <p class="prix">
-                        {{ produit.prix }} $
-                    </p>
-
-
-                    <div class="actions">
-
-                        <button>
-                            Ajouter
-                        </button>
-
-                        <a href="/produits/{{ produit.id_produit }}">
-                            Détails
-                        </a>
-
-                    </div>
+                    <a href="/produits/{{ produit.id_produit }}">
+                        Détails
+                    </a>
 
                 </div>
 
             </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+
+<section class="section-produits">
+
+    <h2>
+        Enchères à venir
+    </h2>
+
+    <div class="grille-produits">
+
+        {% for produit in encheres_futures %}
+
+        <div class="carte-produit">
+            <div class="image-produit">
+
+                {% if produit.src %}
+
+                <img src="{{ produit.src }}" alt="{{ produit.nom }}">
+
+                {% endif %}
+
+
+                <span class="badge-statut
+                        {% if produit.nom_statut == 'En vente' %}
+                            badge-vente
+                        {% elif produit.nom_statut == 'Aux enchères' %}
+                            badge-enchere
+                        {% elif produit.nom_statut == 'À échanger' %}
+                            badge-echange
+                        {% endif %}
+                    ">
+                    {{ produit.nom_statut }}
+                </span>
+
+            </div>
+
+
+            <div class="contenu-produit">
+
+                <h3>
+                    {{ produit.nom }}
+                </h3>
+
+                <p class="prix">
+                    {{ produit.prix }} $
+                </p>
+
+                <div class="actions">
+
+                    {% if produit.nom_statut == 'En vente' %}
+                    <button>
+                        Ajouter
+                    </button>
+                    {% endif %}
+
+                    {% if produit.nom_statut == 'Aux enchères' %}
+                    <button>
+                        Enchérir
+                    </button>
+                    {% endif %}
+
+                    {% if produit.nom_statut == 'À échanger' %}
+                    <button>
+                        Échanger
+                    </button>
+                    {% endif %}
+
+                    <a href="/produits/{{ produit.id_produit }}">
+                        Détails
+                    </a>
+
+                </div>
+
+            </div>
+
+
+
+        </div>
 
         {% endfor %}
 
@@ -111,7 +212,15 @@
 
     <div class="vedette-info">
 
-        <span>
+        <span class="badge-statut
+            {% if produit_du_jour.nom_statut == 'En vente' %}
+                badge-vente
+            {% elif produit_du_jour.nom_statut == 'Aux enchères' %}
+                badge-enchere
+            {% elif produit_du_jour.nom_statut == 'À échanger' %}
+                badge-echange
+            {% endif %}
+        ">
             {{ produit_du_jour.nom_statut }}
         </span>
 
@@ -135,21 +244,21 @@
 
             {% if produit_du_jour.nom_statut == "En vente" %}
 
-                <button>
-                    Acheter
-                </button>
+            <button>
+                Acheter
+            </button>
 
             {% elif produit_du_jour.nom_statut == "Aux enchères" %}
 
-                <button>
-                    Enchérir
-                </button>
+            <button>
+                Enchérir
+            </button>
 
             {% elif produit_du_jour.nom_statut == "À échanger" %}
 
-                <button>
-                    Échanger
-                </button>
+            <button>
+                Échanger
+            </button>
 
             {% endif %}
 
@@ -167,10 +276,7 @@
 
         {% if produit_du_jour.src %}
 
-            <img
-                src="{{ produit_du_jour.src }}"
-                alt="{{ produit_du_jour.nom }}"
-            >
+        <img src="{{ produit_du_jour.src }}" alt="{{ produit_du_jour.nom }}">
 
         {% endif %}
 
@@ -179,7 +285,6 @@
 </section>
 
 {% endif %}
-
 
 
 <section class="section-produits">
@@ -193,52 +298,72 @@
 
         {% for produit in produits_aleatoires %}
 
-            <div class="carte-produit">
+        <div class="carte-produit">
 
-                <div class="image-produit">
+            <div class="image-produit">
 
-                    {% if produit.src %}
+                {% if produit.src %}
 
-                        <img
-                            src="{{ produit.src }}"
-                            alt="{{ produit.nom }}"
-                        >
+                <img src="{{ produit.src }}" alt="{{ produit.nom }}">
+
+                {% endif %}
+
+
+                <span class="badge-statut
+                        {% if produit.nom_statut == 'En vente' %}
+                            badge-vente
+                        {% elif produit.nom_statut == 'Aux enchères' %}
+                            badge-enchere
+                        {% elif produit.nom_statut == 'À échanger' %}
+                            badge-echange
+                        {% endif %}
+                    ">
+                    {{ produit.nom_statut }}
+                </span>
+
+            </div>
+
+
+            <div class="contenu-produit">
+
+                <h3>
+                    {{ produit.nom }}
+                </h3>
+
+                <p class="prix">
+                    {{ produit.prix }} $
+                </p>
+
+                <div class="actions">
+                    {% if produit.nom_statut == "En vente" %}
+
+                    <button>
+                        Acheter
+                    </button>
+
+                    {% elif produit.nom_statut == "Aux enchères" %}
+
+                    <button>
+                        Enchérir
+                    </button>
+
+                    {% elif produit.nom_statut == "À échanger" %}
+
+                    <button>
+                        Échanger
+                    </button>
 
                     {% endif %}
 
-                    <span>
-                        {{ produit.nom_statut }}
-                    </span>
-
-                </div>
-
-
-                <div class="contenu-produit">
-
-                    <h3>
-                        {{ produit.nom }}
-                    </h3>
-
-                    <p class="prix">
-                        {{ produit.prix }} $
-                    </p>
-
-
-                    <div class="actions">
-
-                        <button>
-                            Ajouter
-                        </button>
-
-                        <a href="/produits/{{ produit.id_produit }}">
-                            Détails
-                        </a>
-
-                    </div>
+                    <a href="/produits/{{ produit.id_produit }}">
+                        Détails
+                    </a>
 
                 </div>
 
             </div>
+
+        </div>
 
         {% endfor %}
 

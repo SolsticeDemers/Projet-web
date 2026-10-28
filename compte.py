@@ -1,20 +1,28 @@
 """
 Ce script décrit le blue print Compte
 """
+
 import re
 import hashlib
-from flask import Blueprint, render_template, request, redirect, session
+
+from flask import Blueprint, render_template, request, redirect, session, abort
 import bd
 
+
 regex_courriel = re.compile(
-    r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
+    r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+)
+
 
 bp_compte = Blueprint('compte', __name__)
 
 
 def hacher_mdp(mdp_en_clair):
     """Prend un mot de passe en clair et lui applique une fonction de hachage"""
-    return hashlib.sha512(mdp_en_clair.encode()).hexdigest()
+
+    return hashlib.sha512(
+        mdp_en_clair.encode()
+    ).hexdigest()
 
 
 @bp_compte.route('/authentification', methods=['GET', 'POST'])
@@ -22,24 +30,39 @@ def authentification():
     """Formulaire d'authentification"""
 
     if request.method == 'GET':
-        return render_template("compte/authentification.jinja", nom_page="Authentification")
+
+        return render_template(
+            "compte/authentification.jinja",
+            nom_page="Authentification"
+        )
 
     nom = request.form.get("nom")
     mdp = request.form.get("mdp")
 
-    # valider que les champs ne sont pas vide
-
     mdp = hacher_mdp(mdp)
 
     with bd.creer_curseur() as curseur:
-        utilisateur = bd.get_utilisateur(curseur, nom, mdp)
+
+        utilisateur = bd.get_utilisateur(
+            curseur,
+            nom,
+            mdp
+        )
+
     if utilisateur is not None:
+
         session.permanent = True
+
         session['id_utilisateur'] = utilisateur['id_utilisateur']
+
         session['nom'] = utilisateur['nom']
+
         return redirect('/', code=303)
 
-    return render_template("compte/authentification.jinja", nom_page="Marche pas")
+    return render_template(
+        "compte/authentification.jinja",
+        nom_page="Marche pas"
+    )
 
 
 @bp_compte.route('/creer_compte', methods=['GET', 'POST'])
@@ -53,28 +76,46 @@ def creer_compte():
         )
 
     nom = request.form.get("nom")
+
     courriel = request.form.get("courriel")
     mdp1 = request.form.get("mdp1")
+
     mdp2 = request.form.get("mdp2")
 
+
     classe_nom = ""
+
     classe_courriel = ""
     classe_mdp1 = ""
+
     classe_mdp2 = ""
 
+
     liste_courriel = []
+
     liste_nom = []
 
+
     erreur = False
+
     num_nom_erreur = 0
+
     num_courriel_erreur = 0
+
     num_mdp_erreur = 0
 
+
     with bd.creer_curseur() as curseur:
+
         dict_compte = bd.get_nom_utiliser(curseur)
 
+
     for u in dict_compte:
-        liste_courriel.append(u['courriel'])
+
+        liste_courriel.append(
+            u['courriel']
+        )
+
 
     for u in dict_compte:
         liste_nom.append(u['nom'])
@@ -100,18 +141,28 @@ def creer_compte():
         classe_mdp2 = "is-valid"
 
     if nom == "" or nom is None:
+
         classe_nom = "is-invalid"
+
         erreur = True
+
         num_nom_erreur = 1
 
+
     elif nom in liste_nom:
+
         classe_nom = "is-invalid"
+
         erreur = True
+
         num_nom_erreur = 2
 
     if courriel == "" or courriel is None:
+
         classe_courriel = "is-invalid"
+
         erreur = True
+
         num_courriel_erreur = 1
 
     elif not re.match(
@@ -119,15 +170,23 @@ def creer_compte():
         courriel
     ):
         classe_courriel = "is-invalid"
+
         erreur = True
+
         num_courriel_erreur = 2
 
+
     elif courriel in liste_courriel:
+
         classe_courriel = "is-invalid"
+
         erreur = True
+
         num_courriel_erreur = 3
 
+
     else:
+
         classe_courriel = "is-valid"
 
     mdp1 = hacher_mdp(mdp1)
@@ -167,3 +226,15 @@ def creer_compte():
     session['nom'] = nom
 
     return redirect("/", code=303)
+
+@bp_compte.route("/profil")
+def profil():
+    """Affiche le profil de l'utilisateur connecté"""
+    if "id_utilisateur" not in session:
+        abort(401)
+
+    with bd.creer_curseur() as curseur:
+        utilisateur = bd.get_vendeur(curseur, session["id_utilisateur"])
+        # produits = bd.get_produits_par_vendeur(curseur, session["id_utilisateur"])
+
+    return render_template("profil.jinja", utilisateur=utilisateur)

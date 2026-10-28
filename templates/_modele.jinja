@@ -23,7 +23,7 @@
 
             <a href="/" class="logo">
 
-                <img src="{{ url_for('static', filename='css/images/logo.png') }}" alt="Vintage Market">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Vintage Market">
 
             </a>
 
@@ -40,11 +40,8 @@
 
             {% if session['id_utilisateur'] %}
             <div class="connexion connecter">
-                
-
-
-                <a href="#">
-                    {{session['nom']}}
+                <a href="/compte/profil" class="btn_profil">
+                    Profil
                 </a>
 
                 <a href="/compte/deconnection" class="btn_deconnection">
@@ -74,7 +71,7 @@
     </main>
 
 
-    <footer>
+    <footer class="footer">
 
         <p>
             Vintage Market © 2026
@@ -82,6 +79,7 @@
 
     </footer>
 
-</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+</body>
 </html>

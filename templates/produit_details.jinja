@@ -1,0 +1,57 @@
+{% extends "_modele.jinja" %}
+
+{% block contenu %}
+
+<div class="container my-4">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="{{ img_source }}" alt="{{ produit.nom }}" class="img-fluid">
+        </div>
+        <div class="col-md-6">
+            <div class="mb-3">
+                <h2 class="fw-bold px-3 pt-2 mb-0">{{ produit.nom }}</h2>
+                <p class="px-3 pb-2 mb-0 text-muted">{{ vendeur.nom }}</p>
+            </div>
+
+            <div class="prix p-2 mb-3">
+                <p>Prix : {{ produit.prix }} $</p>
+            </div>
+
+            <div class="p-2 mb-3">
+                <p>{{ produit.description }}</p>
+            </div>
+            <div class="actions">
+                <button type="submit" class="button">Acheter</button>
+                {% if est_connecte and produit.id_vendeur == session.id_utilisateur %}
+                    <a href="/produits/{{ id }}/modifier" class="button">Modifier</a>
+                    <button type="button" class="button bouton-supprimer" data-bs-toggle="modal" data-bs-target="#modal-archiver">Supprimer</button>
+
+
+                <div class="modal fade" id="modal-archiver" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modal-archiver-label">Confirmer la suppression</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                Êtes-vous sûr de vouloir supprimer ce produit ?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                <form method="POST" action="/produits/{{ id }}/archiver">
+                                {{ form_archiver.hidden_tag() }}
+                                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
