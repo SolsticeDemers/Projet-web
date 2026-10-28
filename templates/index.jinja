@@ -90,41 +90,23 @@
 
                     <div class="actions">
 
-                        {% if produit.nom_statut == "En vente" %}
-
+                        {% if produit.nom_statut == 'En vente' %}
                             <button>
-                                Acheter
+                                Ajouter
                             </button>
+                        {% endif %}
 
-                        {% elif produit.nom_statut == "Aux enchères" %}
-
+                        {% if produit.nom_statut == 'Aux enchères' %}
                             <button>
                                 Enchérir
                             </button>
-
-                        {% elif produit.nom_statut == "À échanger" %}
-
-                    {% if produit.nom_statut == 'En vente' %}
-                    <button>
-                            Ajouter
-                        </button>
                         {% endif %}
 
-                    {% if produit.nom_statut == 'Aux enchères' %}
-                    <button>
-                            Enchérir
-                        </button>
+                        {% if produit.nom_statut == 'À échanger' %}
+                            <button>
+                                Échanger
+                            </button>
                         {% endif %}
-
-                    {% if produit.nom_statut == 'À échanger' %}
-                    <button>
-                            Échanger
-                        </button>
-                        {% endif %}
-
-
-
-
 
                         <a href="/produits/{{ produit.id_produit }}">
                             Détails
@@ -154,7 +136,8 @@
         {% for produit in encheres_futures %}
 
             <div class="carte-produit">
-                  <div class="image-produit">
+
+                <div class="image-produit">
 
                     {% if produit.src %}
 
@@ -194,21 +177,21 @@
                     <div class="actions">
 
                         {% if produit.nom_statut == 'En vente' %}
-                    <button>
-                            Ajouter
-                        </button>
+                            <button>
+                                Ajouter
+                            </button>
                         {% endif %}
 
-                    {% if produit.nom_statut == 'Aux enchères' %}
-                    <button>
-                            Enchérir
-                        </button>
+                        {% if produit.nom_statut == 'Aux enchères' %}
+                            <button>
+                                Enchérir
+                            </button>
                         {% endif %}
 
-                    {% if produit.nom_statut == 'À échanger' %}
-                    <button>
-                            Échanger
-                        </button>
+                        {% if produit.nom_statut == 'À échanger' %}
+                            <button>
+                                Échanger
+                            </button>
                         {% endif %}
 
                         <a href="/produits/{{ produit.id_produit }}">
@@ -219,8 +202,6 @@
 
                 </div>
 
-
-
             </div>
 
         {% endfor %}
@@ -228,7 +209,6 @@
     </div>
 
 </section>
-
 
 
 {% if produit_du_jour %}
@@ -367,36 +347,22 @@
 
                     <div class="actions">
 
-                        {% if produit.nom_statut == "En vente" %}
-
+                        {% if produit.nom_statut == 'En vente' %}
                             <button>
-                                Acheter
+                                Ajouter
                             </button>
+                        {% endif %}
 
-                        {% elif produit.nom_statut == "Aux enchères" %}
-
+                        {% if produit.nom_statut == 'Aux enchères' %}
                             <button>
                                 Enchérir
                             </button>
-
-                        {% elif produit.nom_statut == "À échanger" %}
-
-                        {% if produit.nom_statut == 'En vente' %}
-                    <button>
-                            Ajouter
-                        </button>
                         {% endif %}
 
-                    {% if produit.nom_statut == 'Aux enchères' %}
-                    <button>
-                            Enchérir
-                        </button>
-                        {% endif %}
-
-                    {% if produit.nom_statut == 'À échanger' %}
-                    <button>
-                            Échanger
-                        </button>
+                        {% if produit.nom_statut == 'À échanger' %}
+                            <button>
+                                Échanger
+                            </button>
                         {% endif %}
 
                         <a href="/produits/{{ produit.id_produit }}">

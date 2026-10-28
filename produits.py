@@ -1,16 +1,13 @@
 import os
 import logging
 from forms import ArchiverProduitForm
-
-from flask import  Flask, Blueprint, abort, render_template, redirect
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired
-
 from forms import AjouterProduitForm
+
+from flask import Blueprint, abort, render_template, redirect
 from flask import request, session, current_app, url_for
 
 import bd
+
 
 bp_produits = Blueprint('produits', __name__)
 
@@ -116,6 +113,7 @@ def details_produit(id):
         form_archiver=form
     )
 
+
 @bp_produits.route("/ajouter_produit", methods=['GET', 'POST'])
 def ajouter_produit():
     """Permet d'ajouter un produit"""
@@ -130,7 +128,11 @@ def ajouter_produit():
 
     with bd.creer_curseur() as curseur:
         statuts = bd.get_statuts(curseur)
-    form.id_statut.choices = [(s["id_statut"], s["nom_statut"]) for s in statuts]
+
+    form.id_statut.choices = [
+        (s["id_statut"], s["nom_statut"])
+        for s in statuts
+    ]
 
     if form.validate_on_submit():
         nom = request.form["nom"]
@@ -151,12 +153,20 @@ def ajouter_produit():
 
         if image and image.filename:
             nom_image = f"produit_{id_produit}.png"
-            chemin = os.path.join(current_app.config["CHEMIN_IMAGES"], nom_image)
+            chemin = os.path.join(
+                current_app.config["CHEMIN_IMAGES"],
+                nom_image
+            )
             image.save(chemin)
 
-        return redirect(url_for("produits.details_produit", id=id_produit))
+        return redirect(
+            url_for("produits.details_produit", id=id_produit)
+        )
 
-    return render_template("ajouter_produit.jinja", form=form)
+    return render_template(
+        "ajouter_produit.jinja",
+        form=form
+    )
 
 
 @bp_produits.route("/<int:id>/archiver", methods=['POST'])
@@ -183,3 +193,79 @@ def archiver_produit(id):
         bd.archiver_produit(curseur, id)
 
     return redirect(url_for("compte.profil"))
+
+
+@bp_produits.route("/<int:id>/modifier", methods=['GET', 'POST'])
+def modifier_produit(id):
+    """Permet de modifier un produit"""
+
+    if "id_utilisateur" not in session:
+        abort(401)
+
+    with bd.creer_curseur() as curseur:
+        produit = bd.get_produit(curseur, id)
+        statuts = bd.get_statuts(curseur)
+
+    if produit is None:
+        abort(404)
+
+    if produit['id_vendeur'] != session['id_utilisateur']:
+        abort(403)
+
+    nom_image = f"produit_{id}.png"
+
+    chemin_image = os.path.join(
+        current_app.config["CHEMIN_IMAGES"],
+        nom_image
+    )
+
+    form = AjouterProduitForm()
+
+    form.id_statut.choices = [
+        (statut['id_statut'], statut['nom_statut'])
+        for statut in statuts
+    ]
+
+    if request.method == 'GET':
+        form.nom.data = produit['nom']
+        form.description.data = produit['description']
+        form.prix.data = produit['prix']
+        form.id_statut.data = produit['id_statut']
+
+    if form.validate_on_submit():
+        with bd.creer_curseur() as curseur:
+            bd.modifier_produit(
+                curseur,
+                id,
+                request.form["nom"],
+                request.form["description"],
+                float(request.form["prix"]),
+                int(request.form["id_statut"])
+            )
+
+        image = request.files.get("image")
+
+        if image and image.filename:
+            image.save(chemin_image)
+
+        return redirect(
+            url_for("produits.details_produit", id=id)
+        )
+
+    if os.path.exists(chemin_image):
+        img_source = (
+            current_app.config["ROUTE_IMAGES"]
+            + nom_image
+        )
+    else:
+        img_source = url_for(
+            "static",
+            filename="images/default.png"
+        )
+
+    return render_template(
+        "modifier_produit.jinja",
+        form=form,
+        produit=produit,
+        img_source=img_source
+    )
