@@ -205,9 +205,10 @@ def creer_compte():
             num_courriel_erreur=num_courriel_erreur,
             nom=nom,
             courriel=courriel,
-            mdp1=mdp1,
-            mdp2=mdp2
+            mdp1="",
+            mdp2="",
         )
+    mdp1 = hacher_mdp(mdp1)
 
 
     with bd.creer_curseur() as curseur:
