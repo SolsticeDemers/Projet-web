@@ -258,6 +258,7 @@ def get_produits_recherche_filtre(
         WHERE (
             p.nom LIKE %(mot_cle)s
             OR p.description LIKE %(mot_cle)s
+            AND s.nom_statut <> 'Vendu'
         )
 
         AND p.prix BETWEEN %(min)s AND %(max)s
