@@ -42,9 +42,13 @@
 
             <div class="actions">
 
-                <button class="btn-modifier">
-                    Modifier
-                </button>
+                <a href="{{ url_for('produits.modifier_produit', id=produit.id_produit) }}"
+                class="btn-modifier">
+                Modifier
+                </a>
+
+
+
 
                 <form
                     action="{{ url_for('produits.archiver_produit', id=produit.id_produit) }}"

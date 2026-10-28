@@ -12809,4 +12809,8 @@ p a {
 
 .btn-check:focus-visible + .choix-badge {
   outline: 2px solid #111111;
+}
+
+.image-actuelle {
+  max-width: 300px;
 }/*# sourceMappingURL=styles.css.map */
