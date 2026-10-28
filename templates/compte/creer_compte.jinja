@@ -1,19 +1,30 @@
 {% extends "_modele.jinja" %}
 {% block contenu %}
 
-<a href="#"><img src="#" alt="logo"></a>
 <h2>Créer un compte</h2>
 
 <form method="post" action="" novalidate>
     <div>
         <label for="nom">Nom d'utilisateur:</label>
-        <input type="text" name="nom" id="nom">
+        <input type="text" name="nom" id="nom" value="{{ nom }}" class="{{ classe_nom }}">
+        {% if num_nom_erreur == 1 %}
+        <p class="invalid-feedback" id="erreur_nom_1">Le champ nom ne peut pas être vide. Veuiller insérer un nom.</p>
+        {% else %}
+        <p class="invalid-feedback" id="erreur_nom_2">Veuiller insérer un nom valide et unique.</p>
+        {% endif %}
     </div>
     <div>
         <label for="courriel">Courriel:</label>
-        <input type="email" name="courriel" id="courriel">
+        <input type="email" name="courriel" id="courriel" value="{{ courriel }}" class="{{ classe_courriel }}">
+        {% if num_courriel_erreur == 1 %}
+        <p class="invalid-feedback" id="erreur_courriel_1">Le champ courriel ne peut pas être vide. Veuiller insérer un courriel.</p>
+        {% elif num_courriel_erreur == 2 %}
+        <p class="invalid-feedback" id="erreur_courriel_2">Veuiller insérer un courriel valide.</p>
+        {% elif num_courriel_erreur == 3 %}
+        <p class="invalid-feedback" id="erreur_courriel_3">Votre courriel doit être unique.</p>
+        {% endif %}
     </div>
-    <div>
+    {# <div>
         <label for="ville">Votre ville:</label>
         <select name="ville" id="ville">
             <option value="default"></option>
@@ -21,18 +32,21 @@
             <option value="levis">Lévis</option>
             <option value="montreal">Montréal</option>
         </select>
-    </div>
+    </div> #}
     <div>
         <label for="mdp1">Mot de passe:</label>
-        <input type="text" name="mdp1" id="mdp1">
+        <input type="text" name="mdp1" id="mdp1" value="{{ mdp1 }}" class="{{ classe_mdp1 }}">
+        <p class="invalid-feedback" id="erreur_mdp1">Veuiller insérer un mot de passe</p>
+        
     </div>
     <div>
         <label for="mdp2">Valider le mot de passe:</label>
-        <input type="text" name="mdp2" id="mdp2">
-    </div>
-    <div>
-        <input type="checkbox" name="souvenir" id="souvenir">
-        <label for="souvenir">Se souvenir de moi</label>
+        <input type="text" name="mdp2" id="mdp2" value="{{ mdp2 }}" class="{{ classe_mdp2 }}">
+        {% if num_mdp_erreur == 1 %}
+        <p class="invalid-feedback" id="erreur_mdp2">Veuiller réinséré votre mot de passe.</p>
+        {% else %}
+        <p class="invalid-feedback" id="erreur_mdp2">Les deux mots de passe ne sont pas pareil. Veuiller réinséré votre mot de passe.</p>
+        {% endif %}
     </div>
     <button type="submit" id="compteSoumis">Soumettre</button>
 
