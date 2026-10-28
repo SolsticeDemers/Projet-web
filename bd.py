@@ -466,11 +466,6 @@ def archiver_produit(curseur, id_produit):
         }
     )
 
-def get_statuts(curseur):
-    """Retourne tous les statuts de produit"""
-    curseur.execute("SELECT id_statut, nom_statut FROM statut_produit")
-    return curseur.fetchall()
-
 def modifier_produit(curseur, id_produit, nom, description, prix, id_statut):
     """Modifier un produit dans la bd"""
     curseur.execute(
@@ -485,3 +480,33 @@ def modifier_produit(curseur, id_produit, nom, description, prix, id_statut):
             "id_statut": id_statut
         }
     )
+
+    
+def get_notification(curseur, id_utilisateur):
+    curseur.execute("SELECT * FROM echange WHERE proprio = %(id_utilisateur)s OR id_utilisateur = %(id_utilisateur)s;",
+                    {
+                        'id_utilisateur' : id_utilisateur
+                    })
+    return curseur.fetchall()
+
+def get_utilisateur_name(curseur, id):
+    curseur.execute("SELECT nom FROM utilisateur WHERE id_utilisateur = %(id)s;",
+                    {
+                        'id' : id
+                    })
+    return curseur.fetchone()
+
+def get_produit_by_id(curseur, id):
+    curseur.execute("SELECT * FROM produit WHERE id_produit = %(id)s;",
+                    {
+                        'id' : id
+                    })
+    return curseur.fetchall()
+
+def update_offer(curseur, id_proposition, approuve):
+    curseur.execute("UPDATE `echange` SET `approuver`= %(approuve)s WHERE id_echange = %(id)s;",
+                    {
+                        'id' : id_proposition,
+                        'approuve' : approuve
+                    })
+    return curseur.fetchall()
