@@ -118,8 +118,6 @@ def get_produits_aleatoires(curseur):
     """)
 
     return curseur.fetchall()
-
-
 def get_utilisateurs_populaires(curseur):
     """Retourne les 3 vendeurs les plus populaires"""
 
@@ -283,7 +281,6 @@ def get_produits_recherche_filtre(
 
     return curseur.fetchall()
 
-
 def get_utilisateur(curseur, nom, mdp):
     """Permet d'obtenir un utilisateur avec son nom/courriel et mot de passe"""
 
@@ -304,34 +301,28 @@ def get_utilisateur(curseur, nom, mdp):
 
     return curseur.fetchone()
 
+
 def get_produit(curseur, id_produit):
     """Permet d'obtenir un produit par son identifiant"""
 
     curseur.execute("""
         SELECT *
-        FROM produit
-        WHERE id_produit = %(id_produit)s
-    """, {
-        "id_produit": id_produit
-    })
-
+        FROM produit WHERE id_produit=%(id_produit)s
+             """, {
+                 'id_produit': id_produit,
+        })
     return curseur.fetchone()
-
 
 def get_vendeur(curseur, id_utilisateur):
     """Permet d'obtenir un vendeur par son identifiant"""
 
     curseur.execute("""
         SELECT *
-        FROM utilisateur
-        WHERE id_utilisateur = %(id_utilisateur)s
-    """, {
-        "id_utilisateur": id_utilisateur
-    })
-
+        FROM utilisateur WHERE id_utilisateur=%(id_utilisateur)s
+             """, {
+                 'id_utilisateur': id_utilisateur,
+        })
     return curseur.fetchone()
-
-
 def inserer_utilisateur_bd(curseur, nom, courriel, mdp):
     """Créer un utilisateur dans la bd"""
 
@@ -354,7 +345,6 @@ def inserer_utilisateur_bd(curseur, nom, courriel, mdp):
 
     return curseur.lastrowid
 
-
 def get_nom_unique(curseur, nom):
     """Vérifie l'existance d'un nom"""
 
@@ -370,7 +360,6 @@ def get_nom_unique(curseur, nom):
 
     return curseur.fetchone()
 
-
 def get_courriel_unique(curseur, courriel):
     """Vérifie l'existance d'un courriel"""
 
@@ -385,7 +374,6 @@ def get_courriel_unique(curseur, courriel):
     })
 
     return curseur.fetchone()
-
 
 def get_nom_utiliser(curseur):
     """Dictionnaire de nom et courriel déjà utilisé"""
@@ -444,6 +432,24 @@ def get_enchere_future(curseur):
         LIMIT 4
     """)
 
+    return curseur.fetchall()
+
+
+def ajouter_produit(curseur, id_vendeur, nom, description, prix, id_statut):
+    """Ajouter un produit dans la bd"""
+    curseur.execute("INSERT INTO produit (id_vendeur, nom, description, prix, id_statut, date) "
+                    "VALUES(%(id_vendeur)s, %(nom)s, %(description)s, %(prix)s, %(id_statut)s, CURDATE());", {
+                        'id_vendeur': id_vendeur,
+                        'nom': nom,
+                        'description': description,
+                        'prix': prix,
+                        'id_statut': id_statut
+                    })
+    return curseur.lastrowid
+
+def get_statuts(curseur):
+    """Retourne tous les statuts de produit"""
+    curseur.execute("SELECT id_statut, nom_statut FROM statut_produit")
     return curseur.fetchall()
 
 def archiver_produit(curseur, id_produit):
