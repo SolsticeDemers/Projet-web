@@ -12528,7 +12528,6 @@ header {
   grid-template-columns: 1fr 1fr;
   align-items: center;
   gap: 10px;
-  text-align: center;
 }
 
 .btn_deconnection {
@@ -12792,4 +12791,22 @@ footer {
 p a {
   color: blue;
   text-decoration: underline;
+}
+
+.choix-badge {
+  position: static;
+  display: inline-block;
+  margin-right: 8px;
+  cursor: pointer;
+  opacity: 0.6;
+  border: 2px solid transparent;
+}
+
+.btn-check:checked + .choix-badge {
+  opacity: 1;
+  border-color: #111111;
+}
+
+.btn-check:focus-visible + .choix-badge {
+  outline: 2px solid #111111;
 }/*# sourceMappingURL=styles.css.map */

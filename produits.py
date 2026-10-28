@@ -2,11 +2,15 @@ import os
 import logging
 from forms import ArchiverProduitForm
 
-from flask import Blueprint, abort, render_template, redirect
+from flask import  Flask, Blueprint, abort, render_template, redirect
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField
+from wtforms.validators import DataRequired
+
+from forms import AjouterProduitForm
 from flask import request, session, current_app, url_for
 
 import bd
-
 
 bp_produits = Blueprint('produits', __name__)
 
@@ -111,6 +115,48 @@ def details_produit(id):
         est_connecte=est_connecte,
         form_archiver=form
     )
+
+@bp_produits.route("/ajouter_produit", methods=['GET', 'POST'])
+def ajouter_produit():
+    """Permet d'ajouter un produit"""
+
+    if "id_utilisateur" not in session:
+        abort(401)
+
+    form = AjouterProduitForm()
+
+    if request.method == "GET":
+        form.id_statut.data = 1
+
+    with bd.creer_curseur() as curseur:
+        statuts = bd.get_statuts(curseur)
+    form.id_statut.choices = [(s["id_statut"], s["nom_statut"]) for s in statuts]
+
+    if form.validate_on_submit():
+        nom = request.form["nom"]
+        description = request.form["description"]
+        prix = float(request.form["prix"])
+        id_statut = int(request.form["id_statut"])
+        image = request.files.get("image")
+
+        with bd.creer_curseur() as curseur:
+            id_produit = bd.ajouter_produit(
+                curseur,
+                session["id_utilisateur"],
+                nom,
+                description,
+                prix,
+                id_statut
+            )
+
+        if image and image.filename:
+            nom_image = f"produit_{id_produit}.png"
+            chemin = os.path.join(current_app.config["CHEMIN_IMAGES"], nom_image)
+            image.save(chemin)
+
+        return redirect(url_for("produits.details_produit", id=id_produit))
+
+    return render_template("ajouter_produit.jinja", form=form)
 
 
 @bp_produits.route("/<int:id>/archiver", methods=['POST'])
