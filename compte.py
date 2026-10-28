@@ -70,17 +70,14 @@ def creer_compte():
     """Affiche un formulaire"""
 
     if request.method == 'GET':
-
         return render_template(
             "compte/creer_compte.jinja",
             page="Créer un compte"
         )
 
-
     nom = request.form.get("nom")
 
     courriel = request.form.get("courriel")
-
     mdp1 = request.form.get("mdp1")
 
     mdp2 = request.form.get("mdp2")
@@ -89,7 +86,6 @@ def creer_compte():
     classe_nom = ""
 
     classe_courriel = ""
-
     classe_mdp1 = ""
 
     classe_mdp2 = ""
@@ -122,11 +118,27 @@ def creer_compte():
 
 
     for u in dict_compte:
+        liste_nom.append(u['nom'])
 
-        liste_nom.append(
-            u['nom']
-        )
+    if mdp1 == "" or mdp1 is None:
+        classe_mdp1 = "is-invalid"
+        erreur = True
 
+    else:
+        classe_mdp1 = "is-valid"
+
+    if mdp2 == "" or mdp2 is None:
+        classe_mdp2 = "is-invalid"
+        erreur = True
+        num_mdp_erreur = 1
+
+    elif mdp2 != mdp1:
+        classe_mdp2 = "is-invalid"
+        erreur = True
+        num_mdp_erreur = 2
+
+    else:
+        classe_mdp2 = "is-valid"
 
     if nom == "" or nom is None:
 
@@ -136,6 +148,7 @@ def creer_compte():
 
         num_nom_erreur = 1
 
+
     elif nom in liste_nom:
 
         classe_nom = "is-invalid"
@@ -143,11 +156,6 @@ def creer_compte():
         erreur = True
 
         num_nom_erreur = 2
-
-    else:
-
-        classe_nom = "is-valid"
-
 
     if courriel == "" or courriel is None:
 
@@ -157,13 +165,16 @@ def creer_compte():
 
         num_courriel_erreur = 1
 
-    elif not regex_courriel.fullmatch(courriel):
-
+    elif not re.match(
+        r"^[^@\s]+@[^@\s]+\.[^@\s]+$",
+        courriel
+    ):
         classe_courriel = "is-invalid"
 
         erreur = True
 
         num_courriel_erreur = 2
+
 
     elif courriel in liste_courriel:
 
@@ -173,42 +184,12 @@ def creer_compte():
 
         num_courriel_erreur = 3
 
+
     else:
 
         classe_courriel = "is-valid"
 
-
-    if mdp1 == "" or mdp1 is None:
-
-        classe_mdp1 = "is-invalid"
-
-        erreur = True
-
-    else:
-
-        classe_mdp1 = "is-valid"
-
-
-    if mdp2 == "" or mdp2 is None:
-
-        classe_mdp2 = "is-invalid"
-
-        erreur = True
-
-        num_mdp_erreur = 1
-
-    elif mdp2 != mdp1:
-
-        classe_mdp2 = "is-invalid"
-
-        erreur = True
-
-        num_mdp_erreur = 2
-
-    else:
-
-        classe_mdp2 = "is-valid"
-
+    mdp1 = hacher_mdp(mdp1)
 
     if erreur is True:
 
@@ -224,11 +205,9 @@ def creer_compte():
             num_courriel_erreur=num_courriel_erreur,
             nom=nom,
             courriel=courriel,
-            mdp1=mdp1,
-            mdp2=mdp2
+            mdp1="",
+            mdp2="",
         )
-
-
     mdp1 = hacher_mdp(mdp1)
 
 
@@ -241,22 +220,11 @@ def creer_compte():
             mdp1
         )
 
-
     session.permanent = True
 
     session['id_utilisateur'] = id_util
 
     session['nom'] = nom
-
-
-    return redirect("/", code=303)
-
-
-@bp_compte.route('/deconnection')
-def deconnection():
-    """Détruit la session"""
-
-    session.clear()
 
     return redirect("/", code=303)
 

@@ -35,13 +35,13 @@
     </div> #}
     <div>
         <label for="mdp1">Mot de passe:</label>
-        <input type="text" name="mdp1" id="mdp1" value="{{ mdp1 }}" class="{{ classe_mdp1 }}">
+        <input type="text" name="mdp1" id="mdp1" value="{{ mdp1 or '' }}" class="{{ classe_mdp1 }}">
         <p class="invalid-feedback" id="erreur_mdp1">Veuiller insérer un mot de passe</p>
-        
+
     </div>
     <div>
         <label for="mdp2">Valider le mot de passe:</label>
-        <input type="text" name="mdp2" id="mdp2" value="{{ mdp2 }}" class="{{ classe_mdp2 }}">
+        <input type="text" name="mdp2" id="mdp2" value="{{ mdp2 or '' }}" class="{{ classe_mdp2 }}">
         {% if num_mdp_erreur == 1 %}
         <p class="invalid-feedback" id="erreur_mdp2">Veuiller réinséré votre mot de passe.</p>
         {% else %}
