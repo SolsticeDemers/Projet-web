@@ -1,0 +1,79 @@
+{% extends "_modele.jinja" %}
+
+{% block contenu %}
+
+<section class="container my-4">
+
+    <h2 class="m-5">Mes produits</h2>
+
+    {% if produits %}
+    <div class="liste-mes-produits">
+
+        {% for produit in produits %}
+        <div class="carte-produit carte-mon-produit">
+
+            <div class="image-produit">
+                <a href="/produits/{{ produit.id_produit }}">
+                    {% if produit.src %}
+                    <img src="{{ produit.src }}" alt="{{ produit.nom }}">
+                    {% endif %}
+                </a>
+
+                <span class="badge-statut badge-{{ produit.code_statut }}">
+                    {{ produit.nom_statut }}
+                </span>
+            </div>
+
+            <div class="contenu-produit">
+                <h3>
+                    <a href="/produits/{{ produit.id_produit }}">
+                        {{ produit.nom }}
+                    </a>
+                </h3>
+
+                <p>
+                    {{ produit.description }}
+                </p>
+
+                <p class="prix">
+                    {{ produit.prix }} $
+                </p>
+            </div>
+
+            <div class="actions">
+
+                <button class="btn-modifier">
+                    Modifier
+                </button>
+
+                <form
+                    action="{{ url_for('produits.archiver_produit', id=produit.id_produit) }}"
+                    method="post"
+                >
+
+                    {{ form_archiver.hidden_tag() }}
+
+                    <button type="submit" class="btn-supprimer">
+                        Supprimer
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <p>
+        Vous n'avez ajouté aucun produit.
+    </p>
+
+    {% endif %}
+
+</section>
+
+{% endblock %}

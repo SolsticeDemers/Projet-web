@@ -1,31 +1,90 @@
 import os
 import logging
+from forms import ArchiverProduitForm
 
-from flask import  Flask, Blueprint, abort, render_template, redirect, flash
+from flask import  Flask, Blueprint, abort, render_template, redirect
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 
 from forms import AjouterProduitForm
 from flask import request, session, current_app, url_for
+
 import bd
 
+bp_produits = Blueprint('produits', __name__)
 
 
-produits_bp = Blueprint('produits', __name__)
+@bp_produits.route('/mes_produits')
+def mes_produits():
+    """Affiche les produits ajoutés par l'utilisateur connecté"""
 
-@produits_bp.route('/<int:id>', methods=['GET', 'POST'])
+    if "id_utilisateur" not in session:
+        return redirect(url_for("compte.authentification"))
+
+    id_utilisateur = session["id_utilisateur"]
+
+    with bd.creer_curseur() as curseur:
+        produits = bd.get_produits_par_vendeur(
+            curseur,
+            id_utilisateur
+        )
+
+    codes_statut = {
+        'En vente': 'vente',
+        'Aux enchères': 'enchere',
+        'À échanger': 'echange',
+        'Vendu': 'vendu',
+    }
+
+    for produit in produits:
+        produit["code_statut"] = codes_statut.get(
+            produit["nom_statut"],
+            ""
+        )
+
+        nom_image = f"produit_{produit['id_produit']}.png"
+        produit["src"] = None
+
+        if os.path.exists(
+            os.path.join(
+                current_app.config["CHEMIN_IMAGES"],
+                nom_image
+            )
+        ):
+            produit["src"] = (
+                current_app.config["ROUTE_IMAGES"]
+                + nom_image
+            )
+
+    form = ArchiverProduitForm()
+
+    return render_template(
+        'inventaire.jinja',
+        produits=produits,
+        form_archiver=form
+    )
+
+
+@bp_produits.route('/<int:id>', methods=['GET', 'POST'])
 def details_produit(id):
     """Permet de voir les détails d'un produit"""
+
+    form = ArchiverProduitForm()
+
     with bd.creer_curseur() as curseur:
         produit = bd.get_produit(curseur, id)
 
         if produit is None:
             abort(404)
 
-        vendeur = bd.get_vendeur(curseur, produit['id_vendeur'])
+        vendeur = bd.get_vendeur(
+            curseur,
+            produit['id_vendeur']
+        )
 
     nom_image = "produit_" + str(id) + ".png"
+
     chemin_image = os.path.join(
         current_app.config["CHEMIN_IMAGES"],
         nom_image
@@ -37,19 +96,27 @@ def details_produit(id):
         est_connecte = False
 
     if os.path.exists(chemin_image):
-        img_source = current_app.config["ROUTE_IMAGES"] + nom_image
+        img_source = (
+            current_app.config["ROUTE_IMAGES"]
+            + nom_image
+        )
     else:
-        img_source = url_for("static", filename="images/default.png")
+        img_source = url_for(
+            "static",
+            filename="images/default.png"
+        )
 
-
-    return render_template('produit_details.jinja',
+    return render_template(
+        'produit_details.jinja',
+        id=id,
         produit=produit,
         vendeur=vendeur,
         img_source=img_source,
-        est_connecte=est_connecte
+        est_connecte=est_connecte,
+        form_archiver=form
     )
 
-@produits_bp.route("/ajouter_produit", methods=['GET', 'POST'])
+@bp_produits.route("/ajouter_produit", methods=['GET', 'POST'])
 def ajouter_produit():
     """Permet d'ajouter un produit"""
 
@@ -91,3 +158,28 @@ def ajouter_produit():
 
     return render_template("ajouter_produit.jinja", form=form)
 
+
+@bp_produits.route("/<int:id>/archiver", methods=['POST'])
+def archiver_produit(id):
+    """Permet d'archiver un produit"""
+
+    if "id_utilisateur" not in session:
+        abort(401)
+
+    form = ArchiverProduitForm()
+
+    if not form.validate_on_submit():
+        abort(400)
+
+    with bd.creer_curseur() as curseur:
+        produit = bd.get_produit(curseur, id)
+
+        if produit is None:
+            abort(404)
+
+        if produit['id_vendeur'] != session['id_utilisateur']:
+            abort(403)
+
+        bd.archiver_produit(curseur, id)
+
+    return redirect(url_for("compte.profil"))
