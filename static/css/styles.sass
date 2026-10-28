@@ -7,6 +7,8 @@ $creme: #F9F8F3
 $orange: #DE7452
 $blanc: #FFFFFF
 $noir: #111111
+$gris-fonce: #5F5C67
+$danger: #C0392B
 
 *
     box-sizing: border-box
@@ -63,18 +65,18 @@ header
 
 .connexion
     text-align: right
-    
+
     a
         border: 1px solid $creme
         border-radius: 25px
         padding: 12px 22px
         color: $creme
-    
+
 .connecter
     display: grid
     grid-template-columns:  1fr 1fr
     align-items: center
-    gap: 10px    
+    gap: 10px
 
 .btn_deconnection
     max-height: 50px
@@ -181,6 +183,9 @@ header
 .badge-echange
     background: $bleu
 
+.badge-vendu
+    background: $gris
+
 .badge-statut-notif
     margin: 15px 0px 15px 0px
     padding: 7px 13px
@@ -219,6 +224,23 @@ header
         background: $gris
         color: $blanc
 
+    .btn-modifier
+        background: $gris
+
+        &:hover
+            background: $gris-fonce
+
+    .btn-supprimer
+        background: $bleu
+
+        &:hover
+            background: $danger
+
+
+    .bouton-supprimer
+        background: $orange
+        color: $blanc
+
 .produit-vedette
     width: 100%
     min-height: 550px
@@ -251,7 +273,8 @@ header
         width: 100%
         height: 100%
         object-fit: cover
-
+.voir-plus
+    margin-top: 100px
 footer
     position: relative
     z-index: 2
@@ -273,10 +296,46 @@ footer
     .produit-vedette
         grid-template-columns: 1fr
 
+.liste-mes-produits
+    display: flex
+    flex-direction: column
+    gap: 20px
+
+.carte-mon-produit
+    display: grid
+    grid-template-columns: 250px 1fr auto
+    align-items: center
+    height: 200px
+
+    .image-produit
+        height: 100%
+
+    .actions
+        padding: 22px
+
+
 p
     a
         color: blue
         text-decoration: underline
+
+.choix-badge
+    position: static
+    display: inline-block
+    margin-right: 8px
+    cursor: pointer
+    opacity: 0.6
+    border: 2px solid transparent
+
+.btn-check:checked + .choix-badge
+    opacity: 1
+    border-color: $noir
+
+.btn-check:focus-visible + .choix-badge
+    outline: 2px solid $noir
+
+.image-actuelle
+    max-width: 300px
 
 #creer-compte-formulaire
     margin-left: 200px

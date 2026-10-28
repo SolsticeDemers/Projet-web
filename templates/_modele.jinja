@@ -49,9 +49,9 @@
 
             {% if session['id_utilisateur'] %}
             <div class="connexion connecter">
-                
-
-
+                <a href="/compte/profil" class="btn_profil">
+                    Profil
+                </a>
                 <a href="/compte/echange">
                     {{session['nom']}}
                 </a>
@@ -83,13 +83,15 @@
     </main>
 
 
-    <footer>
+    <footer class="footer">
 
         <p>
             Vintage Market © 2026
         </p>
 
     </footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
