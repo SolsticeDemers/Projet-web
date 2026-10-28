@@ -7,6 +7,8 @@ $creme: #F9F8F3
 $orange: #DE7452
 $blanc: #FFFFFF
 $noir: #111111
+$gris-fonce: #5F5C67
+$danger: #C0392B
 
 *
     box-sizing: border-box
@@ -75,6 +77,8 @@ header
     grid-template-columns:  1fr 1fr
     align-items: center
     gap: 10px
+    gap: 10px
+    text-align: center
 
 .btn_deconnection
     max-height: 50px
@@ -181,6 +185,9 @@ header
 .badge-echange
     background: $bleu
 
+.badge-vendu
+    background: $gris
+
 .contenu-produit
     padding: 22px
 
@@ -209,6 +216,23 @@ header
 
     a
         background: $gris
+        color: $blanc
+
+    .btn-modifier
+        background: $gris
+
+        &:hover
+            background: $gris-fonce
+
+    .btn-supprimer
+        background: $bleu
+
+        &:hover
+            background: $danger
+
+
+    .bouton-supprimer
+        background: $orange
         color: $blanc
 
 .produit-vedette
@@ -243,7 +267,8 @@ header
         width: 100%
         height: 100%
         object-fit: cover
-
+.voir-plus
+    margin-top: 100px
 footer
     position: relative
     z-index: 2
@@ -264,6 +289,24 @@ footer
 
     .produit-vedette
         grid-template-columns: 1fr
+
+.liste-mes-produits
+    display: flex
+    flex-direction: column
+    gap: 20px
+
+.carte-mon-produit
+    display: grid
+    grid-template-columns: 250px 1fr auto
+    align-items: center
+    height: 200px
+
+    .image-produit
+        height: 100%
+
+    .actions
+        padding: 22px
+
 
 p
     a
