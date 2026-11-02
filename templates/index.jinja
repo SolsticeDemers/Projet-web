@@ -119,12 +119,6 @@
                                     Enchérir
                                 </a>
 
-                            {% else %}
-
-                                <a href="/compte/authentification">
-                                    Enchérir
-                                </a>
-
                             {% endif %}
 
                         {% endif %}
@@ -225,12 +219,6 @@
                                     Enchérir
                                 </a>
 
-                            {% else %}
-
-                                <a href="/compte/authentification">
-                                    Enchérir
-                                </a>
-
                             {% endif %}
 
                         {% endif %}
@@ -309,12 +297,6 @@
                 {% if "id_utilisateur" in session %}
 
                     <a href="{{ url_for('produits.miser_produit', id=produit_du_jour.id_produit) }}">
-                        Enchérir
-                    </a>
-
-                {% else %}
-
-                    <a href="/compte/authentification">
                         Enchérir
                     </a>
 
@@ -434,12 +416,6 @@
                             {% if "id_utilisateur" in session %}
 
                                 <a href="{{ url_for('produits.miser_produit', id=produit.id_produit) }}">
-                                    Enchérir
-                                </a>
-
-                            {% else %}
-
-                                <a href="/compte/authentification">
                                     Enchérir
                                 </a>
 
