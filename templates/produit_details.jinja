@@ -34,9 +34,19 @@
 
             <div class="prix p-2 mb-3">
 
-                <p>
-                    Prix actuel : {{ produit.prix }} $
-                </p>
+                {% if produit.id_statut == 2 %}
+
+                    <p>
+                        Mise actuelle : {{ produit.prix }} $
+                    </p>
+
+                {% else %}
+
+                    <p>
+                        Prix : {{ produit.prix }} $
+                    </p>
+
+                {% endif %}
 
             </div>
 
@@ -50,51 +60,42 @@
             </div>
 
 
-            {% if produit.id_statut == 2 %}
+            <div class="actions">
 
-                <form method="post">
+                {% if produit.id_statut == 2 %}
 
-                    <input
-                        type="number"
-                        name="mise"
-                        step="0.01"
-                        placeholder="Votre mise"
-                        required
-                    >
+                    {% if est_connecte %}
 
-                    {% if erreur %}
+                        <a
+                            href="{{ url_for('produits.miser_produit', id=produit.id_produit) }}"
+                            class="button"
+                        >
+                            Enchérir
+                        </a>
 
-                        <p class="text-danger">
-                            {{ erreur }}
-                        </p>
+                    {% else %}
+
+                        <a
+                            href="/compte/authentification"
+                            class="button"
+                        >
+                            Connectez-vous pour enchérir
+                        </a>
 
                     {% endif %}
 
+                {% else %}
 
                     <button
-                        type="submit"
-                        class="button"
-                    >
-                        Miser
-                    </button>
-
-                </form>
-
-
-            {% else %}
-
-                <div class="actions">
-
-                    <button
-                        type="submit"
+                        type="button"
                         class="button"
                     >
                         Acheter
                     </button>
 
-                </div>
+                {% endif %}
 
-            {% endif %}
+            </div>
 
         </div>
 

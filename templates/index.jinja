@@ -39,7 +39,6 @@
 </section>
 
 
-
 <section class="section-produits">
 
     <h2>
@@ -83,9 +82,36 @@
 
                     <div class="actions">
 
-                        <button>
-                            Ajouter
-                        </button>
+                        {% if produit.nom_statut == "En vente" %}
+
+                            <button>
+                                Ajouter
+                            </button>
+
+                        {% elif produit.nom_statut == "Aux enchères" %}
+
+                            {% if "id_utilisateur" in session %}
+
+                                <a href="{{ url_for('produits.miser_produit', id=produit.id_produit) }}">
+                                    Enchérir
+                                </a>
+
+                            {% else %}
+
+                                <a href="/compte/authentification">
+                                    Enchérir
+                                </a>
+
+                            {% endif %}
+
+                        {% elif produit.nom_statut == "À échanger" %}
+
+                            <button>
+                                Échanger
+                            </button>
+
+                        {% endif %}
+
 
                         <a href="/produits/{{ produit.id_produit }}">
                             Détails
@@ -102,7 +128,6 @@
     </div>
 
 </section>
-
 
 
 {% if produit_du_jour %}
@@ -141,9 +166,19 @@
 
             {% elif produit_du_jour.nom_statut == "Aux enchères" %}
 
-                <button>
-                    Enchérir
-                </button>
+                {% if "id_utilisateur" in session %}
+
+                    <a href="{{ url_for('produits.miser_produit', id=produit_du_jour.id_produit) }}">
+                        Enchérir
+                    </a>
+
+                {% else %}
+
+                    <a href="/compte/authentification">
+                        Enchérir
+                    </a>
+
+                {% endif %}
 
             {% elif produit_du_jour.nom_statut == "À échanger" %}
 
@@ -179,7 +214,6 @@
 </section>
 
 {% endif %}
-
 
 
 <section class="section-produits">
@@ -226,9 +260,36 @@
 
                     <div class="actions">
 
-                        <button>
-                            Ajouter
-                        </button>
+                        {% if produit.nom_statut == "En vente" %}
+
+                            <button>
+                                Ajouter
+                            </button>
+
+                        {% elif produit.nom_statut == "Aux enchères" %}
+
+                            {% if "id_utilisateur" in session %}
+
+                                <a href="{{ url_for('produits.miser_produit', id=produit.id_produit) }}">
+                                    Enchérir
+                                </a>
+
+                            {% else %}
+
+                                <a href="/compte/authentification">
+                                    Enchérir
+                                </a>
+
+                            {% endif %}
+
+                        {% elif produit.nom_statut == "À échanger" %}
+
+                            <button>
+                                Échanger
+                            </button>
+
+                        {% endif %}
+
 
                         <a href="/produits/{{ produit.id_produit }}">
                             Détails

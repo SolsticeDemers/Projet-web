@@ -7,11 +7,9 @@ import bd
 
 produits_bp = Blueprint('produits', __name__)
 
-@produits_bp.route('/<int:id>', methods=['GET', 'POST'])
+@produits_bp.route('/<int:id>', methods=['GET'])
 def details_produit(id):
     """Permet de voir les détails d'un produit"""
-
-    erreur = ""
 
     with bd.creer_curseur() as curseur:
         produit = bd.get_produit(curseur, id)
@@ -19,20 +17,10 @@ def details_produit(id):
         if produit is None:
             abort(404)
 
-        vendeur = bd.get_vendeur(curseur, produit['id_vendeur'])
-
-        if request.method == "POST":
-            mise = request.form.get("mise", type=float)
-
-            if mise is None:
-                erreur = "Veuillez entrer une mise."
-
-            elif mise <= produit["prix"]:
-                erreur = "La mise doit être supérieure au prix actuel."
-
-            else:
-                bd.modifier_prix_produit(curseur, id, mise)
-                return redirect(url_for("produits.details_produit", id=id))
+        vendeur = bd.get_vendeur(
+            curseur,
+            produit['id_vendeur']
+        )
 
     nom_image = "produit_" + str(id) + ".png"
 
@@ -47,15 +35,100 @@ def details_produit(id):
         est_connecte = False
 
     if os.path.exists(chemin_image):
-        img_source = current_app.config["ROUTE_IMAGES"] + nom_image
+        img_source = (
+            current_app.config["ROUTE_IMAGES"]
+            + nom_image
+        )
     else:
-        img_source = url_for("static", filename="images/default.png")
+        img_source = url_for(
+            "static",
+            filename="images/default.png"
+        )
 
     return render_template(
         'produit_details.jinja',
         produit=produit,
         vendeur=vendeur,
         img_source=img_source,
-        est_connecte=est_connecte,
+        est_connecte=est_connecte
+    )
+
+@produits_bp.route('/<int:id>/mise', methods=['GET', 'POST'])
+def miser_produit(id):
+    """Permet de miser sur un produit"""
+
+    if "id_utilisateur" not in session:
+        return redirect(
+            url_for("compte.authentification")
+        )
+
+    erreur = ""
+
+    with bd.creer_curseur() as curseur:
+        produit = bd.get_produit(curseur, id)
+
+        if produit is None:
+            abort(404)
+
+        if produit["id_statut"] != 2:
+            abort(400)
+
+        vendeur = bd.get_vendeur(
+            curseur,
+            produit['id_vendeur']
+        )
+
+        if request.method == "POST":
+            mise = request.form.get(
+                "mise",
+                type=float
+            )
+
+            if mise is None:
+                erreur = "Veuillez entrer une mise."
+
+            elif mise <= float(produit["prix"]):
+                erreur = (
+                    "La mise doit être supérieure "
+                    "au prix actuel."
+                )
+
+            else:
+                bd.modifier_prix_produit(
+                    curseur,
+                    id,
+                    mise
+                )
+
+                return redirect(
+                    url_for(
+                        "produits.details_produit",
+                        id=id
+                    )
+                )
+
+    nom_image = "produit_" + str(id) + ".png"
+
+    chemin_image = os.path.join(
+        current_app.config["CHEMIN_IMAGES"],
+        nom_image
+    )
+
+    if os.path.exists(chemin_image):
+        img_source = (
+            current_app.config["ROUTE_IMAGES"]
+            + nom_image
+        )
+    else:
+        img_source = url_for(
+            "static",
+            filename="images/default.png"
+        )
+
+    return render_template(
+        "mise.jinja",
+        produit=produit,
+        vendeur=vendeur,
+        img_source=img_source,
         erreur=erreur
     )
