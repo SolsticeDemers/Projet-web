@@ -163,9 +163,13 @@
 
                         {% elif produit.nom_statut == "Aux enchères" %}
 
-                            <button>
-                                Enchérir
-                            </button>
+                            {% if "id_utilisateur" in session %}
+
+                                <a href="{{ url_for('produits.miser_produit', id=produit.id_produit) }}">
+                                    Enchérir
+                                </a>
+
+                            {% endif %}
 
 
                         {% elif produit.nom_statut == "À échanger" %}

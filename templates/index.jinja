@@ -88,6 +88,7 @@
                         {{ produit.prix }} $
                     </p>
 
+
                     <div class="actions">
 
                         {% if produit.nom_statut == 'En vente' %}
@@ -112,9 +113,13 @@
 
                         {% if produit.nom_statut == 'Aux enchères' %}
 
-                            <button>
-                                Enchérir
-                            </button>
+                            {% if "id_utilisateur" in session %}
+
+                                <a href="{{ url_for('produits.miser_produit', id=produit.id_produit) }}">
+                                    Enchérir
+                                </a>
+
+                            {% endif %}
 
                         {% endif %}
 
@@ -194,6 +199,7 @@
                         {{ produit.prix }} $
                     </p>
 
+
                     <div class="actions">
 
                         {% if produit.nom_statut == 'En vente' %}
@@ -207,9 +213,13 @@
 
                         {% if produit.nom_statut == 'Aux enchères' %}
 
-                            <button>
-                                Enchérir
-                            </button>
+                            {% if "id_utilisateur" in session %}
+
+                                <a href="{{ url_for('produits.miser_produit', id=produit.id_produit) }}">
+                                    Enchérir
+                                </a>
+
+                            {% endif %}
 
                         {% endif %}
 
@@ -284,9 +294,13 @@
 
             {% elif produit_du_jour.nom_statut == "Aux enchères" %}
 
-                <button>
-                    Enchérir
-                </button>
+                {% if "id_utilisateur" in session %}
+
+                    <a href="{{ url_for('produits.miser_produit', id=produit_du_jour.id_produit) }}">
+                        Enchérir
+                    </a>
+
+                {% endif %}
 
             {% elif produit_du_jour.nom_statut == "À échanger" %}
 
@@ -399,9 +413,13 @@
 
                         {% if produit.nom_statut == 'Aux enchères' %}
 
-                            <button>
-                                Enchérir
-                            </button>
+                            {% if "id_utilisateur" in session %}
+
+                                <a href="{{ url_for('produits.miser_produit', id=produit.id_produit) }}">
+                                    Enchérir
+                                </a>
+
+                            {% endif %}
 
                         {% endif %}
 
