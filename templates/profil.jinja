@@ -1,0 +1,14 @@
+{% extends "_modele.jinja" %}
+
+{% block contenu %}
+<div class="container my-4">
+    <h2>Profil de {{ session['nom'] }}</h2>
+    <p>Email : {{ session['email'] }}</p>
+    <p>Nom : {{ session['nom'] }}</p>
+    <p>Prénom : {{ session['prenom'] }}</p>
+    <div class="actions">
+        <a href="/produits/ajouter_produit" class="button">Ajouter un produit</a>
+    </div>
+</div>
+
+{% endblock %}

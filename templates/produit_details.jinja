@@ -62,7 +62,14 @@
 
             <div class="actions">
 
-                {% if produit.id_statut == 2 %}
+                {% if not est_disponible %}
+
+                    <p class="text-danger">
+                        Ce produit n'est plus disponible.
+                    </p>
+
+
+                {% elif produit.id_statut == 2 %}
 
                     {% if est_connecte %}
 
@@ -84,14 +91,128 @@
 
                     {% endif %}
 
-                {% else %}
+
+                {% elif not est_connecte %}
+
+                    <a
+                        href="/compte/authentification"
+                        class="button"
+                    >
+                        Connectez-vous pour acheter
+                    </a>
+
+
+                {% elif not est_vendeur %}
+
+                    <form
+                        method="POST"
+                        action="/panier/ajouter/{{ produit.id_produit }}"
+                    >
+
+                        {{ form.hidden_tag() }}
+
+                        <button
+                            type="submit"
+                            class="button"
+                        >
+                            Ajouter au panier
+                        </button>
+
+                    </form>
+
+                {% endif %}
+
+
+                {% if est_connecte and produit.id_vendeur == session.id_utilisateur %}
+
+                    <a
+                        href="/produits/{{ id }}/modifier"
+                        class="button"
+                    >
+                        Modifier
+                    </a>
+
 
                     <button
                         type="button"
-                        class="button"
+                        class="button bouton-supprimer"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modal-archiver"
                     >
-                        Acheter
+                        Supprimer
                     </button>
+
+
+                    <div
+                        class="modal fade"
+                        id="modal-archiver"
+                        tabindex="-1"
+                    >
+
+                        <div class="modal-dialog">
+
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+
+                                    <h5
+                                        class="modal-title"
+                                        id="modal-archiver-label"
+                                    >
+                                        Confirmer la suppression
+                                    </h5>
+
+                                    <button
+                                        type="button"
+                                        class="btn-close"
+                                        data-bs-dismiss="modal"
+                                    >
+                                    </button>
+
+                                </div>
+
+
+                                <div class="modal-body">
+
+                                    Êtes-vous sûr de vouloir supprimer ce produit ?
+
+                                </div>
+
+
+                                <div class="modal-footer">
+
+                                    <button
+                                        type="button"
+                                        class="btn btn-secondary"
+                                        data-bs-dismiss="modal"
+                                    >
+                                        Annuler
+                                    </button>
+
+
+                                    <form
+                                        method="POST"
+                                        action="/produits/{{ id }}/archiver"
+                                    >
+
+                                        {{ form_archiver.hidden_tag() }}
+
+                                        <button
+                                            type="submit"
+                                            class="btn btn-danger"
+                                        >
+                                            Supprimer
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
 
                 {% endif %}
 

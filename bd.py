@@ -1,6 +1,7 @@
 """
 Connexion à la BD
 """
+
 import os
 import contextlib
 import mysql.connector
@@ -11,19 +12,23 @@ def _creer_connexion():
     """Pour créer une connexion à la BD"""
 
     conn = mysql.connector.connect(
-        user = os.getenv("BD_UTILISATEUR"),
-        password= os.getenv("BD_MDP"),
+        user=os.getenv("BD_UTILISATEUR"),
+        password=os.getenv("BD_MDP"),
         host=os.getenv("BD_SERVEUR"),
         database=os.getenv("BD_NOM_SCHEMA"),
         raise_on_warnings=True
     )
+
     try:
         yield conn
+
     except Exception:
         conn.rollback()
         raise
+
     else:
         conn.commit()
+
     finally:
         conn.close()
 
@@ -61,6 +66,7 @@ def get_nouveaux_produits(curseur):
         JOIN statut_produit s
             ON p.id_statut = s.id_statut
         WHERE s.nom_statut <> 'Vendu'
+        AND p.archive = FALSE
         ORDER BY p.date DESC
         LIMIT 4
     """)
@@ -83,6 +89,7 @@ def get_produit_aleatoire(curseur):
         JOIN statut_produit s
             ON p.id_statut = s.id_statut
         WHERE s.nom_statut <> 'Vendu'
+        AND p.archive = FALSE
         ORDER BY RAND()
         LIMIT 1
     """)
@@ -105,6 +112,7 @@ def get_produits_aleatoires(curseur):
         JOIN statut_produit s
             ON p.id_statut = s.id_statut
         WHERE s.nom_statut <> 'Vendu'
+        AND p.archive = FALSE
         ORDER BY RAND()
         LIMIT 4
     """)
@@ -127,6 +135,7 @@ def get_utilisateurs_populaires(curseur):
 
         LEFT JOIN achat a
             ON p.id_produit = a.id_produit
+            AND a.paye = TRUE
 
         GROUP BY
             u.id_utilisateur,
@@ -141,10 +150,36 @@ def get_utilisateurs_populaires(curseur):
 
     return curseur.fetchall()
 
-def get_produits(curseur, prix_min, prix_max, limite, offset):
-    """Permet d'obtenir tous les produits"""
 
-    curseur.execute("""
+def get_produits(
+    curseur,
+    prix_min,
+    prix_max,
+    limite,
+    offset,
+    trier_par,
+    ordre
+):
+    """Permet d'obtenir et de trier les produits"""
+
+    if trier_par == "prix":
+
+        if ordre == "DESC":
+            tri = "ORDER BY p.prix DESC"
+
+        else:
+            tri = "ORDER BY p.prix ASC"
+
+    else:
+
+        if ordre == "DESC":
+            tri = "ORDER BY p.nom DESC"
+
+        else:
+            tri = "ORDER BY p.nom ASC"
+
+
+    requete = """
         SELECT
             p.id_produit,
             p.nom,
@@ -159,11 +194,16 @@ def get_produits(curseur, prix_min, prix_max, limite, offset):
             ON p.id_statut = s.id_statut
 
         WHERE p.prix BETWEEN %(min)s AND %(max)s
+        AND s.nom_statut <> 'Vendu'
+        AND p.archive = FALSE
 
-        ORDER BY p.nom ASC
+        """ + tri + """
 
         LIMIT %(limite)s OFFSET %(offset)s
-    """, {
+    """
+
+
+    curseur.execute(requete, {
         "min": prix_min,
         "max": prix_max,
         "limite": limite,
@@ -174,16 +214,35 @@ def get_produits(curseur, prix_min, prix_max, limite, offset):
 
 
 def get_produits_recherche_filtre(
-        curseur,
-        mot_cle,
-        prix_min,
-        prix_max,
-        limite,
-        offset
-    ):
+    curseur,
+    mot_cle,
+    prix_min,
+    prix_max,
+    limite,
+    offset,
+    trier_par,
+    ordre
+):
     """Permet de rechercher des produits"""
 
-    curseur.execute("""
+    if trier_par == "prix":
+
+        if ordre == "DESC":
+            tri = "ORDER BY p.prix DESC"
+
+        else:
+            tri = "ORDER BY p.prix ASC"
+
+    else:
+
+        if ordre == "DESC":
+            tri = "ORDER BY p.nom DESC"
+
+        else:
+            tri = "ORDER BY p.nom ASC"
+
+
+    requete = """
         SELECT
             p.id_produit,
             p.nom,
@@ -200,14 +259,20 @@ def get_produits_recherche_filtre(
         WHERE (
             p.nom LIKE %(mot_cle)s
             OR p.description LIKE %(mot_cle)s
+            AND s.nom_statut <> 'Vendu'
         )
 
         AND p.prix BETWEEN %(min)s AND %(max)s
+        AND s.nom_statut <> 'Vendu'
+        AND p.archive = FALSE
 
-        ORDER BY p.nom ASC
+        """ + tri + """
 
         LIMIT %(limite)s OFFSET %(offset)s
-    """, {
+    """
+
+
+    curseur.execute(requete, {
         "mot_cle": "%" + mot_cle + "%",
         "min": prix_min,
         "max": prix_max,
@@ -218,16 +283,29 @@ def get_produits_recherche_filtre(
     return curseur.fetchall()
 
 def get_utilisateur(curseur, nom, mdp):
-    curseur.execute("SELECT nom, id_utilisateur FROM utilisateur "
-                    "WHERE  (courriel = %(nom)s OR nom=%(nom)s) AND mot_de_passe=%(mdp)s;",
-                    {
-                        'nom': nom,
-                        'mdp': mdp
-                    })
+    """Permet d'obtenir un utilisateur avec son nom/courriel et mot de passe"""
+
+    curseur.execute("""
+        SELECT
+            nom,
+            id_utilisateur
+        FROM utilisateur
+        WHERE (
+            courriel = %(nom)s
+            OR nom = %(nom)s
+        )
+        AND mot_de_passe = %(mdp)s
+    """, {
+        "nom": nom,
+        "mdp": mdp
+    })
+
     return curseur.fetchone()
+
 
 def get_produit(curseur, id_produit):
     """Permet d'obtenir un produit par son identifiant"""
+
     curseur.execute("""
         SELECT *
         FROM produit WHERE id_produit=%(id_produit)s
@@ -238,6 +316,7 @@ def get_produit(curseur, id_produit):
 
 def get_vendeur(curseur, id_utilisateur):
     """Permet d'obtenir un vendeur par son identifiant"""
+
     curseur.execute("""
         SELECT *
         FROM utilisateur WHERE id_utilisateur=%(id_utilisateur)s
@@ -247,38 +326,247 @@ def get_vendeur(curseur, id_utilisateur):
     return curseur.fetchone()
 def inserer_utilisateur_bd(curseur, nom, courriel, mdp):
     """Créer un utilisateur dans la bd"""
-    curseur.execute("INSERT INTO utilisateur (nom, courriel, mot_de_passe )"
-                    "VALUES(%(nom)s, %(courriel)s, %(mdp)s);", {
-                        'nom': nom,
-                        'courriel': courriel,
-                        'mdp': mdp,
-                    })
+
+    curseur.execute("""
+        INSERT INTO utilisateur (
+            nom,
+            courriel,
+            mot_de_passe
+        )
+        VALUES (
+            %(nom)s,
+            %(courriel)s,
+            %(mdp)s
+        )
+    """, {
+        "nom": nom,
+        "courriel": courriel,
+        "mdp": mdp
+    })
+
     return curseur.lastrowid
 
 def get_nom_unique(curseur, nom):
     """Vérifie l'existance d'un nom"""
-    curseur.execute("SELECT id_utilisateur, nom FROM utilisateur WHERE nom=%(nom)s ;",
-                    {
-                        'nom': nom
-                    })
+
+    curseur.execute("""
+        SELECT
+            id_utilisateur,
+            nom
+        FROM utilisateur
+        WHERE nom = %(nom)s
+    """, {
+        "nom": nom
+    })
+
     return curseur.fetchone()
 
 def get_courriel_unique(curseur, courriel):
     """Vérifie l'existance d'un courriel"""
-    curseur.execute("SELECT id_utilisateur, courriel FROM utilisateur WHERE courriel=%(courriel)s;",
-                    {
-                        'courriel': courriel
-                    })
+
+    curseur.execute("""
+        SELECT
+            id_utilisateur,
+            courriel
+        FROM utilisateur
+        WHERE courriel = %(courriel)s
+    """, {
+        "courriel": courriel
+    })
+
     return curseur.fetchone()
 
 def get_nom_utiliser(curseur):
     """Dictionnaire de nom et courriel déjà utilisé"""
-    curseur.execute("SELECT id_utilisateur, nom, courriel FROM utilisateur;")
+
+    curseur.execute("""
+        SELECT
+            id_utilisateur,
+            nom,
+            courriel
+        FROM utilisateur
+    """)
+
+    return curseur.fetchall()
+
+def get_produits_par_vendeur(curseur, id_vendeur):
+    """Retourne la liste des produits pour un vendeur donné"""
+
+    curseur.execute(
+        """
+        SELECT
+            p.id_produit,
+            p.nom,
+            p.description,
+            p.prix,
+            s.nom_statut
+        FROM produit p
+        JOIN statut_produit s
+            ON p.id_statut = s.id_statut
+        WHERE p.id_vendeur = %(id_vendeur)s
+        AND p.archive = FALSE
+        """,
+        {
+            'id_vendeur': id_vendeur
+        }
+    )
+
     return curseur.fetchall()
 
 
+def get_enchere_future(curseur):
+    """Permet d'obtenir les 4 prochains produits mis aux enchères"""
+    curseur.execute("""
+        SELECT
+            p.id_produit,
+            p.nom,
+            p.description,
+            p.prix,
+            p.date,
+            s.nom_statut
+        FROM produit p
+        JOIN statut_produit s
+            ON p.id_statut = s.id_statut
+        WHERE s.nom_statut = 'Aux enchères' AND NOW() < p.date
+        AND p.archive = FALSE
+        ORDER BY p.date ASC
+        LIMIT 4
+    """)
+
+    return curseur.fetchall()
+
+
+def ajouter_produit(curseur, id_vendeur, nom, description, prix, id_statut):
+    """Ajouter un produit dans la bd"""
+    curseur.execute("INSERT INTO produit (id_vendeur, nom, description, prix, id_statut, date) "
+                    "VALUES(%(id_vendeur)s, %(nom)s, %(description)s, %(prix)s, %(id_statut)s, CURDATE());", {
+                        'id_vendeur': id_vendeur,
+                        'nom': nom,
+                        'description': description,
+                        'prix': prix,
+                        'id_statut': id_statut
+                    })
+    return curseur.lastrowid
+
+def get_statuts(curseur):
+    """Retourne tous les statuts de produit"""
+    curseur.execute("SELECT id_statut, nom_statut FROM statut_produit")
+    return curseur.fetchall()
+
+def archiver_produit(curseur, id_produit):
+    """Archive un produit"""
+
+    curseur.execute(
+        """
+        UPDATE produit
+        SET archive = TRUE
+        WHERE id_produit = %(id_produit)s
+        """,
+        {
+            "id_produit": id_produit
+        }
+    )
+
+def get_statuts(curseur):
+    """Retourne tous les statuts de produit"""
+    curseur.execute("SELECT id_statut, nom_statut FROM statut_produit")
+    return curseur.fetchall()
+
+def ajouter_au_panier(curseur, id_acheteur, id_produit):
+    """Permet d'ajouter un produit au panier"""
+    curseur.execute(
+        "INSERT IGNORE INTO achat "
+        "(id_produit, id_acheteur, prix_achat, date_achat, paye) "
+        "SELECT id_produit, %(id_acheteur)s, prix, CURDATE(), FALSE "
+        "FROM produit WHERE id_produit = %(id_produit)s",
+        {
+            "id_acheteur": id_acheteur,
+            "id_produit": id_produit
+        }
+    )
+
+def supprimer_du_panier(curseur, id_acheteur, id_produit):
+    """Permet de retirer un produit du panier"""
+    curseur.execute(
+        "DELETE FROM achat " \
+        "WHERE id_acheteur = %(id_acheteur)s "
+        "AND id_produit = %(id_produit)s " \
+        "AND paye = FALSE",
+        {
+            "id_acheteur": id_acheteur,
+            "id_produit": id_produit
+        }
+    )
+
+def get_panier(curseur, id_acheteur):
+    """Permet de retourner les produits dans le panier"""
+    curseur.execute("""
+        SELECT p.id_produit, p.description, p.nom, p.prix, p.archive, p.id_statut
+        FROM achat a
+        JOIN produit p ON a.id_produit = p.id_produit
+        WHERE a.id_acheteur = %(id_acheteur)s
+        AND a.paye = FALSE""",
+        {
+            "id_acheteur": id_acheteur
+        })
+    return curseur.fetchall()
+
+def confirmer_achat(curseur, id_acheteur, id_produit, prix):
+    """Permet de confirmer l'achat d'un produit du panier"""
+    curseur.execute(
+        "UPDATE achat SET paye = TRUE, prix_achat = %(prix)s, "
+        "date_achat = CURDATE() "
+        "WHERE id_acheteur = %(id_acheteur)s " \
+        "AND id_produit = %(id_produit)s " \
+        "AND paye = FALSE",
+        {
+            "id_acheteur": id_acheteur,
+            "id_produit": id_produit,
+            "prix": prix
+        }
+    )
+
+def marquer_vendu(curseur, id_produit):
+    """Change le statut du produit pour Vendu"""
+    curseur.execute(
+        "UPDATE produit SET id_statut = 4 "
+        "WHERE id_produit = %(id_produit)s",
+        {
+            "id_produit": id_produit
+        }
+    )
+
+def get_nb_articles_panier(curseur, id_acheteur):
+    """Permet de compter les produits dans le panier"""
+    curseur.execute(
+        "SELECT COUNT(*) AS nb FROM achat "
+        "WHERE id_acheteur = %(id_acheteur)s "
+        "AND paye = FALSE",
+        {
+            "id_acheteur": id_acheteur
+        }
+    )
+    return curseur.fetchone()["nb"]
+
+
+def modifier_produit(curseur, id_produit, nom, description, prix, id_statut):
+    """Modifier un produit dans la bd"""
+    curseur.execute(
+        "UPDATE produit SET nom = %(nom)s, description = %(description)s, "
+        "prix = %(prix)s, id_statut = %(id_statut)s "
+        "WHERE id_produit = %(id_produit)s",
+        {
+            "id_produit": id_produit,
+            "nom": nom,
+            "description": description,
+            "prix": prix,
+            "id_statut": id_statut
+        }
+    )
+
 def modifier_prix_produit(curseur, id_produit, nouveau_prix):
     """Modifie le prix actuel d'un produit"""
+
     curseur.execute("""
         UPDATE produit
         SET prix = %(nouveau_prix)s

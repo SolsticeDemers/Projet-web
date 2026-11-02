@@ -5,7 +5,7 @@ Ce script décrit le blue print Compte
 import re
 import hashlib
 
-from flask import Blueprint, render_template, request, redirect, session
+from flask import Blueprint, render_template, request, redirect, session, abort
 import bd
 
 
@@ -259,3 +259,15 @@ def deconnection():
     session.clear()
 
     return redirect("/", code=303)
+
+@bp_compte.route("/profil")
+def profil():
+    """Affiche le profil de l'utilisateur connecté"""
+    if "id_utilisateur" not in session:
+        abort(401)
+
+    with bd.creer_curseur() as curseur:
+        utilisateur = bd.get_vendeur(curseur, session["id_utilisateur"])
+        # produits = bd.get_produits_par_vendeur(curseur, session["id_utilisateur"])
+
+    return render_template("profil.jinja", utilisateur=utilisateur)
