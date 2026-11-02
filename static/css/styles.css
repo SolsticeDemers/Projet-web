@@ -12813,4 +12813,84 @@ p a {
 
 .image-actuelle {
   max-width: 300px;
+}
+
+.form-conteneur {
+  max-width: 540px;
+  margin: 3rem auto 0;
+  padding: 0 12px;
+}
+.form-conteneur h1 {
+  margin-bottom: 1.5rem;
+}
+
+.formulaire {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.form-groupe {
+  margin-bottom: 1rem;
+}
+.form-groupe label {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
+
+.form-champ {
+  display: block;
+  width: 100%;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #111111;
+  background-color: #FFFFFF;
+  border: 1px solid #ced4da;
+  border-radius: 0.375rem;
+}
+.form-champ:focus {
+  border-color: #323550;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(50, 53, 80, 0.25);
+}
+.form-champ.is-invalid {
+  border-color: #C0392B;
+}
+.form-champ.is-valid {
+  border-color: #B0E6C7;
+}
+
+.form-erreur {
+  margin-top: 0.25rem;
+  margin-bottom: 0;
+  font-size: 0.875rem;
+  color: #C0392B;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-bottom: 3rem;
+}
+.form-actions button {
+  padding: 12px 18px;
+  border: 0;
+  border-radius: 8px;
+  background: #323550;
+  color: #FFFFFF;
+  cursor: pointer;
+}
+.form-actions button:hover {
+  background: #5F5C67;
+}
+
+.form-apercu-image {
+  display: block;
+  max-width: 300px;
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid #ced4da;
+  padding: 0.25rem;
+  background: #FFFFFF;
 }/*# sourceMappingURL=styles.css.map */

@@ -2,79 +2,83 @@
 
 {% block contenu %}
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-12 col-md-8 col-lg-6">
-            <h1 class="mb-4">Ajouter un produit</h1>
+<div class="form-conteneur">
+    <h1 class="mb-4">Ajouter un produit</h1>
 
-            <form method="POST" action="{{ url_for('produits.ajouter_produit') }}" enctype="multipart/form-data"
-                novalidate class="d-grid gap-4">
-                {{ form.hidden_tag() }}
+    <form method="POST" action="{{ url_for('produits.ajouter_produit') }}" enctype="multipart/form-data" novalidate
+        class="formulaire">
+        {{ form.hidden_tag() }}
 
-                <div class="mb-4">
-                    {{ form.nom.label(class="form-label") }}
-                    <span class="text-danger">*</span>
-                    {{ form.nom(class="form-control", placeholder="Nom du produit") }}
+        <div class="form-groupe">
+            {{ form.nom.label }}
+            <span class="text-danger">*</span>
+            {{ form.nom(class="form-champ", placeholder="Nom du produit") }}
 
-                    {% for erreur in form.nom.errors %}
-                    <div class="text-danger">{{ erreur }}</div>
-                    {% endfor %}
-                </div>
+            {% for erreur in form.nom.errors %}
+            <div class="form-erreur">{{ erreur }}</div>
+            {% endfor %}
+        </div>
 
-                <div class="mb-3">
-                    {{ form.description.label(class="form-label") }}
-                    <span class="text-danger">*</span>
-                    {{ form.description(class="form-control", rows="4",
-                    placeholder="Description du produit") }}
+        <div class="form-groupe">
+            {{ form.description.label }}
+            <span class="text-danger">*</span>
+            {{ form.description(class="form-champ", rows="4",
+            placeholder="Description du produit") }}
 
-                    {% for erreur in form.description.errors %}
-                    <div class="text-danger">{{ erreur }}</div>
-                    {% endfor %}
-                </div>
+            {% for erreur in form.description.errors %}
+            <div class="form-erreur">{{ erreur }}</div>
+            {% endfor %}
+        </div>
 
-                <div class="mb-3">
-                    {{ form.prix.label(class="form-label") }}
-                    <span class="text-danger">*</span>
-                    {{ form.prix(class="form-control", step="0.01",
-                    placeholder="0.00") }}
+        <div class="form-groupe">
+            {{ form.prix.label }}
+            <span class="text-danger">*</span>
+            {{ form.prix(class="form-champ", step="0.01",
+            placeholder="0.00") }}
 
-                    {% for erreur in form.prix.errors %}
-                    <div class="text-danger">{{ erreur }}</div>
-                    {% endfor %}
-                </div>
+            {% for erreur in form.prix.errors %}
+            <div class="form-erreur">{{ erreur }}</div>
+            {% endfor %}
+        </div>
 
-                <div class="mb-3">
-                    {{ form.id_statut.label(class="visually-hidden") }}
+        <div class="form-groupe">
+            {{ form.id_statut.label(class="visually-hidden") }}
 
-                    {% for choix in form.id_statut %}
-                    {{ choix(class="btn-check", autocomplete="off") }}
-                    <label for="{{ choix.id }}" class="choix-badge badge-statut
+            {% for choix in form.id_statut %}
+            {{ choix(class="btn-check", autocomplete="off") }}
+            <label for="{{ choix.id }}" class="choix-badge badge-statut
                     {% if choix.label.text == 'En vente' %}badge-vente
                     {% elif choix.label.text == 'Aux enchères' %}badge-enchere
                     {% elif choix.label.text == 'À échanger' %}badge-echange
                     {% endif %}">
-                        {{ choix.label.text }}
-                    </label>
-                    {% endfor %}
+                {{ choix.label.text }}
+            </label>
+            {% endfor %}
 
-                    {% for erreur in form.id_statut.errors %}
-                    <div class="text-danger">{{ erreur }}</div>
-                    {% endfor %}
-                </div>
-                <div class="mb-3">
-                    {{ form.image.label(class="form-label") }}
-                    {{ form.image(class="form-control", accept=".png,.jpg,.jpeg") }}
-
-                    {% for erreur in form.image.errors %}
-                    <div class="text-danger">{{ erreur }}</div>
-                    {% endfor %}
-                </div>
-                <div class="actions d-flex justify-content-end mb-5">
-                    <button type="submit" class="button">Ajouter le produit</button>
-                </div>
-            </form>
+            {% for erreur in form.id_statut.errors %}
+            <div class="form-erreur">{{ erreur }}</div>
+            {% endfor %}
         </div>
-    </div>
+        <div class="mb-3">
+            {{ form.image.label(class="form-label") }}
+
+            <img id="apercu-image" src="{{ url_for('static', filename='images/default.png') }}"
+                data-img-initiale="{{ url_for('static', filename='images/default.png') }}"
+                alt="Aperçu de l'image du produit"
+                class="form-apercu-image">
+                
+            {{ form.image(class="form-champ", accept=".png,.jpg,.jpeg") }}
+
+            {% for erreur in form.image.errors %}
+            <div class="form-erreur">{{ erreur }}</div>
+            {% endfor %}
+        </div>
+        <div class="form-actions">
+            <button type="submit">Ajouter le produit</button>
+        </div>
+    </form>
 </div>
+
+<script src="/js/apercu_image.js"></script>
 
 {% endblock %}
