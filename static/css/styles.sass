@@ -7,6 +7,8 @@ $creme: #F9F8F3
 $orange: #DE7452
 $blanc: #FFFFFF
 $noir: #111111
+$gris-fonce: #5F5C67
+$danger: #C0392B
 
 *
     box-sizing: border-box
@@ -72,7 +74,7 @@ header
 
 .connecter
     display: grid
-    grid-template-columns:  1fr 1fr
+    grid-template-columns: 1fr 1fr
     align-items: center
     gap: 10px
 
@@ -181,6 +183,9 @@ header
 .badge-echange
     background: $bleu
 
+.badge-vendu
+    background: $gris
+
 .contenu-produit
     padding: 22px
 
@@ -218,6 +223,22 @@ header
         background: $gris
         color: $blanc
 
+    .btn-modifier
+        background: $gris
+
+        &:hover
+            background: $gris-fonce
+
+    .btn-supprimer
+        background: $bleu
+
+        &:hover
+            background: $danger
+
+    .bouton-supprimer
+        background: $orange
+        color: $blanc
+
 .produit-vedette
     width: 100%
     min-height: 550px
@@ -251,6 +272,9 @@ header
         height: 100%
         object-fit: cover
 
+.voir-plus
+    margin-top: 100px
+
 footer
     position: relative
     z-index: 2
@@ -272,11 +296,6 @@ footer
     .produit-vedette
         grid-template-columns: 1fr
 
-p
-    a
-        color: blue
-        text-decoration: underline
-
 .liste-mes-produits
     display: flex
     flex-direction: column
@@ -290,6 +309,32 @@ p
 
     .image-produit
         height: 100%
+
+    .actions
+        padding: 22px
+
+p
+    a
+        color: blue
+        text-decoration: underline
+
+.choix-badge
+    position: static
+    display: inline-block
+    margin-right: 8px
+    cursor: pointer
+    opacity: 0.6
+    border: 2px solid transparent
+
+.btn-check:checked + .choix-badge
+    opacity: 1
+    border-color: $noir
+
+.btn-check:focus-visible + .choix-badge
+    outline: 2px solid $noir
+
+.image-actuelle
+    max-width: 300px
 
 .icone-panier
     color: $creme
@@ -316,4 +361,3 @@ p
     font-size: 1rem
     font-weight: bold
     color: $creme
-

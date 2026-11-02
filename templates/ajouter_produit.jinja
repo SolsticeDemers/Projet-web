@@ -1,0 +1,80 @@
+{% extends "_modele.jinja" %}
+
+{% block contenu %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <h1 class="mb-4">Ajouter un produit</h1>
+
+            <form method="POST" action="{{ url_for('produits.ajouter_produit') }}" enctype="multipart/form-data"
+                novalidate class="d-grid gap-4">
+                {{ form.hidden_tag() }}
+
+                <div class="mb-4">
+                    {{ form.nom.label(class="form-label") }}
+                    <span class="text-danger">*</span>
+                    {{ form.nom(class="form-control", placeholder="Nom du produit") }}
+
+                    {% for erreur in form.nom.errors %}
+                    <div class="text-danger">{{ erreur }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.description.label(class="form-label") }}
+                    <span class="text-danger">*</span>
+                    {{ form.description(class="form-control", rows="4",
+                    placeholder="Description du produit") }}
+
+                    {% for erreur in form.description.errors %}
+                    <div class="text-danger">{{ erreur }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.prix.label(class="form-label") }}
+                    <span class="text-danger">*</span>
+                    {{ form.prix(class="form-control", step="0.01",
+                    placeholder="0.00") }}
+
+                    {% for erreur in form.prix.errors %}
+                    <div class="text-danger">{{ erreur }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.id_statut.label(class="visually-hidden") }}
+
+                    {% for choix in form.id_statut %}
+                    {{ choix(class="btn-check", autocomplete="off") }}
+                    <label for="{{ choix.id }}" class="choix-badge badge-statut
+                    {% if choix.label.text == 'En vente' %}badge-vente
+                    {% elif choix.label.text == 'Aux enchères' %}badge-enchere
+                    {% elif choix.label.text == 'À échanger' %}badge-echange
+                    {% endif %}">
+                        {{ choix.label.text }}
+                    </label>
+                    {% endfor %}
+
+                    {% for erreur in form.id_statut.errors %}
+                    <div class="text-danger">{{ erreur }}</div>
+                    {% endfor %}
+                </div>
+                <div class="mb-3">
+                    {{ form.image.label(class="form-label") }}
+                    {{ form.image(class="form-control", accept=".png,.jpg,.jpeg") }}
+
+                    {% for erreur in form.image.errors %}
+                    <div class="text-danger">{{ erreur }}</div>
+                    {% endfor %}
+                </div>
+                <div class="actions d-flex justify-content-end mb-5">
+                    <button type="submit" class="button">Ajouter le produit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

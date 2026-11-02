@@ -12652,6 +12652,10 @@ header {
   background: #323550;
 }
 
+.badge-vendu {
+  background: #7E7B85;
+}
+
 .contenu-produit {
   padding: 22px;
 }
@@ -12689,6 +12693,22 @@ header {
 }
 .actions a {
   background: #7E7B85;
+  color: #FFFFFF;
+}
+.actions .btn-modifier {
+  background: #7E7B85;
+}
+.actions .btn-modifier:hover {
+  background: #5F5C67;
+}
+.actions .btn-supprimer {
+  background: #323550;
+}
+.actions .btn-supprimer:hover {
+  background: #C0392B;
+}
+.actions .bouton-supprimer {
+  background: #DE7452;
   color: #FFFFFF;
 }
 
@@ -12729,6 +12749,10 @@ header {
      object-fit: cover;
 }
 
+.voir-plus {
+  margin-top: 100px;
+}
+
 footer {
   position: relative;
   z-index: 2;
@@ -12752,11 +12776,31 @@ footer {
     grid-template-columns: 1fr;
   }
 }
+.liste-mes-produits {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.carte-mon-produit {
+  display: grid;
+  grid-template-columns: 250px 1fr auto;
+  align-items: center;
+  height: 200px;
+}
+.carte-mon-produit .image-produit {
+  height: 100%;
+}
+.carte-mon-produit .actions {
+  padding: 22px;
+}
+
 p a {
   color: blue;
   text-decoration: underline;
 }
 
+<<<<<<< HEAD
 .liste-mes-produits {
   display: flex;
   flex-direction: column;
@@ -12800,4 +12844,26 @@ p a {
   font-size: 1rem;
   font-weight: bold;
   color: #F9F8F3;
+=======
+.choix-badge {
+  position: static;
+  display: inline-block;
+  margin-right: 8px;
+  cursor: pointer;
+  opacity: 0.6;
+  border: 2px solid transparent;
+}
+
+.btn-check:checked + .choix-badge {
+  opacity: 1;
+  border-color: #111111;
+}
+
+.btn-check:focus-visible + .choix-badge {
+  outline: 2px solid #111111;
+}
+
+.image-actuelle {
+  max-width: 300px;
+>>>>>>> origin/main
 }/*# sourceMappingURL=styles.css.map */
