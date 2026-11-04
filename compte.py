@@ -244,55 +244,6 @@ def deconnection():
 
     return redirect("/", code=303)
 
-
-@bp_compte.route('/echange')
-def echange():
-    status = 'Échange'
-
-    notifications = [
-    ]
-    with bd.creer_curseur() as curseur:
-        notification = bd.get_notification(
-            curseur, session['id_utilisateur'])
-
-    for notif in notification:
-
-
-        
-        if session['id_utilisateur'] == notif['id_utilisateur']:
-            with bd.creer_curseur() as curseur:
-                proprio = bd.get_utilisateur_name(
-                    curseur, notif['proprio'])
-                proprio = proprio['nom']
-                offrant = session['nom']
-        else:
-            with bd.creer_curseur() as curseur:
-                offrant = bd.get_utilisateur_name(
-                    curseur, notif['id_utilisateur'])
-                offrant = offrant['nom']
-                proprio = session['nom']
-        with bd.creer_curseur() as curseur:
-            produit_echange = bd.get_produit_by_id(
-                curseur, notif['produit'])
-        with bd.creer_curseur() as curseur:
-            produit_offert = bd.get_produit_by_id(
-                curseur, notif['produit_offert'])
-
-        une_notification = {
-            "id_proposition": notif['id_notification'],
-            "proprio": proprio,
-            "offrant": offrant,
-            "echange_nom": produit_echange[0]['nom'],
-            "echange_statut": produit_echange[0]['id_statut'],
-            "offert_nom": produit_offert[0]['nom'],
-            "commentaire": produit_offert[0]['description'],
-            "approuve": notif['approuver']
-        }
-        notifications.append(une_notification)
-
-    return render_template("compte/profil.jinja",
-                           page="Profil", notifications=notifications, status=status)
-
 # Pas finit Création d'échange
 @bp_compte.route('/faire_echange', methods=['GET', 'POST'])
 def faire_echange():
@@ -324,4 +275,53 @@ def profil():
         utilisateur = bd.get_vendeur(curseur, session["id_utilisateur"])
         # produits = bd.get_produits_par_vendeur(curseur, session["id_utilisateur"])
 
-    return render_template("profil.jinja", utilisateur=utilisateur)
+    notifications = [
+    ]
+    with bd.creer_curseur() as curseur:
+        notification = bd.get_notification(
+                curseur, session['id_utilisateur'])
+
+    for notif in notification:
+
+        if session['id_utilisateur'] == notif['id_utilisateur']:
+            with bd.creer_curseur() as curseur:
+                proprio = bd.get_utilisateur_name(
+                        curseur, notif['proprio'])
+                proprio = proprio['nom']
+                offrant = session['nom']
+        else:
+            with bd.creer_curseur() as curseur:
+                offrant = bd.get_utilisateur_name(
+                        curseur, notif['id_utilisateur'])
+                offrant = offrant['nom']
+                proprio = session['nom']
+        with bd.creer_curseur() as curseur:
+            produit = bd.get_produit_by_id(
+                    curseur, notif['produit'])
+            
+        if notif['id_statut'] == 3:
+            with bd.creer_curseur() as curseur:
+                produit_offert = bd.get_produit_by_id(
+                    curseur, notif['produit_offert'])
+
+            une_notification = {
+                "id_proposition": notif['id_notification'],
+                "proprio": proprio,
+                "offrant": offrant,
+                "echange_nom": produit[0]['nom'],
+                "notif_statut": notif['id_statut'],
+                "offert_nom": produit_offert[0]['nom'],
+                "commentaire": produit_offert[0]['description'],
+                "approuve": notif['approuver']
+            }
+        else:
+            une_notification = {
+                    "id_proposition": notif['id_notification'],
+                    "proprio": proprio,
+                    "offrant": offrant,
+                    "echange_nom": produit[0]['nom'],
+                    "notif_statut": notif['id_statut']
+                }
+        notifications.append(une_notification)
+
+    return render_template("profil.jinja", utilisateur=utilisateur, notifications = notifications)
