@@ -483,7 +483,7 @@ def modifier_produit(curseur, id_produit, nom, description, prix, id_statut):
 
     
 def get_notification(curseur, id_utilisateur):
-    curseur.execute("SELECT * FROM echange WHERE proprio = %(id_utilisateur)s OR id_utilisateur = %(id_utilisateur)s;",
+    curseur.execute("SELECT * FROM notification WHERE proprio = %(id_utilisateur)s OR id_utilisateur = %(id_utilisateur)s;",
                     {
                         'id_utilisateur' : id_utilisateur
                     })
@@ -504,7 +504,7 @@ def get_produit_by_id(curseur, id):
     return curseur.fetchall()
 
 def update_offer(curseur, id_proposition, approuve):
-    curseur.execute("UPDATE `echange` SET `approuver`= %(approuve)s WHERE id_echange = %(id)s;",
+    curseur.execute("UPDATE `notification` SET `approuver`= %(approuve)s WHERE id_notification = %(id)s;",
                     {
                         'id' : id_proposition,
                         'approuve' : approuve

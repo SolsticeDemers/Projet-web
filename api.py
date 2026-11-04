@@ -29,3 +29,29 @@ def nom_unique():
     else:
         is_unique = True
     return jsonify(is_unique)
+
+
+@bp_api.route('/accepter_echange/<int:id_proposition>/<string:approuve>')
+def accepter_echange(id_proposition, approuve):
+
+    if approuve == "oui":
+        reponse = 1
+    else:
+        reponse = 0
+    with bd.creer_curseur() as curseur:
+        bd.update_offer(curseur, id_proposition, reponse)
+
+    return jsonify(reponse)# ???
+
+@bp_api.route('/refuser_echange/<int:id_proposition>/<string:approuve>')
+def refuser_echange(id_proposition, approuve):
+
+    if approuve == "non":
+        reponse = 0
+    else:
+        reponse = 1
+    with bd.creer_curseur() as curseur:
+        bd.update_offer(curseur, id_proposition, reponse)
+
+    return jsonify(reponse)# ???
+

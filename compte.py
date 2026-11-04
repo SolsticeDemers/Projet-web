@@ -256,6 +256,9 @@ def echange():
             curseur, session['id_utilisateur'])
 
     for notif in notification:
+
+
+        
         if session['id_utilisateur'] == notif['id_utilisateur']:
             with bd.creer_curseur() as curseur:
                 proprio = bd.get_utilisateur_name(
@@ -270,13 +273,13 @@ def echange():
                 proprio = session['nom']
         with bd.creer_curseur() as curseur:
             produit_echange = bd.get_produit_by_id(
-                curseur, notif['produit_echange'])
+                curseur, notif['produit'])
         with bd.creer_curseur() as curseur:
             produit_offert = bd.get_produit_by_id(
                 curseur, notif['produit_offert'])
 
         une_notification = {
-            "id_proposition": notif['id_echange'],
+            "id_proposition": notif['id_notification'],
             "proprio": proprio,
             "offrant": offrant,
             "echange_nom": produit_echange[0]['nom'],
