@@ -143,15 +143,30 @@
 
                         {% if produit.nom_statut == "En vente" %}
 
-                            <button>
-                                Acheter
-                            </button>
+                            {% if "id_utilisateur" in session %}
+
+                                <form
+                                    method="POST"
+                                    action="/panier/ajouter/{{ produit.id_produit }}"
+                                >
+
+                                    {{ form_panier.hidden_tag() }}
+
+                                    <button type="submit">
+                                        Ajouter
+                                    </button>
+
+                                </form>
+
+                            {% endif %}
+
 
                         {% elif produit.nom_statut == "Aux enchères" %}
 
                             <button>
                                 Enchérir
                             </button>
+
 
                         {% elif produit.nom_statut == "À échanger" %}
 

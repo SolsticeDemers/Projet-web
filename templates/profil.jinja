@@ -11,4 +11,24 @@
     </div>
 </div>
 
+
+<section>
+    <h2>Notification</h2>
+    <ul>
+        {% for notif in notifications %}
+        {% if notif.notif_statut == 1 %}
+        {# En vente #}
+        
+        {% elif notif.notif_statut == 2 %}
+        {# Aux enchères #}
+        
+        {% elif %}
+        {% if notif.notif_statut == 3 %}
+        {# À échanger #}
+        {% endif %}
+        {% endfor %}
+    </ul>
+</section>
+
+
 {% endblock %}

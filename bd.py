@@ -135,6 +135,7 @@ def get_utilisateurs_populaires(curseur):
 
         LEFT JOIN achat a
             ON p.id_produit = a.id_produit
+            AND a.paye = TRUE
 
         GROUP BY
             u.id_utilisateur,
@@ -466,6 +467,83 @@ def archiver_produit(curseur, id_produit):
         }
     )
 
+def ajouter_au_panier(curseur, id_acheteur, id_produit):
+    """Permet d'ajouter un produit au panier"""
+    curseur.execute(
+        "INSERT IGNORE INTO achat "
+        "(id_produit, id_acheteur, prix_achat, date_achat, paye) "
+        "SELECT id_produit, %(id_acheteur)s, prix, CURDATE(), FALSE "
+        "FROM produit WHERE id_produit = %(id_produit)s",
+        {
+            "id_acheteur": id_acheteur,
+            "id_produit": id_produit
+        }
+    )
+
+def supprimer_du_panier(curseur, id_acheteur, id_produit):
+    """Permet de retirer un produit du panier"""
+    curseur.execute(
+        "DELETE FROM achat " \
+        "WHERE id_acheteur = %(id_acheteur)s "
+        "AND id_produit = %(id_produit)s " \
+        "AND paye = FALSE",
+        {
+            "id_acheteur": id_acheteur,
+            "id_produit": id_produit
+        }
+    )
+
+def get_panier(curseur, id_acheteur):
+    """Permet de retourner les produits dans le panier"""
+    curseur.execute("""
+        SELECT p.id_produit, p.description, p.nom, p.prix, p.archive, p.id_statut
+        FROM achat a
+        JOIN produit p ON a.id_produit = p.id_produit
+        WHERE a.id_acheteur = %(id_acheteur)s
+        AND a.paye = FALSE""",
+        {
+            "id_acheteur": id_acheteur
+        })
+    return curseur.fetchall()
+
+def confirmer_achat(curseur, id_acheteur, id_produit, prix):
+    """Permet de confirmer l'achat d'un produit du panier"""
+    curseur.execute(
+        "UPDATE achat SET paye = TRUE, prix_achat = %(prix)s, "
+        "date_achat = CURDATE() "
+        "WHERE id_acheteur = %(id_acheteur)s " \
+        "AND id_produit = %(id_produit)s " \
+        "AND paye = FALSE",
+        {
+            "id_acheteur": id_acheteur,
+            "id_produit": id_produit,
+            "prix": prix
+        }
+    )
+
+def marquer_vendu(curseur, id_produit):
+    """Change le statut du produit pour Vendu"""
+    curseur.execute(
+        "UPDATE produit SET id_statut = 4 "
+        "WHERE id_produit = %(id_produit)s",
+        {
+            "id_produit": id_produit
+        }
+    )
+
+def get_nb_articles_panier(curseur, id_acheteur):
+    """Permet de compter les produits dans le panier"""
+    curseur.execute(
+        "SELECT COUNT(*) AS nb FROM achat "
+        "WHERE id_acheteur = %(id_acheteur)s "
+        "AND paye = FALSE",
+        {
+            "id_acheteur": id_acheteur
+        }
+    )
+    return curseur.fetchone()["nb"]
+
+
 def modifier_produit(curseur, id_produit, nom, description, prix, id_statut):
     """Modifier un produit dans la bd"""
     curseur.execute(
@@ -479,7 +557,7 @@ def modifier_produit(curseur, id_produit, nom, description, prix, id_statut):
             "prix": prix,
             "id_statut": id_statut
         }
-    )
+    ) 
 
     
 def get_notification(curseur, id_utilisateur):
@@ -503,10 +581,3 @@ def get_produit_by_id(curseur, id):
                     })
     return curseur.fetchall()
 
-def update_offer(curseur, id_proposition, approuve):
-    curseur.execute("UPDATE `notification` SET `approuver`= %(approuve)s WHERE id_notification = %(id)s;",
-                    {
-                        'id' : id_proposition,
-                        'approuve' : approuve
-                    })
-    return curseur.fetchall()
