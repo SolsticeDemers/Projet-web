@@ -244,6 +244,7 @@ def deconnection():
 
     return redirect("/", code=303)
 
+
 @bp_compte.route("/profil")
 def profil():
     """Affiche le profil de l'utilisateur connecté"""
@@ -275,10 +276,11 @@ def profil():
                 offrant = offrant['nom']
                 proprio = session['nom']
 
-        
+
         with bd.creer_curseur() as curseur:
             status = bd.get_statut_by_Id(
-                    curseur, notif['id_statut'])
+                           curseur, notif['id_statut'])
+            status = status['nom_statut']
         
         with bd.creer_curseur() as curseur:
             produit = bd.get_produit_by_id(
@@ -290,7 +292,7 @@ def profil():
                     "offrant": offrant,
                     "echange_nom": produit[0]['nom'],
                     "notif_statut": notif['id_statut'],
-                    "statut" : status
+                    "status" : status
                 }
         notifications.append(une_notification)
 

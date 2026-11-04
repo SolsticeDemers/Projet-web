@@ -18,10 +18,19 @@
         {% for notif in notifications %}
         {% if notif.notif_statut == 1 %}
         {# En vente #}
-        
+        <li>
+            <span class="badge-statut badge-vente ">
+                {{ produit.nom_statut }}
+            </span>
+            
+        </li>
         {% elif notif.notif_statut == 2 %}
         {# Aux enchères #}
-        
+        <li>
+            <span class="badge-statut badge-enchere ">
+                {{ produit.nom_statut }}
+            </span>
+        </li>
         {% elif %}
         {% if notif.notif_statut == 3 %}
         {# À échanger #}
