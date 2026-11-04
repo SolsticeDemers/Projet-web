@@ -562,4 +562,24 @@ def modifier_produit(curseur, id_produit, nom, description, prix, id_statut):
             "prix": prix,
             "id_statut": id_statut
         }
-    ) 
+    )
+
+def ajouter_mise(curseur, id_produit, id_utilisateur, montant):
+    """Enregistre une mise"""
+
+    curseur.execute("""
+        INSERT INTO mise (
+            id_produit,
+            id_utilisateur,
+            montant
+        )
+        VALUES (
+            %(id_produit)s,
+            %(id_utilisateur)s,
+            %(montant)s
+        )
+    """, {
+        "id_produit": id_produit,
+        "id_utilisateur": id_utilisateur,
+        "montant": montant
+    })
