@@ -452,6 +452,14 @@ def get_statuts(curseur):
     curseur.execute("SELECT id_statut, nom_statut FROM statut_produit")
     return curseur.fetchall()
 
+def get_statut_by_Id(curseur, id):
+    """Retourne le nom du statut de produit"""
+    curseur.execute("SELECT nom_statut FROM statut_produit WHERE id_statut = %(id)s;",
+                        {
+                            'id' : id
+                        })
+    return curseur.fetchone()
+
 def archiver_produit(curseur, id_produit):
     """Archive un produit"""
 

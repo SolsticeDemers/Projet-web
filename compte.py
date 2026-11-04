@@ -245,6 +245,8 @@ def deconnection():
     return redirect("/", code=303)
 
 # Pas finit Création d'échange
+
+
 @bp_compte.route('/faire_echange', methods=['GET', 'POST'])
 def faire_echange():
     if request.method == 'GET':
@@ -298,6 +300,12 @@ def profil():
         with bd.creer_curseur() as curseur:
             produit = bd.get_produit_by_id(
                     curseur, notif['produit'])
+
+
+        with bd.creer_curseur() as curseur:
+            status = bd.get_statut_by_Id(
+                    curseur, notif['id_statut'])
+            status = status['nom_statut']
             
         if notif['id_statut'] == 3:
             with bd.creer_curseur() as curseur:
@@ -310,6 +318,7 @@ def profil():
                 "offrant": offrant,
                 "echange_nom": produit[0]['nom'],
                 "notif_statut": notif['id_statut'],
+                "status": status,
                 "offert_nom": produit_offert[0]['nom'],
                 "commentaire": produit_offert[0]['description'],
                 "approuve": notif['approuver']
@@ -320,7 +329,8 @@ def profil():
                     "proprio": proprio,
                     "offrant": offrant,
                     "echange_nom": produit[0]['nom'],
-                    "notif_statut": notif['id_statut']
+                    "notif_statut": notif['id_statut'],
+                    "status": status
                 }
         notifications.append(une_notification)
 

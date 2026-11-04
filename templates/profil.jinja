@@ -39,7 +39,7 @@
             </span> #}
 
             <span class="badge-statut-notif badge-echange">
-                {{ status }}
+                {{ notif.status }}
             </span>
 
             {% if notif.approuve == 1 %}
@@ -62,7 +62,7 @@
             {% elif session['nom'] == notif.proprio and notif.approuve == None %}
         <li>
             <span class="badge-statut-notif badge-echange">
-                {{ status }}
+                {{ notif.status }}
             </span>
             <p id="nom_offrant"><strong>{{notif.offrant}}</strong></p>
             <p>Votre produit: {{notif.echange_nom}}</p>
