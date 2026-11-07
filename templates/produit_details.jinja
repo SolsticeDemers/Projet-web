@@ -34,9 +34,27 @@
 
             <div class="prix p-2 mb-3">
 
-                <p>
-                    Prix : {{ produit.prix }} $
-                </p>
+                {% if produit.id_statut == 2 %}
+
+                    <p>
+                        Mise actuelle : {{ produit.prix }} $
+                    </p>
+
+                    {% if produit.date_fin %}
+
+                        <p>
+                            Fin de l'enchère : {{ produit.date_fin }}
+                        </p>
+
+                    {% endif %}
+
+                {% else %}
+
+                    <p>
+                        Prix : {{ produit.prix }} $
+                    </p>
+
+                {% endif %}
 
             </div>
 
@@ -58,11 +76,39 @@
                         Ce produit n'est plus disponible.
                     </p>
 
+
+                {% elif produit.id_statut == 2 %}
+
+                    {% if est_connecte %}
+
+                        <a
+                            href="{{ url_for('produits.miser_produit', id=produit.id_produit) }}"
+                            class="button"
+                        >
+                            Enchérir
+                        </a>
+
+                    {% else %}
+
+                        <a
+                            href="/compte/authentification"
+                            class="button"
+                        >
+                            Enchérir
+                        </a>
+
+                    {% endif %}
+
+
                 {% elif not est_connecte %}
 
-                    <a href="/compte/authentification" class="button">
+                    <a
+                        href="/compte/authentification"
+                        class="button"
+                    >
                         Connectez-vous pour acheter
                     </a>
+
 
                 {% elif not est_vendeur %}
 
@@ -73,7 +119,10 @@
 
                         {{ form.hidden_tag() }}
 
-                        <button type="submit" class="button">
+                        <button
+                            type="submit"
+                            class="button"
+                        >
                             Ajouter au panier
                         </button>
 

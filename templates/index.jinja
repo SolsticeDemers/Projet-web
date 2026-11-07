@@ -88,6 +88,7 @@
                         {{ produit.prix }} $
                     </p>
 
+
                     <div class="actions">
 
                         {% if produit.nom_statut == 'En vente' %}
@@ -100,28 +101,20 @@
                                 >
                                     {{ form_panier.hidden_tag() }}
 
-                                    <button type="submit">
+                                    <button
+                                        type="submit"
+                                        class="button"
+                                    >
                                         Ajouter
                                     </button>
+
                                 </form>
 
                             {% endif %}
 
-                        {% endif %}
+                        {% elif produit.nom_statut == 'À échanger' %}
 
-
-                        {% if produit.nom_statut == 'Aux enchères' %}
-
-                            <button>
-                                Enchérir
-                            </button>
-
-                        {% endif %}
-
-
-                        {% if produit.nom_statut == 'À échanger' %}
-
-                            <button>
+                            <button class="button">
                                 Échanger
                             </button>
 
@@ -194,29 +187,20 @@
                         {{ produit.prix }} $
                     </p>
 
+
                     <div class="actions">
 
                         {% if produit.nom_statut == 'En vente' %}
 
-                            <button>
+                            <button class="button">
                                 Ajouter
                             </button>
 
-                        {% endif %}
 
 
-                        {% if produit.nom_statut == 'Aux enchères' %}
+                        {% elif produit.nom_statut == 'À échanger' %}
 
-                            <button>
-                                Enchérir
-                            </button>
-
-                        {% endif %}
-
-
-                        {% if produit.nom_statut == 'À échanger' %}
-
-                            <button>
+                            <button class="button">
                                 Échanger
                             </button>
 
@@ -278,19 +262,13 @@
 
             {% if produit_du_jour.nom_statut == "En vente" %}
 
-                <button>
+                <button class="button">
                     Acheter
-                </button>
-
-            {% elif produit_du_jour.nom_statut == "Aux enchères" %}
-
-                <button>
-                    Enchérir
                 </button>
 
             {% elif produit_du_jour.nom_statut == "À échanger" %}
 
-                <button>
+                <button class="button">
                     Échanger
                 </button>
 
@@ -387,28 +365,21 @@
                                 >
                                     {{ form_panier.hidden_tag() }}
 
-                                    <button type="submit">
+                                    <button
+                                        type="submit"
+                                        class="button"
+                                    >
                                         Ajouter
                                     </button>
+
                                 </form>
 
                             {% endif %}
 
-                        {% endif %}
+                        
+                        {% elif produit.nom_statut == 'À échanger' %}
 
-
-                        {% if produit.nom_statut == 'Aux enchères' %}
-
-                            <button>
-                                Enchérir
-                            </button>
-
-                        {% endif %}
-
-
-                        {% if produit.nom_statut == 'À échanger' %}
-
-                            <button>
+                            <button class="button">
                                 Échanger
                             </button>
 

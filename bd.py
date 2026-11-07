@@ -562,4 +562,16 @@ def modifier_produit(curseur, id_produit, nom, description, prix, id_statut):
             "prix": prix,
             "id_statut": id_statut
         }
-    ) 
+    )
+
+def modifier_prix_produit(curseur, id_produit, nouveau_prix):
+    """Modifie le prix actuel d'un produit"""
+
+    curseur.execute("""
+        UPDATE produit
+        SET prix = %(nouveau_prix)s
+        WHERE id_produit = %(id_produit)s
+    """, {
+        "nouveau_prix": nouveau_prix,
+        "id_produit": id_produit
+    })

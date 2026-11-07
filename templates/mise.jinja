@@ -1,0 +1,102 @@
+{% extends "_modele.jinja" %}
+
+{% block contenu %}
+
+<div class="container my-4">
+
+    <div class="row">
+
+        <div class="col-md-6">
+
+            <img
+                src="{{ img_source }}"
+                alt="{{ produit.nom }}"
+                class="img-fluid"
+            >
+
+        </div>
+
+
+        <div class="col-md-6">
+
+            <div class="mb-3">
+
+                <h2 class="fw-bold px-3 pt-2 mb-0">
+                    {{ produit.nom }}
+                </h2>
+
+                <p class="px-3 pb-2 mb-0 text-muted">
+                    {{ vendeur.nom }}
+                </p>
+
+            </div>
+
+
+            <div class="prix p-2 mb-3">
+
+                <p>
+                    Mise actuelle : {{ produit.prix }} $
+                </p>
+
+                {% if produit.date_fin %}
+
+                    <p>
+                        Fin de l'enchère : {{ produit.date_fin }}
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="p-2 mb-3">
+
+                <p>
+                    {{ produit.description }}
+                </p>
+
+            </div>
+
+
+            <form method="post" novalidate>
+
+                <input
+                    type="number"
+                    name="mise"
+                    step="0.01"
+                    placeholder="Votre mise"
+                >
+
+
+                {% if erreur %}
+
+                    <p class="message-erreur">
+                        {{ erreur }}
+                    </p>
+
+                {% endif %}
+
+                <div class="actions">
+
+                <button
+                    type="submit"
+                    class="button"
+                >
+                    Miser
+                </button>
+
+
+                </div>
+
+
+
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

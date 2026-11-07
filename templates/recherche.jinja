@@ -152,7 +152,10 @@
 
                                     {{ form_panier.hidden_tag() }}
 
-                                    <button type="submit">
+                                    <button
+                                        type="submit"
+                                        class="button"
+                                    >
                                         Ajouter
                                     </button>
 
@@ -161,16 +164,11 @@
                             {% endif %}
 
 
-                        {% elif produit.nom_statut == "Aux enchères" %}
-
-                            <button>
-                                Enchérir
-                            </button>
-
+                    
 
                         {% elif produit.nom_statut == "À échanger" %}
 
-                            <button>
+                            <button class="button">
                                 Échanger
                             </button>
 
