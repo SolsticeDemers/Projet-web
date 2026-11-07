@@ -101,32 +101,20 @@
                                 >
                                     {{ form_panier.hidden_tag() }}
 
-                                    <button type="submit">
+                                    <button
+                                        type="submit"
+                                        class="button"
+                                    >
                                         Ajouter
                                     </button>
+
                                 </form>
 
                             {% endif %}
 
-                        {% endif %}
+                        {% elif produit.nom_statut == 'À échanger' %}
 
-
-                        {% if produit.nom_statut == 'Aux enchères' %}
-
-                            {% if "id_utilisateur" in session %}
-
-                                <a href="{{ url_for('produits.miser_produit', id=produit.id_produit) }}">
-                                    Enchérir
-                                </a>
-
-                            {% endif %}
-
-                        {% endif %}
-
-
-                        {% if produit.nom_statut == 'À échanger' %}
-
-                            <button>
+                            <button class="button">
                                 Échanger
                             </button>
 
@@ -204,29 +192,15 @@
 
                         {% if produit.nom_statut == 'En vente' %}
 
-                            <button>
+                            <button class="button">
                                 Ajouter
                             </button>
 
-                        {% endif %}
 
 
-                        {% if produit.nom_statut == 'Aux enchères' %}
+                        {% elif produit.nom_statut == 'À échanger' %}
 
-                            {% if "id_utilisateur" in session %}
-
-                                <a href="{{ url_for('produits.miser_produit', id=produit.id_produit) }}">
-                                    Enchérir
-                                </a>
-
-                            {% endif %}
-
-                        {% endif %}
-
-
-                        {% if produit.nom_statut == 'À échanger' %}
-
-                            <button>
+                            <button class="button">
                                 Échanger
                             </button>
 
@@ -288,23 +262,13 @@
 
             {% if produit_du_jour.nom_statut == "En vente" %}
 
-                <button>
+                <button class="button">
                     Acheter
                 </button>
 
-            {% elif produit_du_jour.nom_statut == "Aux enchères" %}
-
-                {% if "id_utilisateur" in session %}
-
-                    <a href="{{ url_for('produits.miser_produit', id=produit_du_jour.id_produit) }}">
-                        Enchérir
-                    </a>
-
-                {% endif %}
-
             {% elif produit_du_jour.nom_statut == "À échanger" %}
 
-                <button>
+                <button class="button">
                     Échanger
                 </button>
 
@@ -401,32 +365,21 @@
                                 >
                                     {{ form_panier.hidden_tag() }}
 
-                                    <button type="submit">
+                                    <button
+                                        type="submit"
+                                        class="button"
+                                    >
                                         Ajouter
                                     </button>
+
                                 </form>
 
                             {% endif %}
 
-                        {% endif %}
+                        
+                        {% elif produit.nom_statut == 'À échanger' %}
 
-
-                        {% if produit.nom_statut == 'Aux enchères' %}
-
-                            {% if "id_utilisateur" in session %}
-
-                                <a href="{{ url_for('produits.miser_produit', id=produit.id_produit) }}">
-                                    Enchérir
-                                </a>
-
-                            {% endif %}
-
-                        {% endif %}
-
-
-                        {% if produit.nom_statut == 'À échanger' %}
-
-                            <button>
+                            <button class="button">
                                 Échanger
                             </button>
 

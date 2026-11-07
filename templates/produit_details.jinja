@@ -40,6 +40,14 @@
                         Mise actuelle : {{ produit.prix }} $
                     </p>
 
+                    {% if produit.date_fin %}
+
+                        <p>
+                            Fin de l'enchère : {{ produit.date_fin }}
+                        </p>
+
+                    {% endif %}
+
                 {% else %}
 
                     <p>
@@ -75,6 +83,15 @@
 
                         <a
                             href="{{ url_for('produits.miser_produit', id=produit.id_produit) }}"
+                            class="button"
+                        >
+                            Enchérir
+                        </a>
+
+                    {% else %}
+
+                        <a
+                            href="/compte/authentification"
                             class="button"
                         >
                             Enchérir

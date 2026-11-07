@@ -152,7 +152,10 @@
 
                                     {{ form_panier.hidden_tag() }}
 
-                                    <button type="submit">
+                                    <button
+                                        type="submit"
+                                        class="button"
+                                    >
                                         Ajouter
                                     </button>
 
@@ -161,20 +164,11 @@
                             {% endif %}
 
 
-                        {% elif produit.nom_statut == "Aux enchères" %}
-
-                            {% if "id_utilisateur" in session %}
-
-                                <a href="{{ url_for('produits.miser_produit', id=produit.id_produit) }}">
-                                    Enchérir
-                                </a>
-
-                            {% endif %}
-
+                    
 
                         {% elif produit.nom_statut == "À échanger" %}
 
-                            <button>
+                            <button class="button">
                                 Échanger
                             </button>
 

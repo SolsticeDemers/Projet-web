@@ -38,6 +38,14 @@
                     Mise actuelle : {{ produit.prix }} $
                 </p>
 
+                {% if produit.date_fin %}
+
+                    <p>
+                        Fin de l'enchère : {{ produit.date_fin }}
+                    </p>
+
+                {% endif %}
+
             </div>
 
 
@@ -56,20 +64,19 @@
                     type="number"
                     name="mise"
                     step="0.01"
-                    min="{{ produit.prix }}"
                     placeholder="Votre mise"
-                    required
                 >
 
 
                 {% if erreur %}
 
-                    <p class="text-danger">
+                    <p class="message-erreur">
                         {{ erreur }}
                     </p>
 
                 {% endif %}
 
+                <div class="actions">
 
                 <button
                     type="submit"
@@ -77,6 +84,12 @@
                 >
                     Miser
                 </button>
+
+
+                </div>
+
+
+
 
             </form>
 
