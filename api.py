@@ -1,5 +1,5 @@
 """Blueprint api"""
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, session
 import bd
 bp_api = Blueprint("api", __name__)
 
@@ -17,6 +17,7 @@ def courriel_unique():
         is_unique = True
     return jsonify(is_unique)
 
+
 @bp_api.route('/nom_unique')
 def nom_unique():
 
@@ -31,27 +32,20 @@ def nom_unique():
     return jsonify(is_unique)
 
 
-@bp_api.route('/accepter_echange/<int:id_proposition>/<string:approuve>')
-def accepter_echange(id_proposition, approuve):
 
-    if approuve == "oui":
-        reponse = 1
-    else:
-        reponse = 0
+
+@bp_api.route("/verifNotif")
+def verif_nouvelle_notif():
+
     with bd.creer_curseur() as curseur:
-        bd.update_offer(curseur, id_proposition, reponse)
+        nouvelle_notif = bd.get_nouvelle_notification(
+            curseur, session['id_utilisateur'])
 
-    return jsonify(reponse)# ???
-
-@bp_api.route('/refuser_echange/<int:id_proposition>/<string:approuve>')
-def refuser_echange(id_proposition, approuve):
-
-    if approuve == "non":
-        reponse = 0
-    else:
-        reponse = 1
-    with bd.creer_curseur() as curseur:
-        bd.update_offer(curseur, id_proposition, reponse)
-
-    return jsonify(reponse)# ???
-
+        est_nouvelle = True
+        nb_notif = len(nouvelle_notif)
+        reponse = {
+            "nouvelle": nb_notif > 0,
+            "nb_notif": nb_notif,
+            "nouvelles_notif": nouvelle_notif
+        }
+        return reponse

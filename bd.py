@@ -491,7 +491,7 @@ def modifier_produit(curseur, id_produit, nom, description, prix, id_statut):
 
     
 def get_notification(curseur, id_utilisateur):
-    curseur.execute("SELECT * FROM notification WHERE proprio = %(id_utilisateur)s OR id_utilisateur = %(id_utilisateur)s;",
+    curseur.execute("SELECT * FROM notification WHERE id_destinataire = %(id_utilisateur)s;",
                     {
                         'id_utilisateur' : id_utilisateur
                     })
@@ -512,9 +512,58 @@ def get_produit_by_id(curseur, id):
     return curseur.fetchall()
 
 def update_offer(curseur, id_proposition, approuve):
-    curseur.execute("UPDATE `notification` SET `approuver`= %(approuve)s WHERE id_notification = %(id)s;",
+    curseur.execute("UPDATE `echange` SET `approuver`= %(approuve)s WHERE id_echange = %(id)s;",
                     {
                         'id' : id_proposition,
                         'approuve' : approuve
+                    })
+    return curseur.fetchall()
+
+def create_notif_offrant(curseur, id):
+    curseur.execute("INSERT INTO `notification`( `id_destinataire`, `id_statut`, `notif_vue`, `date`)" \
+    " VALUES ((SELECT e.id_utilisateur FROM notification_echange n JOIN echange e ON n.id_echange = e.id_echange WHERE e.id_echange = %(id)s)" \
+    ", 3 , 0, CURRENT_DATE);",{
+        'id' : id
+    })
+    return curseur.lastrowid
+
+def create_notif_echange(curseur, id_echange, id_notification):
+    curseur.execute("INSERT INTO `notification_echange` (`id_notification`, `id_echange`) VALUES (%(id_notification)s, %(id_echange)s);",{
+        'id_notification' : id_notification,
+        'id_echange' : id_echange
+    })
+
+# def create_notif_echange(curseur):
+#     curseur.execute
+
+def get_notif_echange(curseur, id):
+
+    curseur.execute("""
+        SELECT
+        e.*
+        FROM notification n
+        JOIN notification_echange j
+            ON n.id_notification = j.id_notification
+        JOIN echange e
+            ON j.id_echange = e.id_echange
+        WHERE n.id_notification =  %(id)s
+    """,
+        {
+            'id' : id
+        })
+    return curseur.fetchone()
+
+def get_nouvelle_notification(curseur, id_utilisateur):
+    curseur.execute("SELECT * FROM notification WHERE id_destinataire = %(id_utilisateur)s and notif_vue = 0;",
+                    {
+                        'id_utilisateur' : id_utilisateur
+                    })
+    return curseur.fetchall()
+
+def update_notification(curseur, id_proposition, vue):
+    curseur.execute("UPDATE `notification` SET `notif_vue`= %(vue)s WHERE id_notification = %(id)s;",
+                    {
+                        'id' : id_proposition,
+                        'vue' : vue
                     })
     return curseur.fetchall()
