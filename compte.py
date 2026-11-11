@@ -2,11 +2,13 @@
 Ce script décrit le blue print Compte
 """
 
+import os
 import re
 import hashlib
 
-from flask import Blueprint, render_template, request, redirect, session, abort
+from flask import Blueprint, current_app, render_template, request, redirect, session, abort, url_for
 import bd
+from forms import ArchiverProduitForm
 
 
 regex_courriel = re.compile(
@@ -76,7 +78,6 @@ def creer_compte():
             page="Créer un compte"
         )
 
-
     nom = request.form.get("nom")
 
     courriel = request.form.get("courriel")
@@ -84,7 +85,6 @@ def creer_compte():
     mdp1 = request.form.get("mdp1")
 
     mdp2 = request.form.get("mdp2")
-
 
     classe_nom = ""
 
@@ -94,11 +94,9 @@ def creer_compte():
 
     classe_mdp2 = ""
 
-
     liste_courriel = []
 
     liste_nom = []
-
 
     erreur = False
 
@@ -108,11 +106,9 @@ def creer_compte():
 
     num_mdp_erreur = 0
 
-
     with bd.creer_curseur() as curseur:
 
         dict_compte = bd.get_nom_utiliser(curseur)
-
 
     for u in dict_compte:
 
@@ -120,13 +116,11 @@ def creer_compte():
             u['courriel']
         )
 
-
     for u in dict_compte:
 
         liste_nom.append(
             u['nom']
         )
-
 
     if nom == "" or nom is None:
 
@@ -147,7 +141,6 @@ def creer_compte():
     else:
 
         classe_nom = "is-valid"
-
 
     if courriel == "" or courriel is None:
 
@@ -177,7 +170,6 @@ def creer_compte():
 
         classe_courriel = "is-valid"
 
-
     if mdp1 == "" or mdp1 is None:
 
         classe_mdp1 = "is-invalid"
@@ -187,7 +179,6 @@ def creer_compte():
     else:
 
         classe_mdp1 = "is-valid"
-
 
     if mdp2 == "" or mdp2 is None:
 
@@ -209,7 +200,6 @@ def creer_compte():
 
         classe_mdp2 = "is-valid"
 
-
     if erreur is True:
 
         return render_template(
@@ -228,9 +218,7 @@ def creer_compte():
             mdp2=mdp2
         )
 
-
     mdp1 = hacher_mdp(mdp1)
-
 
     with bd.creer_curseur() as curseur:
 
@@ -241,13 +229,11 @@ def creer_compte():
             mdp1
         )
 
-
     session.permanent = True
 
     session['id_utilisateur'] = id_util
 
     session['nom'] = nom
-
 
     return redirect("/", code=303)
 
@@ -260,14 +246,60 @@ def deconnection():
 
     return redirect("/", code=303)
 
+
 @bp_compte.route("/profil")
 def profil():
     """Affiche le profil de l'utilisateur connecté"""
+
     if "id_utilisateur" not in session:
-        abort(401)
+        return redirect(url_for("compte.authentification"))
+
+    id_utilisateur = session["id_utilisateur"]
 
     with bd.creer_curseur() as curseur:
-        utilisateur = bd.get_vendeur(curseur, session["id_utilisateur"])
-        # produits = bd.get_produits_par_vendeur(curseur, session["id_utilisateur"])
+        utilisateur = bd.get_vendeur(curseur, id_utilisateur)
 
-    return render_template("profil.jinja", utilisateur=utilisateur)
+        if utilisateur is None:
+            abort(404)
+
+
+        produits = bd.get_produits_par_vendeur(
+            curseur,
+            id_utilisateur
+        )
+
+        codes_statut = {
+            'En vente': 'vente',
+            'Aux enchères': 'enchere',
+            'À échanger': 'echange',
+            'Vendu': 'vendu',
+        }
+
+        for produit in produits:
+            produit["code_statut"] = codes_statut.get(
+                produit["nom_statut"],
+                ""
+            )
+
+            nom_image = f"produit_{produit['id_produit']}.png"
+            produit["src"] = None
+
+            if os.path.exists(
+                os.path.join(
+                    current_app.config["CHEMIN_IMAGES"],
+                    nom_image
+                )
+            ):
+                produit["src"] = (
+                    current_app.config["ROUTE_IMAGES"]
+                    + nom_image
+                )
+
+        form = ArchiverProduitForm()
+
+        return render_template(
+            'profil.jinja',
+            produits=produits,
+            form_archiver=form,
+            utilisateur=utilisateur
+        )
