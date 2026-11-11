@@ -21,18 +21,55 @@
             <input
                 type="number"
                 name="prix_min"
-                value="{{ prix_min }}"
+                value="{{ prix_min if prix_min is not none else '' }}"
                 class="form-control form-control-sm filtre"
                 placeholder="Min"
+                min="0"
             >
 
             <input
                 type="number"
                 name="prix_max"
-                value="{{ prix_max }}"
+                value="{{ prix_max if prix_max is not none else '' }}"
                 class="form-control form-control-sm filtre"
                 placeholder="Max"
+                min="0"
             >
+
+            <select
+                name="tri"
+                class="form-select form-select-sm filtre"
+            >
+
+                <option
+                    value="nom_ASC"
+                    {% if tri == "nom_ASC" %}selected{% endif %}
+                >
+                    Trier : A - Z
+                </option>
+
+                <option
+                    value="nom_DESC"
+                    {% if tri == "nom_DESC" %}selected{% endif %}
+                >
+                    Trier : Z - A
+                </option>
+
+                <option
+                    value="prix_ASC"
+                    {% if tri == "prix_ASC" %}selected{% endif %}
+                >
+                    Prix : moins cher en premier
+                </option>
+
+                <option
+                    value="prix_DESC"
+                    {% if tri == "prix_DESC" %}selected{% endif %}
+                >
+                    Prix : plus cher en premier
+                </option>
+
+            </select>
 
             <button class="btn btn-sm btn-secondary">
                 Filtrer
@@ -101,11 +138,29 @@
                         {{ produit.prix }} $
                     </p>
 
+
                     <div class="actions">
 
-                        <button>
-                            Ajouter
-                        </button>
+                        {% if produit.nom_statut == "En vente" %}
+
+                            <button>
+                                Acheter
+                            </button>
+
+                        {% elif produit.nom_statut == "Aux enchères" %}
+
+                            <button>
+                                Enchérir
+                            </button>
+
+                        {% elif produit.nom_statut == "À échanger" %}
+
+                            <button>
+                                Échanger
+                            </button>
+
+                        {% endif %}
+
 
                         <a href="/produits/{{ produit.id_produit }}">
                             Détails
@@ -116,6 +171,7 @@
                 </div>
 
             </div>
+
 
         {% else %}
 
@@ -132,11 +188,12 @@
 
         <ul class="pagination justify-content-center">
 
+
             <li class="page-item {% if page <= 1 %}disabled{% endif %}">
 
                 <a
                     class="page-link"
-                    href="/produits/recherche?mot_cle={{ mot_cle }}&prix_min={{ prix_min }}&prix_max={{ prix_max }}&page={{ page - 1 }}"
+                    href="/produits/recherche?mot_cle={{ mot_cle }}&prix_min={{ prix_min if prix_min is not none else '' }}&prix_max={{ prix_max if prix_max is not none else '' }}&tri={{ tri }}&page={{ page - 1 }}"
                 >
                     &laquo;
                 </a>
@@ -157,7 +214,7 @@
 
                 <a
                     class="page-link"
-                    href="/produits/recherche?mot_cle={{ mot_cle }}&prix_min={{ prix_min }}&prix_max={{ prix_max }}&page={{ page + 1 }}"
+                    href="/produits/recherche?mot_cle={{ mot_cle }}&prix_min={{ prix_min if prix_min is not none else '' }}&prix_max={{ prix_max if prix_max is not none else '' }}&tri={{ tri }}&page={{ page + 1 }}"
                 >
                     &raquo;
                 </a>
