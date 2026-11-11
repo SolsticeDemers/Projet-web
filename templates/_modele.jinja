@@ -47,32 +47,57 @@
 
             </form>
 
+
             {% if session['id_utilisateur'] %}
             <div>
                 <div class="connexion connecter">
+
+                    <a href="/panier/" class="icone-panier" title="Mon panier">
+
+                        <i class="bi bi-cart3"></i>
+
+                        {% if nb_articles > 0 %}
+
+                        <span class="nb-articles">
+                            ({{ nb_articles }})
+                        </span>
+
+                        {% endif %}
+
+                    </a>
+
+
                     <a href="/compte/profil" class="btn_profil">
                         Profil
                     </a>
 
+
                     <a href="/compte/deconnection" class="btn_deconnection">
                         Se déconnecter
                     </a>
-
-
+                    <a href="/compte/notification" id="btn_notification"><img
+                            src="{{ url_for('static', filename='images/bell.png') }}" alt="Notifications"
+                            id="img_notif">
+                        <p id="nb_notification"></p>
+                    </a>
                 </div>
-                <a href="/compte/notification" id="btn_notification"><img src="{{ url_for('static', filename='images/bell.png') }}" alt="Notifications" id="img_notif">
-                <p id="nb_notification"></p> </a>
             </div>
+
 
             {% else %}
 
+
             <div class="connexion">
+
                 <a href="/compte/authentification">
                     Se connecter
                 </a>
+
             </div>
 
-            {% endif%}
+
+            {% endif %}
+
         </nav>
 
     </header>
@@ -95,9 +120,9 @@
 
     </footer>
 
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ url_for('static', filename='js/utils-ajax.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/notification.js') }}"></script>
+
 </body>
 
 </html>

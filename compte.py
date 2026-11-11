@@ -323,12 +323,6 @@ def notification():
        
     return render_template("notification.jinja", notifications_echange=notifications_echange)
 
-# Pas finit Création d'échange
-@bp_compte.route('/faire_echange', methods=['GET', 'POST'])
-def faire_echange():
-    if request.method == 'GET':
-        return render_template("compte/faire_echange.jinja", page="Créer un compte")
-    nom = request.form.get("nom")
 
 
 @bp_compte.route('/accepter_echange/<int:id_proposition>/<string:approuve>')
