@@ -9,18 +9,6 @@
         {% if session['nom'] == notif.offrant and notif.approuve != None %}
         <li>
 
-            {# <span class="badge-statut-notif
-                            {% if notif.echange_statut == 1 %}
-                                badge-vente
-                            {% elif notif.echange_statut == 2 %}
-                                badge-enchere
-                            {% elif notif.echange_statut == 3 %}
-                                badge-echange
-                            {% endif %}
-                        ">
-                {{ status }}
-            </span> #}
-
             <span class="badge-statut-notif badge-echange">
                 {{ notif.status }}
             </span>
