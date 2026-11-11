@@ -4,3 +4,4 @@ __pycache__
 *.pyc
 styles.css
 styles.css.map
+/static/images/utiles/
