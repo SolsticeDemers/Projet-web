@@ -1,12 +1,31 @@
 {% extends "_modele.jinja" %}
 
 {% block contenu %}
-<div class="container my-4">
-    <h2>Profil de {{ utilisateur.nom }}</h2>
-    <p>Nom d'utilisateur : {{ utilisateur.nom }}</p>
-    <p>Courriel : {{ utilisateur.courriel }}</p>
+<section class="container my-4">
+    <div class="profil-entete">
+        <img src="{{ image_vendeur }}" alt="Image de profil de {{ utilisateur.nom }}" class="profil-avatar">
 
-</div>
+        <div class="profil-informations">
+            <h3>{{ utilisateur.nom }}</h3>
+            <p><strong>Nom d'utilisateur :</strong> {{ utilisateur.nom }}</p>
+            <p><strong>Courriel :</strong> {{ utilisateur.courriel }}</p>
+
+            <a href="{{ url_for('compte.modifier_profil') }}" class="profil-bouton-modifier">
+                Modifier mon profil
+            </a>
+        </div>
+
+        <div class="actions flex-column ms-auto">
+            <button type="button" class="bouton-secondaire" disabled>
+                Notifications
+            </button>
+
+            <button type="button" class="bouton-secondaire" disabled>
+                Transactions
+            </button>
+        </div>
+    </div>
+</section>
 
 <section class="container my-4">
     <div class="d-flex justify-content-between align-items-center gap-3 mb-4">

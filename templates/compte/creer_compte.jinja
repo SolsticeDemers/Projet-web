@@ -3,7 +3,7 @@
 
 <h2>Créer un compte</h2>
 
-<form method="post" action="" novalidate>
+<form method="post" action="" enctype="multipart/form-data" novalidate>
     <div>
         <label for="nom">Nom d'utilisateur:</label>
         <input type="text" name="nom" id="nom" value="{{ nom }}" class="{{ classe_nom }}">
@@ -17,7 +17,8 @@
         <label for="courriel">Courriel:</label>
         <input type="email" name="courriel" id="courriel" value="{{ courriel }}" class="{{ classe_courriel }}">
         {% if num_courriel_erreur == 1 %}
-        <p class="invalid-feedback" id="erreur_courriel_1">Le champ courriel ne peut pas être vide. Veuiller insérer un courriel.</p>
+        <p class="invalid-feedback" id="erreur_courriel_1">Le champ courriel ne peut pas être vide. Veuiller insérer un
+            courriel.</p>
         {% elif num_courriel_erreur == 2 %}
         <p class="invalid-feedback" id="erreur_courriel_2">Veuiller insérer un courriel valide.</p>
         {% elif num_courriel_erreur == 3 %}
@@ -37,7 +38,7 @@
         <label for="mdp1">Mot de passe:</label>
         <input type="text" name="mdp1" id="mdp1" value="{{ mdp1 }}" class="{{ classe_mdp1 }}">
         <p class="invalid-feedback" id="erreur_mdp1">Veuiller insérer un mot de passe</p>
-        
+
     </div>
     <div>
         <label for="mdp2">Valider le mot de passe:</label>
@@ -45,10 +46,29 @@
         {% if num_mdp_erreur == 1 %}
         <p class="invalid-feedback" id="erreur_mdp2">Veuiller réinséré votre mot de passe.</p>
         {% else %}
-        <p class="invalid-feedback" id="erreur_mdp2">Les deux mots de passe ne sont pas pareil. Veuiller réinséré votre mot de passe.</p>
+        <p class="invalid-feedback" id="erreur_mdp2">Les deux mots de passe ne sont pas pareil. Veuiller réinséré votre
+            mot de passe.</p>
         {% endif %}
     </div>
+
+    <div class="mb-3">
+        <label for="image" class="form-label">Image de profil :</label>
+
+        <img id="apercu-image" src="{{ url_for('static', filename='images/default.png') }}"
+            data-img-initiale="{{ url_for('static', filename='images/default.png') }}" alt="Aperçu de l'image de profil"
+            class="img-thumbnail d-block mb-2 image-actuelle">
+
+        <input type="file" name="image" id="image" class="form-control" accept=".png,.jpg,.jpeg" required>
+
+        {% if erreur_image %}
+        <div class="text-danger">{{ erreur_image }}</div>
+        {% endif %}
+    </div>
+
     <button type="submit" id="compteSoumis">Soumettre</button>
 
 </form>
+
+<script src="{{ url_for('static', filename='js/apercu_image.js') }}"></script>
+
 {% endblock %}

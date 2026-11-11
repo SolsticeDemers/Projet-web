@@ -1,0 +1,112 @@
+{% extends "_modele.jinja" %}
+
+{% block contenu %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6 col-lg-4">
+
+            <h2 class="mb-4">Modifier mon profil</h2>
+
+            <form method="post" enctype="multipart/form-data" novalidate class="d-grid gap-4">
+
+                {{ form.hidden_tag() }}
+
+                <div class="mb-4">
+                    {{ form.nom.label(class="form-label") }}
+                    {{ form.nom(class="form-control") }}
+
+                    {% for erreur in form.nom.errors %}
+                    <div class="text-danger">{{ erreur }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.courriel.label(class="form-label") }}
+                    {{ form.courriel(class="form-control") }}
+
+                    {% for erreur in form.courriel.errors %}
+                    <div class="text-danger">{{ erreur }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    <button type="button" class="btn btn-secondary" data-bs-toggle="collapse"
+                        data-bs-target="#section-mot-de-passe"
+                        aria-expanded="{{ 'true' if request.method == 'POST' else 'false' }}"
+                        aria-controls="section-mot-de-passe">
+                        Modifier le mot de passe
+                    </button>
+
+                    <div class="collapse {% if request.method == 'POST' %}show{% endif %}" id="section-mot-de-passe">
+
+                        <div class="mb-3 mt-3">
+                            {{ form.mdp_actuel.label(class="form-label") }}
+                            {{ form.mdp_actuel(
+                            class="form-control",
+                            autocomplete="current-password"
+                            ) }}
+
+                            {% for erreur in form.mdp_actuel.errors %}
+                            <div class="text-danger">{{ erreur }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.mdp1.label(class="form-label") }}
+                            {{ form.mdp1(
+                            class="form-control",
+                            autocomplete="new-password"
+                            ) }}
+
+                            {% for erreur in form.mdp1.errors %}
+                            <div class="text-danger">{{ erreur }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.mdp2.label(class="form-label") }}
+                            {{ form.mdp2(
+                            class="form-control",
+                            autocomplete="new-password"
+                            ) }}
+
+                            {% for erreur in form.mdp2.errors %}
+                            <div class="text-danger">{{ erreur }}</div>
+                            {% endfor %}
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    {{ form.image.label(class="form-label") }}
+
+                    <img id="apercu-image" src="{{ image_vendeur }}" data-img-initiale="{{ image_vendeur }}"
+                        alt="Image de profil actuelle" class="img-thumbnail d-block mb-2 image-actuelle">
+
+                    {{ form.image(
+                    class="form-control",
+                    accept=".png,.jpg,.jpeg"
+                    ) }}
+
+
+                    {% for erreur in form.image.errors %}
+                    <div class="text-danger">{{ erreur }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="actions d-flex justify-content-end mb-5">
+                    <button type="submit" class="button">
+                        Enregistrer les modifications
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/apercu_image.js') }}"></script>
+
+{% endblock %}

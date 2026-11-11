@@ -562,4 +562,31 @@ def modifier_produit(curseur, id_produit, nom, description, prix, id_statut):
             "prix": prix,
             "id_statut": id_statut
         }
-    ) 
+    )
+
+def modifier_utilisateur(curseur, id_utilisateur, nom, courriel):
+    """Met à jour le nom et le courriel d'un utilisateur."""
+
+    curseur.execute("""
+        UPDATE utilisateur
+        SET nom = %(nom)s,
+            courriel = %(courriel)s
+        WHERE id_utilisateur = %(id_utilisateur)s
+    """, {
+        "id_utilisateur": id_utilisateur,
+        "nom": nom,
+        "courriel": courriel
+    })
+
+
+def modifier_mot_de_passe(curseur, id_utilisateur, mot_de_passe):
+    """Enregistre le nouveau mot de passe haché."""
+
+    curseur.execute("""
+        UPDATE utilisateur
+        SET mot_de_passe = %(mot_de_passe)s
+        WHERE id_utilisateur = %(id_utilisateur)s
+    """, {
+        "id_utilisateur": id_utilisateur,
+        "mot_de_passe": mot_de_passe
+    })
