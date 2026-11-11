@@ -287,9 +287,10 @@ def echange(notif, notifications, id_status, id_notif):
             "proprio": proprio,
             "offrant": offrant,
             "echange_nom": produit[0]['nom'],
+            "id_produit": produit[0]['id_produit'],
             "offert_nom": produit_offert[0]['nom'],
+            "id_produit_offert": produit_offert[0]['id_produit'],
             "status" : status,
-            "commentaire": produit_offert[0]['description'],
             "approuve": notif['approuver']
         }
     notifications.append(une_notification)

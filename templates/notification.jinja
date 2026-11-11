@@ -4,46 +4,46 @@
 
 <div>
     <h2>Notification d'échange</h2>
-    <ul>
+    <ul class="liste-mes-produits">
         {% for notif in notifications_echange %}
         {% if session['nom'] == notif.offrant and notif.approuve != None %}
-        <li>
+        <li class="carte-produit carte-mon-produit  affichage_notif">
+            <div id="notif_detail">
+                <p id="nom_offrant"><strong>{{notif.offrant}}</strong></p>
+                <p>Votre produit: <a href="/produits/{{ notif.id_produit }}">{{notif.echange_nom}}</a></p>
+                <p>Le produit offert: <a href="/produits/{{ notif.id_produit_offert }}">{{notif.offert_nom}}</a></p>
 
-            <span class="badge-statut-notif badge-echange">
-                {{ notif.status }}
-            </span>
+                {% if notif.approuve == 1 %}
+                <p class="alert theme-success" role="alert">Votre demande d'échange à été approuvé!</p>
 
-            {% if notif.approuve == 1 %}
-            <p><strong>{{notif.proprio}}</strong></p>
-            <p>Le produit convoité: {{notif.echange_nom}}</p>
-            <p>Votre produit: {{notif.offert_nom}}</p>
-            <p>Votre demande d'échange à été approuvé!</p>
+                {% elif notif.approuve == 0 %}
+                <p class="alert theme-danger" role="alert">Votre demande d'échange à été refusé!</p>
 
-            {% elif notif.approuve == 0 %}
-            <p><strong>{{notif.proprio}}</strong></p>
-            <p>Le produit convoité: {{notif.echange_nom}}</p>
-            <p>Votre produit: {{notif.offert_nom}}</p>
-            <p>Votre demande d'échange à été refusé!</p>
+                {% endif %}
 
-            {% endif %}
-
-
+            </div>
 
         </li>
-        
+    
         {% elif session['nom'] == notif.proprio and notif.approuve == None %}
-        <li>
-            <span class="badge-statut-notif badge-echange">
-                {{ notif.status }}
-            </span>
-            <p id="nom_offrant"><strong>{{notif.offrant}}</strong></p>
-            <p>Votre produit: {{notif.echange_nom}}</p>
-            <p>Le produit offert: {{notif.offert_nom}}</p>
-            <p>Commentaire du produit:</p>
-            <p>{{notif.commentaire}}</p>
-            <a href="/compte/accepter_echange/{{notif.id_proposition}}/oui" id="echange_accepter"
-                value="oui">Accepter</a>
-            <a href="/compte/accepter_echange/{{notif.id_proposition}}/non" id="echange_refuser" value="non">Refuser</a>
+        <li class="carte-produit carte-mon-produit  affichage_notif">
+            <div id="notif_detail">
+                <p id="nom_offrant"><strong>{{notif.offrant}}</strong></p>
+                <p>Votre produit: <a href="/produits/{{ notif.id_produit }}">{{notif.echange_nom}}</a></p>
+                <p>Le produit offert: <a href="/produits/{{ notif.id_produit_offert }}">{{notif.offert_nom}}</a></p>
+                {# <div id="notif_detail">
+                    <p>Le produit offert: {{notif.offert_nom}}</p>
+                    <a href="/produits/{{ notif.id_produit_offert }}">
+                        Détails du profuit offert
+                    </a>
+                </div> #}
+            </div>
+            <div class="actions">
+                <a class="btn-accepter" href="/compte/accepter_echange/{{notif.id_proposition}}/oui"
+                    id="echange_accepter" value="oui">Accepter</a>
+                <a class="btn-refuser" href="/compte/accepter_echange/{{notif.id_proposition}}/non" id="echange_refuser"
+                    value="non">Refuser</a>
+            </div>
         </li>
         {% endif %}
 

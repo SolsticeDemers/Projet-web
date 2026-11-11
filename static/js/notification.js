@@ -15,14 +15,12 @@ async function afficherNotif() {
     let nouvelleNotif = await envoyerRequeteAjax(`/api/verifNotif`,
         "GET", null
     )
-    console.log("Notification")
+
     if (nouvelleNotif.nouvelle == true) {
-        console.log("Alarm")
         imgNotif.src = "/images/alarm.png"
         imgNotif.alt = "image de nouvelle notification"
         nbNotification.textContent= nouvelleNotif.nb_notif
     } else {
-        console.log("Bell")
         imgNotif.src = "/images/bell.png"
         imgNotif.alt = "image d'il n'y a pas de nouvelle notif"
         nbNotification.textContent= ""
