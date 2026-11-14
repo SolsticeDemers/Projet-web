@@ -566,9 +566,9 @@ def modifier_produit(curseur, id_produit, nom, description, prix, id_statut):
             "prix": prix,
             "id_statut": id_statut
         }
-    ) 
-    
-    
+    )
+
+
 def get_notification(curseur, id_utilisateur):
     curseur.execute("SELECT * FROM notification WHERE id_destinataire = %(id_utilisateur)s;",
                     {
@@ -596,7 +596,7 @@ def update_offer(curseur, id_proposition, approuve):
                         'id' : id_proposition,
                         'approuve' : approuve
                     })
-    return curseur.fetchall()
+
 
 def create_notif_offrant(curseur, id):
     curseur.execute("INSERT INTO `notification`( `id_destinataire`, `id_statut`, `notif_vue`, `date`)" \
@@ -644,4 +644,4 @@ def update_notification(curseur, id_proposition, vue):
                         'id' : id_proposition,
                         'vue' : vue
                     })
-    return curseur.fetchall()
+ 
