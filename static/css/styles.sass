@@ -9,6 +9,7 @@ $blanc: #FFFFFF
 $noir: #111111
 $gris-fonce: #5F5C67
 $danger: #C0392B
+$success: #2bc041
 
 *
     box-sizing: border-box
@@ -186,6 +187,13 @@ header
 .badge-vendu
     background: $gris
 
+.badge-statut-notif
+    margin: 15px 0
+    padding: 7px 13px
+    border-radius: 20px
+    color: $blanc
+    font-size: 12px
+
 .contenu-produit
     padding: 22px
 
@@ -241,6 +249,18 @@ header
     .bouton-supprimer
         background: $orange
         color: $blanc
+
+    .btn-accepter
+        background: $gris
+
+        &:hover
+            background: $success
+
+    .btn-refuser
+        background: $gris
+
+        &:hover
+            background: $danger
 
 .produit-vedette
     width: 100%
@@ -453,3 +473,32 @@ p
     &:focus-visible
         outline: 2px solid $bleu
         outline-offset: 3px
+
+
+// Section notifications //
+
+#img_notif
+    max-height: 50px
+    text-align: right
+
+.affichage_notif
+    text-align: left
+    height: 250px
+    padding-left: 20px
+
+#notif_detail
+    a
+        color: $noir
+
+        &:hover
+            color: $gris
+
+.theme-success
+    color: #146c43 !important
+    background-color: #d1e7dd !important
+    border: 1px solid #a3cfbb !important
+
+.theme-danger
+    color: #842029 !important
+    background-color: #f8d7da !important
+    border: 1px solid #f1aeb5 !important

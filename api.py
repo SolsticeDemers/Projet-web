@@ -1,5 +1,5 @@
 """Blueprint api"""
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, session
 import bd
 bp_api = Blueprint("api", __name__)
 
@@ -17,6 +17,7 @@ def courriel_unique():
         is_unique = True
     return jsonify(is_unique)
 
+
 @bp_api.route('/nom_unique')
 def nom_unique():
 
@@ -29,3 +30,22 @@ def nom_unique():
     else:
         is_unique = True
     return jsonify(is_unique)
+
+
+
+
+@bp_api.route("/verifNotif")
+def verif_nouvelle_notif():
+
+    with bd.creer_curseur() as curseur:
+        nouvelle_notif = bd.get_nouvelle_notification(
+            curseur, session['id_utilisateur'])
+
+        est_nouvelle = True
+        nb_notif = len(nouvelle_notif)
+        reponse = {
+            "nouvelle": nb_notif > 0,
+            "nb_notif": nb_notif,
+            "nouvelles_notif": nouvelle_notif
+        }
+        return reponse
