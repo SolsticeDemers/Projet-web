@@ -583,3 +583,44 @@ def ajouter_mise(curseur, id_produit, id_utilisateur, montant):
         "id_utilisateur": id_utilisateur,
         "montant": montant
     })
+
+def modifier_prix_produit(curseur, id_produit, nouveau_prix):
+    """Modifie le prix actuel d'un produit"""
+
+    curseur.execute("""
+        UPDATE produit
+        SET prix = %(nouveau_prix)s
+        WHERE id_produit = %(id_produit)s
+    """, {
+        "nouveau_prix": nouveau_prix,
+        "id_produit": id_produit
+    })
+
+
+def get_mise_gagnante(curseur, id_produit):
+    """Retourne la mise la plus élevée pour un produit"""
+
+    curseur.execute("""
+        SELECT *
+        FROM mise
+        WHERE id_produit = %(id_produit)s
+        ORDER BY montant DESC
+        LIMIT 1
+    """, {
+        "id_produit": id_produit
+    })
+
+    return curseur.fetchone()
+
+def get_encheres_terminees(curseur):
+    """Retourne les enchères dont la date de fin est dépassée"""
+
+    curseur.execute("""
+        SELECT *
+        FROM produit
+        WHERE id_statut = 2
+        AND date_fin IS NOT NULL
+        AND date_fin <= NOW()
+    """)
+
+    return curseur.fetchall()
