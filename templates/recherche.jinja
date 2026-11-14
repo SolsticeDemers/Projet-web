@@ -170,9 +170,18 @@
 
                         {% elif produit.nom_statut == "À échanger" %}
 
-                            <button>
-                                Échanger
-                            </button>
+                            <form
+                                    method="POST"
+                                    action="/notification/faire_echange/{{ produit.id_produit }}"
+                                >
+
+                                    {{ form_panier.hidden_tag() }}
+
+                                    <button type="submit">
+                                        Échanger
+                                    </button>
+
+                                </form>
 
                         {% endif %}
 

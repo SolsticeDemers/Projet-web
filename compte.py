@@ -256,6 +256,8 @@ def profil():
     return render_template("profil.jinja", utilisateur=utilisateur)
 
 
+
+# à déplacer dans notification.py
 def echange(notif, notifications, id_status, id_notif):
     if session['id_utilisateur'] == notif['id_utilisateur']:
         with bd.creer_curseur() as curseur:
@@ -340,4 +342,3 @@ def accepter_echange(id_proposition, approuve):
         
 
     return redirect("/compte/notification", code=303)
-

@@ -1,0 +1,59 @@
+{% extends "_modele.jinja" %}
+
+{% block contenu %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6 col-lg-4">
+            <h2 class="mb-4">Faire une proposition d'échange</h2>
+
+            <form method="post" action="/notification/creer_echange" novalidate class="d-grid gap-4">
+                <div class="mb-4">
+                    <label for="nom_produit" class="form-label">Nom du produit:</label>
+                    <input type="text" name="nom_produit" id="nom_produit" value="{{ nom_produit }}" >
+                    {# class="{{ classe_nom }} form-control"> #}
+                    {# {% if num_nom_erreur == 1 %}
+                    <p class="invalid-feedback" id="erreur_nom_1">Le champ nom ne peut pas être vide. Veuiller insérer
+                        un
+                        nom.</p>
+                    {% else %} #}
+                    {# <p class="invalid-feedback" id="erreur_nom_2">Veuiller insérer un nom valide et unique.</p>
+                    {% endif %} #}
+                </div>
+                <div class="mb-3">
+                    <label for="nom_proprio" class="form-label">Nom du propriétaire:</label>
+                    <input type="text" name="nom_proprio" id="nom_proprio" value="{{ nom_proprio }}">
+                        {# class="{{ classe_courriel }} form-control"> #}
+                    {# {% if num_courriel_erreur == 1 %}
+                    <p class="invalid-feedback" id="erreur_courriel_1">Le champ courriel ne peut pas être vide. Veuiller
+                        insérer un courriel.</p>
+                    {% elif num_courriel_erreur == 2 %}
+                    <p class="invalid-feedback" id="erreur_courriel_2">Veuiller insérer un courriel valide.</p>
+                    {% elif num_courriel_erreur == 3 %}
+                    <p class="invalid-feedback" id="erreur_courriel_3">Votre courriel doit être unique.</p>
+                    {% endif %} #}
+                </div>
+                <div class="mb-4">
+                    <label for="nom_produit_offert" class="form-label">Nom de votre produit:</label>
+                    <input type="text" name="nom_produit_offert" id="nom_produit_offert" value="{{ nom_produit_offert }}" >
+                    {# class="{{ classe_nom }} form-control"> #}
+                    {# {% if num_nom_erreur == 1 %}
+                    <p class="invalid-feedback" id="erreur_nom_1">Le champ nom ne peut pas être vide. Veuiller insérer
+                        un
+                        nom.</p>
+                    {% else %} #}
+                    {# <p class="invalid-feedback" id="erreur_nom_2">Veuiller insérer un nom valide et unique.</p>
+                    {% endif %} #}
+                </div>
+                <div class="actions d-flex justify-content-end mb-5">
+                    <button type="submit" id="echangeSoumis" class="btn btn-primary">
+                        Confirmer l'échange
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
