@@ -77,14 +77,13 @@ CREATE TABLE IF NOT EXISTS `echange` (
   `id_echange` int NOT NULL AUTO_INCREMENT,
   `proprio` int NOT NULL,
   `id_utilisateur` int NOT NULL,
-  `produit_echange` int NOT NULL,
+  `produit` int NOT NULL,
   `produit_offert` int NOT NULL,
-  `commentaire` text NOT NULL,
   `approuver` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id_echange`),
   KEY `CLE_ETRANGERE_PROPRIO` (`proprio`) USING BTREE,
   KEY `CLE_ETRANGERE_PRODDUIT_OFFERT` (`produit_offert`) USING BTREE,
-  KEY `CLE_ETRANGERE_PRODUIT_ECHANGE` (`produit_echange`) USING BTREE,
+  KEY `CLE_ETRANGERE_PRODUIT_ECHANGE` (`produit`) USING BTREE,
   KEY `CLE_ETRANGERE_UTILISATEUR` (`id_utilisateur`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -92,12 +91,57 @@ CREATE TABLE IF NOT EXISTS `echange` (
 -- Déchargement des données de la table `echange`
 --
 
-INSERT INTO `echange` (`id_echange`, `proprio`, `id_utilisateur`, `produit_echange`, `produit_offert`, `commentaire`, `approuver`) VALUES
-(1, 5, 2, 19, 14, '', NULL),
-(2, 3, 4, 16, 22, '', NULL),
-(3, 3, 4, 23, 4, '', NULL);
+INSERT INTO `echange` (`id_echange`, `proprio`, `id_utilisateur`, `produit`, `produit_offert`, `approuver`) VALUES
+(1, 5, 2, 19, 14, NULL),
+(2, 3, 4, 16, 22, NULL),
+(3, 3, 4, 23, 4, NULL);
 
 -- --------------------------------------------------------
+
+--
+-- Structure de la table `notification`
+--
+
+DROP TABLE IF EXISTS `notification`;
+CREATE TABLE IF NOT EXISTS `notification` (
+  `id_notification` int NOT NULL AUTO_INCREMENT,
+  `id_destinataire` int NOT NULL,
+  `id_statut` int NOT NULL,
+  `notif_vue` tinyint NOT NULL DEFAULT '0',
+  `date` date NOT NULL,
+  PRIMARY KEY (`id_notification`),
+  KEY `CLE_ETRANGERE_DESTINATAIRE` (`id_destinataire`) USING BTREE,
+  KEY `CLE_ETRANGERE_STATUT` (`id_statut`)
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `notification`
+--
+
+INSERT INTO `notification` (`id_notification`, `id_destinataire`, `id_statut`, `notif_vue`, `date`) VALUES
+(1, 5, 3, 1, '2026-11-11'),
+(2, 3, 3, 0, '0000-00-00'),
+(3, 3, 3, 0, '0000-00-00');
+--
+-- Structure de la table `notification_echange`
+--
+
+DROP TABLE IF EXISTS `notification_echange`;
+CREATE TABLE IF NOT EXISTS `notification_echange` (
+  `id_notification` int NOT NULL,
+  `id_echange` int NOT NULL,
+  KEY `CLE_ETRANGERE_NOTIFICATION` (`id_notification`),
+  KEY `CLE_ETRANGERE_ECHANGE` (`id_echange`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `notification_echange`
+--
+
+INSERT INTO `notification_echange` (`id_notification`, `id_echange`) VALUES
+(1, 1),
+(2, 2),
+(3, 3);
 
 --
 -- Structure de la table `produit`
@@ -220,6 +264,20 @@ ALTER TABLE `echange`
   ADD CONSTRAINT `echange_ibfk_2` FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateur` (`id_utilisateur`) ON DELETE CASCADE,
   ADD CONSTRAINT `echange_ibfk_3` FOREIGN KEY (`produit_echange`) REFERENCES `produit` (`id_produit`) ON DELETE CASCADE,
   ADD CONSTRAINT `echange_ibfk_4` FOREIGN KEY (`produit_offert`) REFERENCES `produit` (`id_produit`) ON DELETE CASCADE;
+
+
+--
+-- Contraintes pour la table `notification`
+--
+ALTER TABLE `notification`
+  ADD CONSTRAINT `notification_ibfk_1` FOREIGN KEY (`id_statut`) REFERENCES `statut_produit` (`id_statut`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `notification_echange`
+--
+ALTER TABLE `notification_echange`
+  ADD CONSTRAINT `notification_echange_ibfk_1` FOREIGN KEY (`id_notification`) REFERENCES `notification` (`id_notification`) ON DELETE CASCADE,
+  ADD CONSTRAINT `notification_echange_ibfk_2` FOREIGN KEY (`id_echange`) REFERENCES `echange` (`id_echange`) ON DELETE CASCADE;
 
 --
 -- Contraintes pour la table `produit`
