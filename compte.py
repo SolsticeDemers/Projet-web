@@ -464,7 +464,6 @@ def echange(notif, notifications, id_status, id_notif):
     with bd.creer_curseur() as curseur:
         produit = bd.get_produit_by_id(
             curseur, notif['produit'])
-
     with bd.creer_curseur() as curseur:
         status = bd.get_statut_by_Id(
                     curseur, id_status)
@@ -488,33 +487,51 @@ def echange(notif, notifications, id_status, id_notif):
     notifications.append(une_notification)
     return notifications
 
-
 @bp_compte.route('/notification')
 def notification():
-    notifications_vente = [
-    ]
-    notifications_enchere = [
-    ]
-    notifications_echange = [
-    ]
+    if "id_utilisateur" not in session:
+        abort(401)
+
+    notifications_vente = []
+    notifications_enchere = []
+    notifications_echange = []
+
     with bd.creer_curseur() as curseur:
         notification = bd.get_notification(
-            curseur, session['id_utilisateur'])
+            curseur, session['id_utilisateur']
+        )
+
+        notifications_achat = bd.get_notifications_achat_non_lues(
+            curseur, session['id_utilisateur']
+        )
 
     for notif in notification:
         with bd.creer_curseur() as curseur:
-            nouvelle_notif = bd.update_notification(curseur, notif['id_notification'], 1)
-
+            bd.update_notification(
+                curseur,
+                notif['id_notification'],
+                1
+            )
 
         if notif['id_statut'] == 3:
             with bd.creer_curseur() as curseur:
                 notif_echange = bd.get_notif_echange(
-                    curseur, notif['id_notification'])
-                notif_echange = echange(
-                    notif_echange, notifications_echange, notif['id_statut'], notif['id_notification'])
+                    curseur,
+                    notif['id_notification']
+                )
 
+                notifications_echange = echange(
+                    notif_echange,
+                    notifications_echange,
+                    notif['id_statut'],
+                    notif['id_notification']
+                )
 
-    return render_template("notification.jinja", notifications_echange=notifications_echange)
+    return render_template(
+        "notification.jinja",
+        notifications_echange=notifications_echange,
+        notifications_achat=notifications_achat
+    )
 
 
 
