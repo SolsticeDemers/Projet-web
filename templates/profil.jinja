@@ -3,25 +3,29 @@
 {% block contenu %}
 <section class="container my-4">
     <div class="profil-entete">
-        <img src="{{ image_vendeur }}" alt="Image de profil de {{ utilisateur.nom }}" class="profil-avatar">
+        <div class="d-flex flex-column align-items-center">
+            <img src="{{ image_vendeur }}" alt="Image de profil de {{ utilisateur.nom }}" class="profil-avatar">
+            <div>
+                <a href="{{ url_for('compte.modifier_profil') }}" class="lien-modifier-profil">
+                    Modifier mon profil
+                </a>
+            </div>
+        </div>
 
         <div class="profil-informations">
             <h3>{{ utilisateur.nom }}</h3>
             <p><strong>Nom d'utilisateur :</strong> {{ utilisateur.nom }}</p>
             <p><strong>Courriel :</strong> {{ utilisateur.courriel }}</p>
 
-            <a href="{{ url_for('compte.modifier_profil') }}" class="profil-bouton-modifier">
-                Modifier mon profil
-            </a>
         </div>
 
         <div class="actions flex-column ms-auto">
             <button type="button" class="bouton-secondaire" disabled>
-                Notifications
+                Mes notifications
             </button>
 
             <button type="button" class="bouton-secondaire" disabled>
-                Transactions
+                Mes transactions
             </button>
         </div>
     </div>
@@ -44,9 +48,8 @@
 
             <div class="image-produit">
                 <a href="/produits/{{ produit.id_produit }}">
-                    {% if produit.src %}
-                    <img src="{{ produit.src }}" alt="{{ produit.nom }}">
-                    {% endif %}
+                    <img src="{{ produit.src or url_for('static', filename='images/default.png') }}"
+                        alt="{{ produit.nom }}">
                 </a>
 
                 <span class="badge-statut badge-{{ produit.code_statut }}">

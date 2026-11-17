@@ -330,7 +330,7 @@ def profil():
         else:
             image_vendeur = url_for(
                 "static",
-                filename="images/default.png"
+                filename="images/default_user.png"
             )
 
         return render_template(
@@ -362,7 +362,7 @@ def modifier_profil():
     if os.path.exists(chemin_image):
         image_vendeur = current_app.config["ROUTE_IMAGES"] + nom_image
     else:
-        image_vendeur = url_for("static", filename="images/default.png")
+        image_vendeur = url_for("static", filename="images/default_user.png")
 
     with bd.creer_curseur() as curseur:
         utilisateur = bd.get_vendeur(curseur, id_utilisateur)
