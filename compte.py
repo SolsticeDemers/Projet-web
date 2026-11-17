@@ -272,7 +272,7 @@ def echange(notif, notifications, id_status, id_notif):
             offrant = offrant['nom']
             proprio = session['nom']
     with bd.creer_curseur() as curseur:
-        produit = bd.get_produit_by_id(
+        produit = bd.get_produit(
             curseur, notif['produit'])
 
     with bd.creer_curseur() as curseur:
@@ -281,7 +281,7 @@ def echange(notif, notifications, id_status, id_notif):
     status = status['nom_statut']
 
     with bd.creer_curseur() as curseur:
-        produit_offert = bd.get_produit_by_id(
+        produit_offert = bd.get_produit(
             curseur, notif['produit_offert'])
         une_notification = {
             "id_proposition": notif['id_echange'],
@@ -315,7 +315,6 @@ def notification():
         with bd.creer_curseur() as curseur:
             nouvelle_notif = bd.update_notification(curseur, notif['id_notification'], 1)
         
-
         if notif['id_statut'] == 3:
             with bd.creer_curseur() as curseur:
                 notif_echange = bd.get_notif_echange(
@@ -323,7 +322,6 @@ def notification():
                 notif_echange = echange(
                     notif_echange, notifications_echange, notif['id_statut'], notif['id_notification'])
 
-       
     return render_template("notification.jinja", notifications_echange=notifications_echange)
 
 
