@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : mer. 11 nov. 2026 à 15:36
+-- Généré le : mar. 17 nov. 2026 à 18:48
 -- Version du serveur : 9.1.0
 -- Version de PHP : 8.3.14
 
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `achat` (
   UNIQUE KEY `id_produit` (`id_produit`),
   UNIQUE KEY `id_produit_2` (`id_produit`,`id_acheteur`),
   KEY `id_acheteur` (`id_acheteur`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `achat`
@@ -64,7 +64,9 @@ INSERT INTO `achat` (`id_achat`, `id_produit`, `id_acheteur`, `prix_achat`, `dat
 (18, 12, 1, 3200.00, '2026-10-27', 1),
 (19, 3, 1, 1150.00, '2026-10-27', 1),
 (20, 9, 1, 980.00, '2026-11-02', 1),
-(22, 21, 1, 725.00, '2026-11-02', 0);
+(23, 25, 3, 20000.00, '2026-11-17', 1),
+(26, 20, 1, 950.00, '2026-11-17', 1),
+(27, 14, 1, 320.00, '2026-11-17', 1);
 
 -- --------------------------------------------------------
 
@@ -77,25 +79,101 @@ CREATE TABLE IF NOT EXISTS `echange` (
   `id_echange` int NOT NULL AUTO_INCREMENT,
   `proprio` int NOT NULL,
   `id_utilisateur` int NOT NULL,
-  `produit_echange` int NOT NULL,
-  `produit_offert` int NOT NULL,
+  `produit` int NOT NULL,
+  `produit_offert` int DEFAULT NULL,
   `commentaire` text NOT NULL,
   `approuver` tinyint(1) DEFAULT NULL,
-  PRIMARY KEY (`id_echange`),
+  PRIMARY KEY (`id_echange`) USING BTREE,
   KEY `CLE_ETRANGERE_PROPRIO` (`proprio`) USING BTREE,
   KEY `CLE_ETRANGERE_PRODDUIT_OFFERT` (`produit_offert`) USING BTREE,
-  KEY `CLE_ETRANGERE_PRODUIT_ECHANGE` (`produit_echange`) USING BTREE,
-  KEY `CLE_ETRANGERE_UTILISATEUR` (`id_utilisateur`) USING BTREE
+  KEY `CLE_ETRANGERE_UTILISATEUR` (`id_utilisateur`) USING BTREE,
+  KEY `CLE_ETRANGERE_PRODUIT` (`produit`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `echange`
 --
 
-INSERT INTO `echange` (`id_echange`, `proprio`, `id_utilisateur`, `produit_echange`, `produit_offert`, `commentaire`, `approuver`) VALUES
+INSERT INTO `echange` (`id_echange`, `proprio`, `id_utilisateur`, `produit`, `produit_offert`, `commentaire`, `approuver`) VALUES
 (1, 5, 2, 19, 14, '', NULL),
 (2, 3, 4, 16, 22, '', NULL),
 (3, 3, 4, 23, 4, '', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `notification`
+--
+
+DROP TABLE IF EXISTS `notification`;
+CREATE TABLE IF NOT EXISTS `notification` (
+  `id_notification` int NOT NULL AUTO_INCREMENT,
+  `id_destinataire` int NOT NULL,
+  `id_statut` int NOT NULL,
+  `notif_vue` tinyint NOT NULL DEFAULT '0',
+  `date` date NOT NULL,
+  PRIMARY KEY (`id_notification`),
+  KEY `CLE_ETRANGERE_DESTINATAIRE` (`id_destinataire`) USING BTREE,
+  KEY `CLE_ETRANGERE_STATUT` (`id_statut`)
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `notification`
+--
+
+INSERT INTO `notification` (`id_notification`, `id_destinataire`, `id_statut`, `notif_vue`, `date`) VALUES
+(1, 5, 3, 0, '0000-00-00'),
+(2, 3, 3, 1, '0000-00-00'),
+(3, 3, 3, 1, '0000-00-00'),
+(26, 1, 1, 1, '2026-11-17'),
+(27, 6, 1, 0, '2026-11-17'),
+(28, 2, 1, 1, '2026-11-17');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `notification_achat`
+--
+
+DROP TABLE IF EXISTS `notification_achat`;
+CREATE TABLE IF NOT EXISTS `notification_achat` (
+  `id_notification` int NOT NULL,
+  `id_achat` int NOT NULL,
+  PRIMARY KEY (`id_notification`),
+  UNIQUE KEY `id_achat` (`id_achat`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `notification_achat`
+--
+
+INSERT INTO `notification_achat` (`id_notification`, `id_achat`) VALUES
+(26, 23),
+(27, 26),
+(28, 27);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `notification_echange`
+--
+
+DROP TABLE IF EXISTS `notification_echange`;
+CREATE TABLE IF NOT EXISTS `notification_echange` (
+  `id_notification` int NOT NULL,
+  `id_echange` int NOT NULL,
+  KEY `CLE_ETRANGERE_NOTIFICATION` (`id_notification`),
+  KEY `CLE_ETRANGERE_ECHANGE` (`id_echange`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `notification_echange`
+--
+
+INSERT INTO `notification_echange` (`id_notification`, `id_echange`) VALUES
+(1, 1),
+(2, 2),
+(3, 3);
 
 -- --------------------------------------------------------
 
@@ -136,18 +214,18 @@ INSERT INTO `produit` (`id_produit`, `nom`, `description`, `prix`, `id_vendeur`,
 (11, 'Buste en marbre blanc italien', 'Buste décoratif sculpté dans du marbre blanc', 2400.00, 5, 4, '2026-09-17', 0),
 (12, 'PlayStation Net Yaroze', 'Console PlayStation noire rare destinée à la création de jeux', 3200.00, 6, 4, '2026-09-20', 0),
 (13, 'L\'Étranger édition canadienne ancienne', 'Ancienne édition canadienne du roman L\'Étranger', 780.00, 4, 4, '2025-12-11', 0),
-(14, 'Portrait familial québécois de 1918', 'Ancien portrait d\'une famille québécoise avec son cadre original', 320.00, 2, 1, '2026-08-28', 0),
+(14, 'Portrait familial québécois de 1918', 'Ancien portrait d\'une famille québécoise avec son cadre original', 320.00, 2, 4, '2026-08-28', 0),
 (15, 'Poudre compacte MAC édition 2008', 'Poudre MAC provenant d\'une collection limitée de 2008', 145.00, 1, 4, '2025-11-20', 0),
 (16, 'Brochure Ford Mustang 1967', 'Brochure publicitaire originale de la Ford Mustang 1967', 225.00, 3, 3, '2025-08-03', 0),
 (17, 'Dracula édition illustrée ancienne', 'Ancienne édition illustrée de Dracula avec couverture rigide', 890.00, 4, 4, '2025-07-08', 0),
 (18, 'Ensemble couture rose années 1990', 'Ensemble deux pièces sur mesure avec veste et jupe assorties', 420.00, 1, 4, '2026-02-19', 0),
 (19, 'Coffret skincare Sulwhasoo édition limitée', 'Coffret de soins Sulwhasoo provenant d\'une édition limitée', 315.00, 5, 3, '2026-09-10', 0),
-(20, 'iPod Classic première génération', 'iPod Apple de première génération avec sa molette originale', 950.00, 6, 1, '2026-08-30', 0),
+(20, 'iPod Classic première génération', 'iPod Apple de première génération avec sa molette originale', 950.00, 6, 4, '2026-08-30', 0),
 (21, 'Portrait miniature peint ancien', 'Petit portrait ancien peint à la main dans un cadre ovale', 725.00, 2, 2, '2026-09-07', 0),
 (22, 'Sac à main perlé fait main', 'Sac à main vintage couvert de perles et fabriqué à la main', 275.00, 1, 4, '2025-05-13', 1),
 (23, 'Volant Porsche 911 classique', 'Volant original provenant d\'une ancienne Porsche 911', 1450.00, 3, 3, '2026-08-22', 0),
 (24, 'Atlas mondial relié en cuir 1904', 'Ancien atlas mondial avec cartes en couleur et reliure en cuir', 1750.00, 4, 4, '2026-09-15', 0),
-(25, 'Cadillac DeVille 1994 rose', 'Cadillac DeVille de 1994 avec peinture rose et intérieur restauré', 20000.00, 1, 2, '2026-09-22', 0),
+(25, 'Cadillac DeVille 1994 rose', 'Cadillac DeVille de 1994 avec peinture rose et intérieur restauré', 20000.00, 1, 4, '2026-09-22', 0),
 (26, 'Journal en cuir brun', 'Journal en cuir brun avec reliure et attache crayon', 20.00, 1, 1, '2026-10-25', 1);
 
 -- --------------------------------------------------------
@@ -218,8 +296,28 @@ ALTER TABLE `achat`
 ALTER TABLE `echange`
   ADD CONSTRAINT `echange_ibfk_1` FOREIGN KEY (`proprio`) REFERENCES `utilisateur` (`id_utilisateur`),
   ADD CONSTRAINT `echange_ibfk_2` FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateur` (`id_utilisateur`) ON DELETE CASCADE,
-  ADD CONSTRAINT `echange_ibfk_3` FOREIGN KEY (`produit_echange`) REFERENCES `produit` (`id_produit`) ON DELETE CASCADE,
+  ADD CONSTRAINT `echange_ibfk_3` FOREIGN KEY (`produit`) REFERENCES `produit` (`id_produit`) ON DELETE CASCADE,
   ADD CONSTRAINT `echange_ibfk_4` FOREIGN KEY (`produit_offert`) REFERENCES `produit` (`id_produit`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `notification`
+--
+ALTER TABLE `notification`
+  ADD CONSTRAINT `notification_ibfk_1` FOREIGN KEY (`id_statut`) REFERENCES `statut_produit` (`id_statut`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `notification_achat`
+--
+ALTER TABLE `notification_achat`
+  ADD CONSTRAINT `notification_achat_ibfk_1` FOREIGN KEY (`id_notification`) REFERENCES `notification` (`id_notification`),
+  ADD CONSTRAINT `notification_achat_ibfk_2` FOREIGN KEY (`id_achat`) REFERENCES `achat` (`id_achat`);
+
+--
+-- Contraintes pour la table `notification_echange`
+--
+ALTER TABLE `notification_echange`
+  ADD CONSTRAINT `notification_echange_ibfk_1` FOREIGN KEY (`id_notification`) REFERENCES `notification` (`id_notification`) ON DELETE CASCADE,
+  ADD CONSTRAINT `notification_echange_ibfk_2` FOREIGN KEY (`id_echange`) REFERENCES `echange` (`id_echange`) ON DELETE CASCADE;
 
 --
 -- Contraintes pour la table `produit`
