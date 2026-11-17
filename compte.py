@@ -271,7 +271,7 @@ def echange(notif, notifications, id_status, id_notif):
             proprio = session['nom']
     with bd.creer_curseur() as curseur:
         produit = bd.get_produit_by_id(
-            curseur, notif['produit'])
+            curseur, notif['produit_echange']) #À VALIDER AVEC SOLSTICE, erreur si juste écrit produit
 
     with bd.creer_curseur() as curseur:
         status = bd.get_statut_by_Id(
@@ -299,6 +299,9 @@ def echange(notif, notifications, id_status, id_notif):
 
 @bp_compte.route('/notification')
 def notification():
+    if "id_utilisateur" not in session:
+        abort(401)
+
     notifications_vente = [
     ]
     notifications_enchere = [
@@ -309,10 +312,14 @@ def notification():
         notification = bd.get_notification(
             curseur, session['id_utilisateur'])
 
+        notifications_achat = bd.get_notifications_achat_non_lues(
+            curseur, session['id_utilisateur']
+        )
+
     for notif in notification:
         with bd.creer_curseur() as curseur:
             nouvelle_notif = bd.update_notification(curseur, notif['id_notification'], 1)
-        
+
 
         if notif['id_statut'] == 3:
             with bd.creer_curseur() as curseur:
@@ -321,8 +328,10 @@ def notification():
                 notif_echange = echange(
                     notif_echange, notifications_echange, notif['id_statut'], notif['id_notification'])
 
-       
-    return render_template("notification.jinja", notifications_echange=notifications_echange)
+
+    return render_template("notification.jinja",
+                           notifications_echange=notifications_echange,
+                           notifications_achat=notifications_achat)
 
 
 
@@ -337,7 +346,7 @@ def accepter_echange(id_proposition, approuve):
         bd.update_offer(curseur, id_proposition, reponse)
         id_notification= bd.create_notif_offrant(curseur, id_proposition)
         bd.create_notif_echange(curseur,id_proposition, id_notification)
-        
+
 
     return redirect("/compte/notification", code=303)
 

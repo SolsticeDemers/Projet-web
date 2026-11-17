@@ -85,18 +85,36 @@ def confirmer():
     with bd.creer_curseur() as curseur:
         produits = bd.get_panier(curseur, id_acheteur)
 
-        # Panier vide : rien à acheter
         if len(produits) == 0:
             return redirect(url_for("panier.voir_panier"))
 
-        # Si un produit est indisponible, on refuse l'achat
         for p in produits:
             if p["archive"] == True or p["id_statut"] == 4:
                 return redirect(url_for("panier.voir_panier"))
 
-        # Tout est disponible : on achète
         for p in produits:
-            bd.confirmer_achat(curseur, id_acheteur, p["id_produit"], p["prix"])
+            nb_achats = bd.confirmer_achat(
+                curseur, id_acheteur, p["id_produit"], p["prix"]
+            )
+
+            if nb_achats != 1:
+                abort(409, "Cet achat a déjà été confirmé ou n'est plus disponible.")
+
             bd.marquer_vendu(curseur, p["id_produit"])
+
+            achat = bd.get_achat_paye(
+                curseur, id_acheteur, p["id_produit"]
+            )
+
+            if achat is None:
+                abort(409, "Impossible de trouver l'achat confirmé.")
+
+            id_notification = bd.creer_notification_achat(
+                curseur, achat["id_vendeur"]
+            )
+
+            bd.lier_notification_achat(
+                curseur, id_notification, achat["id_achat"]
+            )
 
     return redirect(url_for("panier.voir_panier", achat="ok"))

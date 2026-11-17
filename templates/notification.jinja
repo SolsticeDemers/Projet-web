@@ -24,7 +24,7 @@
             </div>
 
         </li>
-    
+
         {% elif session['nom'] == notif.proprio and notif.approuve == None %}
         <li class="carte-produit carte-mon-produit  affichage_notif">
             <div id="notif_detail">
@@ -50,5 +50,26 @@
         {% endfor %}
     </ul>
 </div>
+
+<div>
+    <h2>Notifications d'achat</h2>
+
+    <ul class="liste-mes-produits">
+        {% for notif in notifications_achat %}
+        <li class="carte-produit carte-mon-produit affichage_notif">
+            <p>
+                Votre produit
+                <a href="{{ url_for('produits.details_produit', id=notif.id_produit) }}">
+                    {{ notif.nom_produit }}
+                </a>
+                a été acheté par {{ notif.nom_acheteur }} pour {{ notif.prix_achat }} $.
+            </p>
+        </li>
+        {% else %}
+        <li>Aucune notification d'achat.</li>
+        {% endfor %}
+    </ul>
+</div>
+
 
 {% endblock %}
