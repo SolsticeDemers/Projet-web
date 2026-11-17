@@ -72,7 +72,6 @@ def creer_compte():
     """Affiche un formulaire"""
 
     if request.method == 'GET':
-
         return render_template(
             "compte/creer_compte.jinja",
             page="Créer un compte"
@@ -81,7 +80,6 @@ def creer_compte():
     nom = request.form.get("nom")
 
     courriel = request.form.get("courriel")
-
     mdp1 = request.form.get("mdp1")
 
     mdp2 = request.form.get("mdp2")
@@ -89,7 +87,6 @@ def creer_compte():
     classe_nom = ""
 
     classe_courriel = ""
-
     classe_mdp1 = ""
 
     classe_mdp2 = ""
@@ -140,6 +137,7 @@ def creer_compte():
 
         num_nom_erreur = 1
 
+
     elif nom in liste_nom:
 
         classe_nom = "is-invalid"
@@ -160,13 +158,16 @@ def creer_compte():
 
         num_courriel_erreur = 1
 
-    elif not regex_courriel.fullmatch(courriel):
-
+    elif not re.match(
+        r"^[^@\s]+@[^@\s]+\.[^@\s]+$",
+        courriel
+    ):
         classe_courriel = "is-invalid"
 
         erreur = True
 
         num_courriel_erreur = 2
+
 
     elif courriel in liste_courriel:
 
