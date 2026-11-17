@@ -34,9 +34,27 @@
 
             <div class="prix p-2 mb-3">
 
-                <p>
-                    Prix : {{ produit.prix }} $
-                </p>
+                {% if produit.id_statut == 2 %}
+
+                    <p>
+                        Mise actuelle : {{ produit.prix }} $
+                    </p>
+
+                    {% if produit.date_fin %}
+
+                        <p>
+                            Fin de l'enchère : {{ produit.date_fin }}
+                        </p>
+
+                    {% endif %}
+
+                {% else %}
+
+                    <p>
+                        Prix : {{ produit.prix }} $
+                    </p>
+
+                {% endif %}
 
             </div>
 
@@ -58,26 +76,36 @@
                         Ce produit n'est plus disponible.
                     </p>
 
-                {% elif not est_connecte %}
+                {% elif est_connecte %}
 
-                    <a href="/compte/authentification" class="button">
-                        Connectez-vous pour acheter
-                    </a>
+                    {% if produit.id_statut == 2 and not est_vendeur %}
 
-                {% elif not est_vendeur %}
+                        <a
+                            href="{{ url_for('produits.miser_produit', id=produit.id_produit) }}"
+                            class="button"
+                        >
+                            Enchérir
+                        </a>
 
-                    <form
-                        method="POST"
-                        action="/panier/ajouter/{{ produit.id_produit }}"
-                    >
+                    {% elif produit.id_statut == 1 and not est_vendeur %}
 
-                        {{ form.hidden_tag() }}
+                        <form
+                            method="POST"
+                            action="/panier/ajouter/{{ produit.id_produit }}"
+                        >
 
-                        <button type="submit" class="button">
-                            Ajouter au panier
-                        </button>
+                            {{ form.hidden_tag() }}
 
-                    </form>
+                            <button
+                                type="submit"
+                                class="button"
+                            >
+                                Ajouter au panier
+                            </button>
+
+                        </form>
+
+                    {% endif %}
 
                 {% endif %}
 

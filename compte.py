@@ -296,33 +296,75 @@ def echange(notif, notifications, id_status, id_notif):
     notifications.append(une_notification)
     return notifications
 
+def enchere(notif, notifications, id_notif):
+    """Prépare une notification d'enchère gagnée"""
+
+    with bd.creer_curseur() as curseur:
+        produit = bd.get_notif_enchere(
+            curseur,
+            id_notif
+        )
+
+    une_notification = {
+        "id_notif": id_notif,
+        "nom_produit": produit["nom"],
+        "id_produit": produit["id_produit"],
+        "prix": produit["prix"]
+    }
+
+    notifications.append(une_notification)
+
+    return notifications
+
 
 @bp_compte.route('/notification')
 def notification():
-    notifications_vente = [
-    ]
-    notifications_enchere = [
-    ]
-    notifications_echange = [
-    ]
+    notifications_vente = []
+    notifications_enchere = []
+    notifications_echange = []
+
     with bd.creer_curseur() as curseur:
         notification = bd.get_notification(
-            curseur, session['id_utilisateur'])
+            curseur,
+            session['id_utilisateur']
+        )
 
     for notif in notification:
         with bd.creer_curseur() as curseur:
-            nouvelle_notif = bd.update_notification(curseur, notif['id_notification'], 1)
-        
+            nouvelle_notif = bd.update_notification(
+                curseur,
+                notif['id_notification'],
+                1
+            )
 
         if notif['id_statut'] == 3:
             with bd.creer_curseur() as curseur:
                 notif_echange = bd.get_notif_echange(
-                    curseur, notif['id_notification'])
-                notif_echange = echange(
-                    notif_echange, notifications_echange, notif['id_statut'], notif['id_notification'])
+                    curseur,
+                    notif['id_notification']
+                )
 
-       
-    return render_template("notification.jinja", notifications_echange=notifications_echange)
+                notif_echange = echange(
+                    notif_echange,
+                    notifications_echange,
+                    notif['id_statut'],
+                    notif['id_notification']
+                )
+
+ 
+    for notif in notification:
+        if notif['id_statut'] == 2:
+            notifications_enchere = enchere(
+                notif,
+                notifications_enchere,
+                notif['id_notification']
+            )
+
+    return render_template(
+        "notification.jinja",
+        notifications_echange=notifications_echange,
+        notifications_enchere=notifications_enchere
+    )
 
 
 
@@ -337,7 +379,7 @@ def accepter_echange(id_proposition, approuve):
         bd.update_offer(curseur, id_proposition, reponse)
         id_notification= bd.create_notif_offrant(curseur, id_proposition)
         bd.create_notif_echange(curseur,id_proposition, id_notification)
-        
+
 
     return redirect("/compte/notification", code=303)
 

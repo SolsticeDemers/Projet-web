@@ -63,6 +63,44 @@ def mes_produits():
         form_archiver=form
     )
 
+@bp_produits.route('/mes_encheres')
+def mes_encheres():
+    """Affiche les enchères en cours sur lesquelles l'utilisateur a misé"""
+
+    if "id_utilisateur" not in session:
+        return redirect(
+            url_for("compte.authentification")
+        )
+
+    with bd.creer_curseur() as curseur:
+        encheres = bd.get_encheres_utilisateur(
+            curseur,
+            session["id_utilisateur"]
+        )
+
+    for produit in encheres:
+        nom_image = f"produit_{produit['id_produit']}.png"
+
+        chemin_image = os.path.join(
+            current_app.config["CHEMIN_IMAGES"],
+            nom_image
+        )
+
+        if os.path.exists(chemin_image):
+            produit["src"] = (
+                current_app.config["ROUTE_IMAGES"]
+                + nom_image
+            )
+        else:
+            produit["src"] = url_for(
+                "static",
+                filename="images/default.png"
+            )
+
+    return render_template(
+        "mes_encheres.jinja",
+        encheres=encheres
+    )
 
 @bp_produits.route('/<int:id>', methods=['GET', 'POST'])
 def details_produit(id):
