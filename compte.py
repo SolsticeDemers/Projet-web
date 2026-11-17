@@ -351,7 +351,7 @@ def notification():
                     notif['id_notification']
                 )
 
- 
+
     for notif in notification:
         if notif['id_statut'] == 2:
             notifications_enchere = enchere(
@@ -382,4 +382,3 @@ def accepter_echange(id_proposition, approuve):
 
 
     return redirect("/compte/notification", code=303)
-

@@ -783,3 +783,26 @@ def get_notif_enchere(curseur, id_notification):
     })
 
     return curseur.fetchone()
+
+def get_historique_encheres(curseur, id_utilisateur):
+    """Retourne les enchères gagnées par l'utilisateur"""
+
+    curseur.execute("""
+        SELECT
+            p.id_produit,
+            p.nom,
+            p.prix,
+            p.date_fin
+        FROM notification n
+        JOIN notification_enchere ne
+            ON n.id_notification = ne.id_notification
+        JOIN produit p
+            ON ne.id_produit = p.id_produit
+        WHERE n.id_destinataire = %(id_utilisateur)s
+        AND n.id_statut = 2
+        ORDER BY p.date_fin DESC
+    """, {
+        "id_utilisateur": id_utilisateur
+    })
+
+    return curseur.fetchall()
