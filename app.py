@@ -6,11 +6,14 @@ from compte import bp_compte
 from produits import bp_produits
 from panier import bp_panier
 from forms import PanierForm
+from api import bp_api
+
 
 app = Flask(__name__, static_url_path='')
 app.register_blueprint(bp_compte, url_prefix='/compte')
 app.register_blueprint(bp_produits, url_prefix='/produits')
 app.register_blueprint(bp_panier, url_prefix='/panier')
+app.register_blueprint(bp_api, url_prefix='/api')
 app.secret_key = os.getenv("SECRET_SESSION")
 
 app.config["ROUTE_IMAGES"] = "/images/utiles/"
