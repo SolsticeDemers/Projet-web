@@ -84,29 +84,51 @@
                 </p>
 
                 <div class="actions">
-                    {% if produit.nom_statut == "En vente" %}
+                   
 
-                    <button>
-                        Acheter
-                    </button>
+                        {% if produit.nom_statut == 'En vente' %}
 
-                    {% elif produit.nom_statut == "Aux enchères" %}
+                            {% if "id_utilisateur" in session %}
 
-                    <button>
-                        Enchérir
-                    </button>
+                                <form
+                                    method="POST"
+                                    action="/panier/ajouter/{{ produit.id_produit }}"
+                                >
+                                    {{ form_panier.hidden_tag() }}
 
-                    {% elif produit.nom_statut == "À échanger" %}
+                                    <button type="submit">
+                                        Ajouter
+                                    </button>
+                                </form>
 
-                    <button>
-                        Échanger
-                    </button>
+                            {% endif %}
 
-                    {% endif %}
+                        {% endif %}
 
-                    <a href="/produits/{{ produit.id_produit }}">
-                        Détails
-                    </a>
+
+                        {% if produit.nom_statut == 'Aux enchères' %}
+
+                            <button>
+                                Enchérir
+                            </button>
+
+                        {% endif %}
+
+
+                        {% if produit.nom_statut == 'À échanger' %}
+
+                            <button>
+                                Échanger
+                            </button>
+
+                        {% endif %}
+
+
+                        <a href="/produits/{{ produit.id_produit }}">
+                            Détails
+                        </a>
+
+                    
 
                 </div>
 
@@ -166,29 +188,36 @@
                     {{ produit.prix }} $
                 </p>
 
-                <div class="actions">
+                        {% if produit.nom_statut == 'En vente' %}
 
-                    {% if produit.nom_statut == 'En vente' %}
-                    <button>
-                        Ajouter
-                    </button>
-                    {% endif %}
+                            <button>
+                                Ajouter
+                            </button>
 
-                    {% if produit.nom_statut == 'Aux enchères' %}
-                    <button>
-                        Enchérir
-                    </button>
-                    {% endif %}
+                        {% endif %}
 
-                    {% if produit.nom_statut == 'À échanger' %}
-                    <button>
-                        Échanger
-                    </button>
-                    {% endif %}
 
-                    <a href="/produits/{{ produit.id_produit }}">
-                        Détails
-                    </a>
+                        {% if produit.nom_statut == 'Aux enchères' %}
+
+                            <button>
+                                Enchérir
+                            </button>
+
+                        {% endif %}
+
+
+                        {% if produit.nom_statut == 'À échanger' %}
+
+                            <button>
+                                Échanger
+                            </button>
+
+                        {% endif %}
+
+
+                        <a href="/produits/{{ produit.id_produit }}">
+                            Détails
+                        </a>
 
                 </div>
 
@@ -333,30 +362,52 @@
                     {{ produit.prix }} $
                 </p>
 
-                <div class="actions">
-                    {% if produit.nom_statut == "En vente" %}
 
-                    <button>
-                        Acheter
-                    </button>
+                    <div class="actions">
 
-                    {% elif produit.nom_statut == "Aux enchères" %}
+                        {% if produit.nom_statut == 'En vente' %}
 
-                    <button>
-                        Enchérir
-                    </button>
+                            {% if "id_utilisateur" in session %}
 
-                    {% elif produit.nom_statut == "À échanger" %}
+                                <form
+                                    method="POST"
+                                    action="/panier/ajouter/{{ produit.id_produit }}"
+                                >
+                                    {{ form_panier.hidden_tag() }}
 
-                    <button>
-                        Échanger
-                    </button>
+                                    <button type="submit">
+                                        Ajouter
+                                    </button>
+                                </form>
 
-                    {% endif %}
+                            {% endif %}
 
-                    <a href="/produits/{{ produit.id_produit }}">
-                        Détails
-                    </a>
+                        {% endif %}
+
+
+                        {% if produit.nom_statut == 'Aux enchères' %}
+
+                            <button>
+                                Enchérir
+                            </button>
+
+                        {% endif %}
+
+
+                        {% if produit.nom_statut == 'À échanger' %}
+
+                            <button>
+                                Échanger
+                            </button>
+
+                        {% endif %}
+
+
+                        <a href="/produits/{{ produit.id_produit }}">
+                            Détails
+                        </a>
+
+                    
 
                 </div>
 

@@ -82,7 +82,6 @@ def creer_compte():
 
     mdp2 = request.form.get("mdp2")
 
-
     classe_nom = ""
 
     classe_courriel = ""
@@ -90,11 +89,9 @@ def creer_compte():
 
     classe_mdp2 = ""
 
-
     liste_courriel = []
 
     liste_nom = []
-
 
     erreur = False
 
@@ -104,11 +101,9 @@ def creer_compte():
 
     num_mdp_erreur = 0
 
-
     with bd.creer_curseur() as curseur:
 
         dict_compte = bd.get_nom_utiliser(curseur)
-
 
     for u in dict_compte:
 
@@ -116,29 +111,10 @@ def creer_compte():
             u['courriel']
         )
 
-
     for u in dict_compte:
         liste_nom.append(u['nom'])
 
-    if mdp1 == "" or mdp1 is None:
-        classe_mdp1 = "is-invalid"
-        erreur = True
-
-    else:
-        classe_mdp1 = "is-valid"
-
-    if mdp2 == "" or mdp2 is None:
-        classe_mdp2 = "is-invalid"
-        erreur = True
-        num_mdp_erreur = 1
-
-    elif mdp2 != mdp1:
-        classe_mdp2 = "is-invalid"
-        erreur = True
-        num_mdp_erreur = 2
-
-    else:
-        classe_mdp2 = "is-valid"
+ 
 
     if nom == "" or nom is None:
 
@@ -156,6 +132,10 @@ def creer_compte():
         erreur = True
 
         num_nom_erreur = 2
+
+    else:
+
+        classe_nom = "is-valid"
 
     if courriel == "" or courriel is None:
 
@@ -184,12 +164,37 @@ def creer_compte():
 
         num_courriel_erreur = 3
 
-
     else:
 
         classe_courriel = "is-valid"
 
-    mdp1 = hacher_mdp(mdp1)
+    if mdp1 == "" or mdp1 is None:
+
+        classe_mdp1 = "is-invalid"
+
+        erreur = True
+
+    else:
+
+        classe_mdp1 = "is-valid"
+
+    if mdp2 == "" or mdp2 is None:
+
+        classe_mdp2 = "is-invalid"
+
+        erreur = True
+
+        num_mdp_erreur = 1
+
+    elif mdp2 != mdp1:
+
+        classe_mdp2 = "is-invalid"
+
+        erreur = True
+
+        num_mdp_erreur = 2
+     else: 
+        classe_mdp2 = "is-valid"
 
     if erreur is True:
 
@@ -208,8 +213,8 @@ def creer_compte():
             mdp1="",
             mdp2="",
         )
-    mdp1 = hacher_mdp(mdp1)
 
+    mdp1 = hacher_mdp(mdp1)
 
     with bd.creer_curseur() as curseur:
 
@@ -228,6 +233,15 @@ def creer_compte():
 
     return redirect("/", code=303)
 
+
+@bp_compte.route('/deconnection')
+def deconnection():
+    """Détruit la session"""
+
+    session.clear()
+
+   
+
 @bp_compte.route("/profil")
 def profil():
     """Affiche le profil de l'utilisateur connecté"""
@@ -237,5 +251,91 @@ def profil():
     with bd.creer_curseur() as curseur:
         utilisateur = bd.get_vendeur(curseur, session["id_utilisateur"])
         # produits = bd.get_produits_par_vendeur(curseur, session["id_utilisateur"])
-
     return render_template("profil.jinja", utilisateur=utilisateur)
+
+
+def echange(notif, notifications, id_status, id_notif):
+    if session['id_utilisateur'] == notif['id_utilisateur']:
+        with bd.creer_curseur() as curseur:
+            proprio = bd.get_utilisateur_name(
+                curseur, notif['proprio'])
+            proprio = proprio['nom']
+            offrant = session['nom']
+    else:
+        with bd.creer_curseur() as curseur:
+            offrant = bd.get_utilisateur_name(
+                curseur, notif['id_utilisateur'])
+            offrant = offrant['nom']
+            proprio = session['nom']
+    with bd.creer_curseur() as curseur:
+        produit = bd.get_produit_by_id(
+            curseur, notif['produit'])
+
+    with bd.creer_curseur() as curseur:
+        status = bd.get_statut_by_Id(
+                    curseur, id_status)
+    status = status['nom_statut']
+
+    with bd.creer_curseur() as curseur:
+        produit_offert = bd.get_produit_by_id(
+            curseur, notif['produit_offert'])
+        une_notification = {
+            "id_proposition": notif['id_echange'],
+            "id_notif": id_notif,
+            "proprio": proprio,
+            "offrant": offrant,
+            "echange_nom": produit[0]['nom'],
+            "id_produit": produit[0]['id_produit'],
+            "offert_nom": produit_offert[0]['nom'],
+            "id_produit_offert": produit_offert[0]['id_produit'],
+            "status" : status,
+            "approuve": notif['approuver']
+        }
+    notifications.append(une_notification)
+    return notifications
+
+
+@bp_compte.route('/notification')
+def notification():
+    notifications_vente = [
+    ]
+    notifications_enchere = [
+    ]
+    notifications_echange = [
+    ]
+    with bd.creer_curseur() as curseur:
+        notification = bd.get_notification(
+            curseur, session['id_utilisateur'])
+
+    for notif in notification:
+        with bd.creer_curseur() as curseur:
+            nouvelle_notif = bd.update_notification(curseur, notif['id_notification'], 1)
+        
+
+        if notif['id_statut'] == 3:
+            with bd.creer_curseur() as curseur:
+                notif_echange = bd.get_notif_echange(
+                    curseur, notif['id_notification'])
+                notif_echange = echange(
+                    notif_echange, notifications_echange, notif['id_statut'], notif['id_notification'])
+
+       
+    return render_template("notification.jinja", notifications_echange=notifications_echange)
+
+
+
+@bp_compte.route('/accepter_echange/<int:id_proposition>/<string:approuve>')
+def accepter_echange(id_proposition, approuve):
+
+    if approuve == "oui":
+        reponse = 1
+    else:
+        reponse = 0
+    with bd.creer_curseur() as curseur:
+        bd.update_offer(curseur, id_proposition, reponse)
+        id_notification= bd.create_notif_offrant(curseur, id_proposition)
+        bd.create_notif_echange(curseur,id_proposition, id_notification)
+        
+
+    return redirect("/compte/notification", code=303)
+

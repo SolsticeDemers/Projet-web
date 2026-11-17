@@ -2,6 +2,7 @@ import os
 import logging
 from forms import ArchiverProduitForm
 from forms import AjouterProduitForm
+from forms import PanierForm
 
 from flask import Blueprint, abort, render_template, redirect
 from flask import request, session, current_app, url_for
@@ -67,7 +68,8 @@ def mes_produits():
 def details_produit(id):
     """Permet de voir les détails d'un produit"""
 
-    form = ArchiverProduitForm()
+    form_archiver = ArchiverProduitForm()
+    form_panier = PanierForm()
 
     with bd.creer_curseur() as curseur:
         produit = bd.get_produit(curseur, id)
@@ -103,6 +105,19 @@ def details_produit(id):
             filename="images/default.png"
         )
 
+    est_vendeur = False
+
+    if (
+        est_connecte
+        and produit["id_vendeur"] == session["id_utilisateur"]
+    ):
+        est_vendeur = True
+
+    est_disponible = False
+
+    if produit["archive"] == False and produit["id_statut"] != 4:
+        est_disponible = True
+
     return render_template(
         'produit_details.jinja',
         id=id,
@@ -110,7 +125,10 @@ def details_produit(id):
         vendeur=vendeur,
         img_source=img_source,
         est_connecte=est_connecte,
-        form_archiver=form
+        est_vendeur=est_vendeur,
+        est_disponible=est_disponible,
+        form_archiver=form_archiver,
+        form=form_panier
     )
 
 

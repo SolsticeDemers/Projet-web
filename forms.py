@@ -38,6 +38,9 @@ class AjouterProduitForm(FlaskForm):
     )
     submit = SubmitField("Ajouter le produit")
 
-
 class ArchiverProduitForm(FlaskForm):
     submit = SubmitField("Supprimer")
+
+class PanierForm(FlaskForm):
+    submit = SubmitField("Ajouter au panier")
+

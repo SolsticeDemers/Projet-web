@@ -2,22 +2,39 @@
 
 {% block contenu %}
 
-<h2>Se connecter</h2>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6 col-lg-4">
+            <h2 class="mb-4">Se connecter</h2>
 
-<form method="post" action="" novalidate>
-    <div>
-        <label for="nom">Nom d'utilisateur ou courriel:</label>
-        <input type="text" name="nom" id="nom">
+            <form method="post" action="" novalidate class="d-grid gap-4">
+                <div class="mb-4">
+                    <label for="nom" class="form-label">
+                        Nom d'utilisateur ou courriel :
+                    </label>
+                    <input type="text" name="nom" id="nom" class="form-control">
+                </div>
+
+                <div class="mb-3">
+                    <label for="mdp" class="form-label">Mot de passe :</label>
+                    <input type="text" name="mdp" id="mdp" class="form-control">
+                </div>
+
+                <div class="actions d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary">
+                        Se connecter
+                    </button>
+                </div>
+
+                <p class="mb-5">
+                    Vous n'avez pas de compte ?
+                    <a href="/compte/creer_compte" class="lien-creer-compte">
+                        Me créer un compte
+                    </a>
+                </p>
+            </form>
+        </div>
     </div>
-    <div>
-        <label for="mdp">Mot de passe:</label>
-        <input type="text" name="mdp" id="mdp">
-    </div>
-    <button type="submit">Se connecter</button>
-
-    <p>Vous n'avez pas de compte ? <a href="/compte/creer_compte">Me créer un compte</a></p>
-
-</form>
-
+</div>
 
 {% endblock %}
