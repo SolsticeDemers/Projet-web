@@ -41,19 +41,17 @@
             </div>
 
             <div class="actions">
-
-                <a href="{{ url_for('produits.modifier_produit', id=produit.id_produit) }}"
-                class="btn-modifier">
-                Modifier
+                {% if session['mode_echange'] %}
+                <a href="/notification/creer_echange/{{produit.id_produit}}">Choisir</a>
+                {% else %}
+                <a href="{{ url_for('produits.modifier_produit', id=produit.id_produit) }}" class="btn-modifier">
+                    Modifier
                 </a>
 
 
 
 
-                <form
-                    action="{{ url_for('produits.archiver_produit', id=produit.id_produit) }}"
-                    method="post"
-                >
+                <form action="{{ url_for('produits.archiver_produit', id=produit.id_produit) }}" method="post">
 
                     {{ form_archiver.hidden_tag() }}
 
@@ -62,7 +60,7 @@
                     </button>
 
                 </form>
-
+                {% endif %}
             </div>
 
         </div>
