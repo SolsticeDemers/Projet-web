@@ -279,19 +279,20 @@ def echange(notif, notifications, id_status, id_notif):
         status = bd.get_statut_by_Id(
                     curseur, id_status)
     status = status['nom_statut']
-
+   
     with bd.creer_curseur() as curseur:
         produit_offert = bd.get_produit(
-            curseur, notif['produit_offert'])
+            curseur, notif['produit_offert']) 
+
         une_notification = {
             "id_proposition": notif['id_echange'],
             "id_notif": id_notif,
             "proprio": proprio,
             "offrant": offrant,
-            "echange_nom": produit[0]['nom'],
-            "id_produit": produit[0]['id_produit'],
-            "offert_nom": produit_offert[0]['nom'],
-            "id_produit_offert": produit_offert[0]['id_produit'],
+            "echange_nom": produit['nom'],
+            "id_produit": produit['id_produit'],
+            "offert_nom": produit_offert['nom'],
+            "id_produit_offert": produit_offert['id_produit'],
             "status" : status,
             "approuve": notif['approuver']
         }

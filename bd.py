@@ -675,4 +675,4 @@ def update_notification(curseur, id_proposition, vue):
                         'id': id_proposition,
                         'vue': vue
                     })
-    return curseur.fetchone()
+    return curseur.fetchall()
