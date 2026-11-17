@@ -271,8 +271,7 @@ def echange(notif, notifications, id_status, id_notif):
             proprio = session['nom']
     with bd.creer_curseur() as curseur:
         produit = bd.get_produit_by_id(
-            curseur, notif['produit_echange']) #À VALIDER AVEC SOLSTICE, erreur si juste écrit produit
-
+            curseur, notif['produit'])
     with bd.creer_curseur() as curseur:
         status = bd.get_statut_by_Id(
                     curseur, id_status)

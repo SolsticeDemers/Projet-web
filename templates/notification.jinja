@@ -2,6 +2,7 @@
 
 {% block contenu %}
 
+<section class="container my-4">
 <div>
     <h2>Notification d'échange</h2>
     <ul class="liste-mes-produits">
@@ -66,10 +67,11 @@
             </p>
         </li>
         {% else %}
-        <li>Aucune notification d'achat.</li>
+        <li class="list-unstyled">Vous n'avez aucune notification d'achat</li>
         {% endfor %}
     </ul>
 </div>
+</section>
 
 
 {% endblock %}
