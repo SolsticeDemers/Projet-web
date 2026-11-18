@@ -80,9 +80,9 @@ CREATE TABLE IF NOT EXISTS `echange` (
 -- Déchargement des données de la table `echange`
 --
 
-INSERT INTO `echange` (`id_echange`, `proprio`, `id_utilisateur`, `produit`, `produit_offert`, `commentaire`, `approuver`) VALUES
-(2, 3, 1, 16, 25, NULL, 1),
-(3, 3, 1, 16, 25, NULL, 0);
+INSERT INTO `echange` (`id_echange`, `proprio`, `id_utilisateur`, `produit`, `produit_offert`, `approuver`) VALUES
+(2, 3, 1, 16, 25, 1),
+(3, 3, 1, 16, 25, NULL);
 
 -- --------------------------------------------------------
 

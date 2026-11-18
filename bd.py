@@ -702,7 +702,7 @@ def update_notification(curseur, id_proposition, vue):
                         'id': id_proposition,
                         'vue': vue
                     })
-    return curseur.fetchall()
+    
 
 def update_produit_echange(curseur, id, id_utilisateur):
     curseur.execute("UPDATE `produit` SET `id_vendeur`= %(id_utilisateur)s WHERE id_produit = %(id)s;",
@@ -710,6 +710,13 @@ def update_produit_echange(curseur, id, id_utilisateur):
                         'id_utilisateur': id_utilisateur,
                         'id': id
                     })
+
+def get_echange_by_id(curseur, id ):
+    curseur.execute("SELECT * FROM echange WHERE id_echange = %(id)s;",
+                        {
+                            'id': id
+                        })
+    return curseur.fetchone()
 
 def get_achat_paye(curseur, id_acheteur, id_produit):
     """Trouver l'achat payé et le vendeur qui lui correspond"""

@@ -137,7 +137,6 @@ def creer_compte():
 
         num_nom_erreur = 1
 
-
     elif nom in liste_nom:
 
         classe_nom = "is-invalid"
@@ -167,7 +166,6 @@ def creer_compte():
         erreur = True
 
         num_courriel_erreur = 2
-
 
     elif courriel in liste_courriel:
 
@@ -385,7 +383,8 @@ def modifier_profil():
                 erreur = True
 
             if not regex_courriel.fullmatch(form.courriel.data):
-                form.courriel.errors.append("Veuillez entrer un courriel valide.")
+                form.courriel.errors.append(
+                    "Veuillez entrer un courriel valide.")
                 erreur = True
             else:
                 compte_courriel = bd.get_courriel_unique(
@@ -394,7 +393,8 @@ def modifier_profil():
                 )
 
                 if (compte_courriel and compte_courriel["id_utilisateur"] != id_utilisateur):
-                    form.courriel.errors.append("Ce courriel est déjà utilisé.")
+                    form.courriel.errors.append(
+                        "Ce courriel est déjà utilisé.")
                     erreur = True
 
             mdp_actuel = form.mdp_actuel.data or ""
@@ -405,19 +405,23 @@ def modifier_profil():
             if mdp_actuel or nouveau_mdp or confirmation_mdp:
 
                 if not mdp_actuel:
-                    form.mdp_actuel.errors.append("Veuillez entrer votre mot de passe actuel.")
+                    form.mdp_actuel.errors.append(
+                        "Veuillez entrer votre mot de passe actuel.")
                     erreur = True
 
                 elif hacher_mdp(mdp_actuel) != utilisateur["mot_de_passe"]:
-                    form.mdp_actuel.errors.append("Le mot de passe actuel est incorrect.")
+                    form.mdp_actuel.errors.append(
+                        "Le mot de passe actuel est incorrect.")
                     erreur = True
 
                 if not nouveau_mdp:
-                    form.mdp1.errors.append("Veuillez entrer un nouveau mot de passe.")
+                    form.mdp1.errors.append(
+                        "Veuillez entrer un nouveau mot de passe.")
                     erreur = True
 
                 if nouveau_mdp != confirmation_mdp:
-                    form.mdp2.errors.append("Les nouveaux mots de passe ne correspondent pas.")
+                    form.mdp2.errors.append(
+                        "Les nouveaux mots de passe ne correspondent pas.")
                     erreur = True
 
             if not erreur:
@@ -448,6 +452,8 @@ def modifier_profil():
         image_vendeur=image_vendeur
     )
 
+
+# à déplacer dans notification.py
 def echange(notif, notifications, id_status, id_notif):
     if session['id_utilisateur'] == notif['id_utilisateur']:
         with bd.creer_curseur() as curseur:
@@ -468,10 +474,10 @@ def echange(notif, notifications, id_status, id_notif):
         status = bd.get_statut_by_Id(
                     curseur, id_status)
     status = status['nom_statut']
-   
+
     with bd.creer_curseur() as curseur:
         produit_offert = bd.get_produit(
-            curseur, notif['produit_offert']) 
+            curseur, notif['produit_offert'])
 
         une_notification = {
             "id_proposition": notif['id_echange'],
@@ -482,11 +488,12 @@ def echange(notif, notifications, id_status, id_notif):
             "id_produit": produit['id_produit'],
             "offert_nom": produit_offert['nom'],
             "id_produit_offert": produit_offert['id_produit'],
-            "status" : status,
+            "status": status,
             "approuve": notif['approuver']
         }
     notifications.append(une_notification)
     return notifications
+
 
 @bp_compte.route('/notification')
 def notification():
@@ -507,46 +514,39 @@ def notification():
         )
 
     for notif in notification:
-        with bd.creer_curseur() as curseur:
-            bd.update_notification(
-                curseur,
-                notif['id_notification'],
-                1
-            )
-
-        if notif['id_statut'] == 3:
+        if notif != None:
             with bd.creer_curseur() as curseur:
-                notif_echange = bd.get_notif_echange(
-                    curseur,
-                    notif['id_notification']
-                )
+                        bd.update_notification(
+                            curseur, notif['id_notification'], 1)
 
-                notifications_echange = echange(
-                    notif_echange,
-                    notifications_echange,
-                    notif['id_statut'],
-                    notif['id_notification']
-                )
 
-    return render_template(
-        "notification.jinja",
-        notifications_echange=notifications_echange,
-        notifications_achat=notifications_achat
-    )
+            if notif['id_statut'] == 3:
+                with bd.creer_curseur() as curseur:
+                    notif_echange = bd.get_notif_echange(
+                                curseur, notif['id_notification'])
+                    notif_echange = echange(
+                                notif_echange, notifications_echange, notif['id_statut'], notif['id_notification'])
+
+       
+    return render_template("notification.jinja", notifications_echange=notifications_echange)
 
 
 
-@bp_compte.route('/accepter_echange/<int:id_proposition>/<string:approuve>')
-def accepter_echange(id_proposition, approuve):
+@bp_compte.route('/accepter_echange/<int:id_echange>/<string:approuve>')
+def accepter_echange(id_echange, approuve):
 
     if approuve == "oui":
         reponse = 1
     else:
         reponse = 0
     with bd.creer_curseur() as curseur:
-        bd.update_offer(curseur, id_proposition, reponse)
-        id_notification= bd.create_notif_offrant(curseur, id_proposition)
-        bd.create_notif_echange(curseur,id_proposition, id_notification)
+        bd.update_offer(curseur, id_echange, reponse)
+        id_notification= bd.create_notif_offrant(curseur, id_echange)
+        bd.create_notif_echange(curseur,id_echange, id_notification)
 
-
+    if reponse == 1:
+        with bd.creer_curseur() as curseur:
+            echange = bd.get_echange_by_id(curseur, id_echange)
+            bd.update_produit_echange(curseur, echange['produit_offert'], session['id_utilisateur'])
+            bd.update_produit_echange(curseur, echange['produit'], echange['id_utilisateur'])
     return redirect("/compte/notification", code=303)

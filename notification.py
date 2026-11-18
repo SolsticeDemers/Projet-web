@@ -10,7 +10,7 @@ def faire_echange(id_produit):
 
     session['id_produit_echange'] = id_produit
     session['mode_echange'] = True
-    return redirect('/produits/mes_produits', code = 303)
+    return redirect('/compte/profil', code = 303)
 
 
 
@@ -32,14 +32,11 @@ def creer_echange(id_produit_offert):
         return render_template('faire_echange.jinja', nom_produit=nom_produit, nom_proprio=nom_proprio, nom_produit_offert=nom_produit_offert, id_produit_offert = id_produit_offert)
 
 
-    id_vendeur= produit_echange['id_vendeur']
-
     with bd.creer_curseur() as curseur:
-        id_echange= bd.create_echange(curseur,produit_echange['id_produit'], id_vendeur, session['id_utilisateur'], produit_offert['id_produit'])
+        id_echange= bd.create_echange(curseur,produit_echange['id_produit'], produit_echange['id_vendeur'], session['id_utilisateur'], produit_offert['id_produit'])
         id_notif = bd.create_notif(curseur, produit_echange['id_vendeur'])
         bd.create_notif_echange(curseur, id_echange, id_notif)
-        bd.update_produit_echange(curseur, produit_echange['id_produit'], session['id_utilisateur'])
-        bd.update_produit_echange(curseur, produit_offert['id_produit'], id_vendeur)
+        
 
     session["mode_echange"] = False
     session.pop("id_produit_echange", None)
