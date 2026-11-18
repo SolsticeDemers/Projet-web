@@ -302,7 +302,7 @@ def get_utilisateur(curseur, nom, mdp):
     return curseur.fetchone()
 
 
-def get_produit(curseur, id_produit):
+def get_produit_by_id(curseur, id_produit):
     """Permet d'obtenir un produit par son identifiant"""
 
     curseur.execute("""
