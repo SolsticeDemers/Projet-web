@@ -742,3 +742,137 @@ def get_notifications_achat_non_lues(curseur, id_utilisateur):
     )
 
     return curseur.fetchall()
+
+def ajouter_mise(curseur, id_produit, id_utilisateur, montant):
+    """Enregistre une mise"""
+
+    curseur.execute("""
+        INSERT INTO mise (
+            id_produit,
+            id_utilisateur,
+            montant
+        )
+        VALUES (
+            %(id_produit)s,
+            %(id_utilisateur)s,
+            %(montant)s
+        )
+    """, {
+        "id_produit": id_produit,
+        "id_utilisateur": id_utilisateur,
+        "montant": montant
+    })
+
+def modifier_prix_produit(curseur, id_produit, nouveau_prix):
+    """Modifie le prix actuel d'un produit"""
+
+    curseur.execute("""
+        UPDATE produit
+        SET prix = %(nouveau_prix)s
+        WHERE id_produit = %(id_produit)s
+    """, {
+        "nouveau_prix": nouveau_prix,
+        "id_produit": id_produit
+    })
+
+def get_mise_gagnante(curseur, id_produit):
+    """Retourne la mise la plus élevée pour un produit"""
+
+    curseur.execute("""
+        SELECT *
+        FROM mise
+        WHERE id_produit = %(id_produit)s
+        ORDER BY montant DESC
+        LIMIT 1
+    """, {
+        "id_produit": id_produit
+    })
+
+    return curseur.fetchone()
+
+def get_encheres_terminees(curseur):
+    """Retourne les enchères dont la date de fin est dépassée"""
+
+    curseur.execute("""
+        SELECT *
+        FROM produit
+        WHERE id_statut = 2
+        AND date_fin IS NOT NULL
+        AND date_fin <= NOW()
+    """)
+
+    return curseur.fetchall()
+
+def get_encheres_utilisateur(curseur, id_utilisateur):
+    """Retourne les enchères en cours sur lesquelles l'utilisateur a misé"""
+
+    curseur.execute("""
+        SELECT DISTINCT
+            p.*
+        FROM mise m
+        JOIN produit p
+            ON m.id_produit = p.id_produit
+        WHERE m.id_utilisateur = %(id_utilisateur)s
+        AND p.id_statut = 2
+        AND p.date_fin IS NOT NULL
+        AND p.date_fin > NOW()
+        ORDER BY p.date_fin ASC
+    """, {
+        "id_utilisateur": id_utilisateur
+    })
+
+    return curseur.fetchall()
+
+def create_notif_gagnant(curseur, id_utilisateur):
+    """Crée une notification pour le gagnant d'une enchère"""
+
+    curseur.execute("""
+        INSERT INTO notification (
+            id_destinataire,
+            id_statut,
+            notif_vue,
+            date
+        )
+        VALUES (
+            %(id_utilisateur)s,
+            2,
+            0,
+            CURRENT_DATE
+        )
+    """, {
+        "id_utilisateur": id_utilisateur
+    })
+
+    return curseur.lastrowid
+
+def create_notif_enchere(curseur, id_notification, id_produit):
+    """Relie une notification à une enchère"""
+
+    curseur.execute("""
+        INSERT INTO notification_enchere (
+            id_notification,
+            id_produit
+        )
+        VALUES (
+            %(id_notification)s,
+            %(id_produit)s
+        )
+    """, {
+        "id_notification": id_notification,
+        "id_produit": id_produit
+    })
+
+def get_notif_enchere(curseur, id_notification):
+    """Retourne le produit associé à une notification d'enchère"""
+
+    curseur.execute("""
+        SELECT p.*
+        FROM notification_enchere ne
+        JOIN produit p
+            ON ne.id_produit = p.id_produit
+        WHERE ne.id_notification = %(id_notification)s
+    """, {
+        "id_notification": id_notification
+    })
+
+    return curseur.fetchone()
