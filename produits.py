@@ -390,3 +390,45 @@ def modifier_produit(id):
         produit=produit,
         img_source=img_source
     )
+
+
+
+@bp_produits.route('/historique_encheres')
+def historique_encheres():
+    """Affiche les enchères gagnées par l'utilisateur"""
+
+    if "id_utilisateur" not in session:
+        return redirect(
+            url_for("compte.authentification")
+        )
+
+    with bd.creer_curseur() as curseur:
+        encheres = bd.get_historique_encheres(
+            curseur,
+            session["id_utilisateur"]
+        )
+
+    for produit in encheres:
+
+        nom_image = f"produit_{produit['id_produit']}.png"
+
+        chemin_image = os.path.join(
+            current_app.config["CHEMIN_IMAGES"],
+            nom_image
+        )
+
+        if os.path.exists(chemin_image):
+            produit["src"] = (
+                current_app.config["ROUTE_IMAGES"]
+                + nom_image
+            )
+        else:
+            produit["src"] = url_for(
+                "static",
+                filename="images/default.png"
+            )
+
+    return render_template(
+        "historique.jinja",
+        encheres=encheres
+    )
