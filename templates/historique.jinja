@@ -119,13 +119,13 @@
                 </h3>
 
                 <hr>
-                {% if echange %}
+                {% if echanges %}
 
                     {% for echange in echanges %}
 
                         <div class="py-3 border-bottom">
                         
-                            {% if session['nom'] == notif.offrant %}
+                            {% if session['nom'] == echange.offrant %}
                             <h4>
                                 {{ echange.nom }}
                             </h4>
@@ -133,14 +133,14 @@
                             <p class="mb-1">
                                 Produit que vous avez échangé :
                                 <strong>
-                                    {{ echnage.produit_offert }} 
+                                    {{ echange.produit_offert }} 
                                 </strong>
                             </p>
 
                             <p class="mb-1">
                                 La personne avec qui vous avez échangé :
                                 <strong>
-                                    {{ echnage.nom_proprio }} 
+                                    {{ echange.nom_proprio }} 
                                 </strong>
                             </p>
 
@@ -155,7 +155,7 @@
                             >
                                 Voir le nouveau produit
                             </a>
-                            {% elif session['nom'] == notif.proprio %}
+                            {% elif session['nom'] == echange.proprio %}
                             <h4>
                                 {{ echange.nom_produit_offert }}
                             </h4>
@@ -163,14 +163,14 @@
                             <p class="mb-1">
                                 Produit que vous avez échangé :
                                 <strong>
-                                    {{ echnage.nom }} 
+                                    {{ echange.nom }} 
                                 </strong>
                             </p>
 
                             <p class="mb-1">
                                 La personne avec qui vous avez échangé :
                                 <strong>
-                                    {{ echnage.nom_offrant }} 
+                                    {{ echange.nom_offrant }} 
                                 </strong>
                             </p>
 
