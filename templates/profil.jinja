@@ -1,14 +1,112 @@
 {% extends "_modele.jinja" %}
 
 {% block contenu %}
-<div class="container my-4">
-    <h2>Profil de {{ session['nom'] }}</h2>
-    <p>Email : {{ session['email'] }}</p>
-    <p>Nom : {{ session['nom'] }}</p>
-    <p>Prénom : {{ session['prenom'] }}</p>
-    <div class="actions">
-        <a href="/produits/ajouter_produit" class="button">Ajouter un produit</a>
+<section class="container my-4">
+    <div class="profil-entete">
+        <div class="d-flex flex-column align-items-center">
+            <img src="{{ image_vendeur }}" alt="Image de profil de {{ utilisateur.nom }}" class="profil-avatar">
+            <div>
+                <a href="{{ url_for('compte.modifier_profil') }}" class="lien-modifier-profil">
+                    Modifier mon profil
+                </a>
+            </div>
+        </div>
+
+        <div class="profil-informations">
+            <h3>{{ utilisateur.nom }}</h3>
+            <p><strong>Nom d'utilisateur :</strong> {{ utilisateur.nom }}</p>
+            <p><strong>Courriel :</strong> {{ utilisateur.courriel }}</p>
+
+        </div>
+
+        <div class="actions flex-column ms-auto">
+            <button type="button" class="bouton-secondaire" disabled>
+                Mes notifications
+            </button>
+
+            <button type="button" class="bouton-secondaire" disabled>
+                Mes transactions
+            </button>
+        </div>
     </div>
-</div>
+</section>
+
+<section class="container my-4">
+    <div class="d-flex justify-content-between align-items-center gap-3 mb-4">
+        <h2 class="m-5">Mes produits</h2>
+
+        <div class="actions">
+            <a href="/produits/ajouter_produit" class="button">Ajouter un produit</a>
+        </div>
+    </div>
+
+    {% if produits %}
+    <div class="liste-mes-produits">
+
+        {% for produit in produits %}
+        <div class="carte-produit carte-mon-produit">
+
+            <div class="image-produit">
+                <a href="/produits/{{ produit.id_produit }}">
+                    <img src="{{ produit.src or url_for('static', filename='images/default.png') }}"
+                        alt="{{ produit.nom }}">
+                </a>
+
+                <span class="badge-statut badge-{{ produit.code_statut }}">
+                    {{ produit.nom_statut }}
+                </span>
+            </div>
+
+            <div class="contenu-produit">
+                <h3>
+                    <a href="/produits/{{ produit.id_produit }}">
+                        {{ produit.nom }}
+                    </a>
+                </h3>
+
+                <p>
+                    {{ produit.description }}
+                </p>
+
+                <p class="prix">
+                    {{ produit.prix }} $
+                </p>
+            </div>
+
+            <div class="actions">
+
+                <a href="{{ url_for('produits.modifier_produit', id=produit.id_produit) }}" class="btn-modifier">
+                    Modifier
+                </a>
+
+
+
+
+                <form action="{{ url_for('produits.archiver_produit', id=produit.id_produit) }}" method="post">
+
+                    {{ form_archiver.hidden_tag() }}
+
+                    <button type="submit" class="btn-supprimer">
+                        Supprimer
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <p>
+        Vous n'avez ajouté aucun produit.
+    </p>
+
+    {% endif %}
+
+</section>
 
 {% endblock %}
