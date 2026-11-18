@@ -529,6 +529,7 @@ def confirmer_achat(curseur, id_acheteur, id_produit, prix):
             "prix": prix
         }
     )
+    return curseur.rowcount
 
 def marquer_vendu(curseur, id_produit):
     """Change le statut du produit pour Vendu"""
@@ -568,6 +569,32 @@ def modifier_produit(curseur, id_produit, nom, description, prix, id_statut):
         }
     )
 
+def modifier_utilisateur(curseur, id_utilisateur, nom, courriel):
+    """Met à jour le nom et le courriel d'un utilisateur."""
+
+    curseur.execute("""
+        UPDATE utilisateur
+        SET nom = %(nom)s,
+            courriel = %(courriel)s
+        WHERE id_utilisateur = %(id_utilisateur)s
+    """, {
+        "id_utilisateur": id_utilisateur,
+        "nom": nom,
+        "courriel": courriel
+    })
+
+
+def modifier_mot_de_passe(curseur, id_utilisateur, mot_de_passe):
+    """Enregistre le nouveau mot de passe haché."""
+
+    curseur.execute("""
+        UPDATE utilisateur
+        SET mot_de_passe = %(mot_de_passe)s
+        WHERE id_utilisateur = %(id_utilisateur)s
+    """, {
+        "id_utilisateur": id_utilisateur,
+        "mot_de_passe": mot_de_passe
+    })
 
 def get_notification(curseur, id_utilisateur):
     curseur.execute("SELECT * FROM notification WHERE id_destinataire = %(id_utilisateur)s;",
@@ -645,6 +672,77 @@ def update_notification(curseur, id_proposition, vue):
                         'vue' : vue
                     })
 
+def get_achat_paye(curseur, id_acheteur, id_produit):
+    """Trouver l'achat payé et le vendeur qui lui correspond"""
+    curseur.execute("""
+        SELECT a.id_achat, p.id_vendeur
+        FROM achat a
+        JOIN produit p ON p.id_produit = a.id_produit
+        WHERE a.id_acheteur = %(id_acheteur)s
+          AND a.id_produit = %(id_produit)s
+          AND a.paye = TRUE
+    """, {
+        "id_acheteur": id_acheteur,
+        "id_produit": id_produit
+    })
+    return curseur.fetchone()
+
+def creer_notification_achat(curseur, id_vendeur):
+    """Créer une notification pour le vendeur que son produit est vendu"""
+
+    curseur.execute("""INSERT INTO notification
+        (
+            id_destinataire, id_statut, notif_vue, date
+        )
+        VALUES (%(id_vendeur)s, 1, 0, CURRENT_DATE)""",
+        {
+            "id_vendeur": id_vendeur
+        }
+    )
+
+    return curseur.lastrowid
+
+def lier_notification_achat(curseur, id_notification, id_achat):
+    """Permet de lier une notification à un achat"""
+
+    curseur.execute("INSERT INTO notification_achat (id_notification, id_achat) " \
+        "VALUES (%(id_notification)s, %(id_achat)s)",
+        {
+            'id_notification' : id_notification,
+            'id_achat' : id_achat
+        })
+
+def get_notifications_achat_non_lues(curseur, id_utilisateur):
+    """Retourne les notifications de vente non lues."""
+
+    curseur.execute("""SELECT
+            n.id_notification,
+            p.id_produit,
+            p.nom AS nom_produit,
+            a.prix_achat,
+            u.id_utilisateur AS id_acheteur,
+            u.nom AS nom_acheteur
+        FROM notification n
+
+        JOIN notification_achat na
+        ON na.id_notification = n.id_notification
+        JOIN achat a
+        ON a.id_achat = na.id_achat
+        JOIN produit p
+        ON p.id_produit = a.id_produit
+        JOIN utilisateur u
+        ON u.id_utilisateur = a.id_acheteur
+
+        WHERE n.id_destinataire = %(id_utilisateur)s
+        AND n.notif_vue = 0
+        ORDER BY n.date DESC""",
+        {
+            "id_utilisateur": id_utilisateur
+        }
+    )
+
+    return curseur.fetchall()
+
 def ajouter_mise(curseur, id_produit, id_utilisateur, montant):
     """Enregistre une mise"""
 
@@ -665,7 +763,6 @@ def ajouter_mise(curseur, id_produit, id_utilisateur, montant):
         "montant": montant
     })
 
-
 def modifier_prix_produit(curseur, id_produit, nouveau_prix):
     """Modifie le prix actuel d'un produit"""
 
@@ -677,7 +774,6 @@ def modifier_prix_produit(curseur, id_produit, nouveau_prix):
         "nouveau_prix": nouveau_prix,
         "id_produit": id_produit
     })
-
 
 def get_mise_gagnante(curseur, id_produit):
     """Retourne la mise la plus élevée pour un produit"""
@@ -693,7 +789,6 @@ def get_mise_gagnante(curseur, id_produit):
     })
 
     return curseur.fetchone()
-
 
 def get_encheres_terminees(curseur):
     """Retourne les enchères dont la date de fin est dépassée"""
@@ -750,7 +845,6 @@ def create_notif_gagnant(curseur, id_utilisateur):
 
     return curseur.lastrowid
 
-
 def create_notif_enchere(curseur, id_notification, id_produit):
     """Relie une notification à une enchère"""
 
@@ -767,7 +861,6 @@ def create_notif_enchere(curseur, id_notification, id_produit):
         "id_notification": id_notification,
         "id_produit": id_produit
     })
-
 
 def get_notif_enchere(curseur, id_notification):
     """Retourne le produit associé à une notification d'enchère"""

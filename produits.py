@@ -1,5 +1,6 @@
 import os
 import logging
+
 from forms import ArchiverProduitForm
 from forms import AjouterProduitForm
 from forms import PanierForm
@@ -12,56 +13,6 @@ import bd
 
 bp_produits = Blueprint('produits', __name__)
 
-
-@bp_produits.route('/mes_produits')
-def mes_produits():
-    """Affiche les produits ajoutés par l'utilisateur connecté"""
-
-    if "id_utilisateur" not in session:
-        return redirect(url_for("compte.authentification"))
-
-    id_utilisateur = session["id_utilisateur"]
-
-    with bd.creer_curseur() as curseur:
-        produits = bd.get_produits_par_vendeur(
-            curseur,
-            id_utilisateur
-        )
-
-    codes_statut = {
-        'En vente': 'vente',
-        'Aux enchères': 'enchere',
-        'À échanger': 'echange',
-        'Vendu': 'vendu',
-    }
-
-    for produit in produits:
-        produit["code_statut"] = codes_statut.get(
-            produit["nom_statut"],
-            ""
-        )
-
-        nom_image = f"produit_{produit['id_produit']}.png"
-        produit["src"] = None
-
-        if os.path.exists(
-            os.path.join(
-                current_app.config["CHEMIN_IMAGES"],
-                nom_image
-            )
-        ):
-            produit["src"] = (
-                current_app.config["ROUTE_IMAGES"]
-                + nom_image
-            )
-
-    form = ArchiverProduitForm()
-
-    return render_template(
-        'inventaire.jinja',
-        produits=produits,
-        form_archiver=form
-    )
 
 @bp_produits.route('/mes_encheres')
 def mes_encheres():
@@ -101,6 +52,7 @@ def mes_encheres():
         "mes_encheres.jinja",
         encheres=encheres
     )
+
 
 @bp_produits.route('/<int:id>', methods=['GET', 'POST'])
 def details_produit(id):
@@ -168,6 +120,7 @@ def details_produit(id):
         form_archiver=form_archiver,
         form=form_panier
     )
+
 
 @bp_produits.route('/<int:id>/mise', methods=['GET', 'POST'])
 def miser_produit(id):
@@ -296,14 +249,19 @@ def ajouter_produit():
 
         if image and image.filename:
             nom_image = f"produit_{id_produit}.png"
+
             chemin = os.path.join(
                 current_app.config["CHEMIN_IMAGES"],
                 nom_image
             )
+
             image.save(chemin)
 
         return redirect(
-            url_for("produits.details_produit", id=id_produit)
+            url_for(
+                "produits.details_produit",
+                id=id_produit
+            )
         )
 
     return render_template(
@@ -333,9 +291,14 @@ def archiver_produit(id):
         if produit['id_vendeur'] != session['id_utilisateur']:
             abort(403)
 
-        bd.archiver_produit(curseur, id)
+        bd.archiver_produit(
+            curseur,
+            id
+        )
 
-    return redirect(url_for("compte.profil"))
+    return redirect(
+        url_for("compte.profil")
+    )
 
 
 @bp_produits.route("/<int:id>/modifier", methods=['GET', 'POST'])
@@ -346,8 +309,14 @@ def modifier_produit(id):
         abort(401)
 
     with bd.creer_curseur() as curseur:
-        produit = bd.get_produit(curseur, id)
-        statuts = bd.get_statuts(curseur)
+        produit = bd.get_produit(
+            curseur,
+            id
+        )
+
+        statuts = bd.get_statuts(
+            curseur
+        )
 
     if produit is None:
         abort(404)
@@ -365,7 +334,10 @@ def modifier_produit(id):
     form = AjouterProduitForm()
 
     form.id_statut.choices = [
-        (statut['id_statut'], statut['nom_statut'])
+        (
+            statut['id_statut'],
+            statut['nom_statut']
+        )
         for statut in statuts
     ]
 
@@ -376,6 +348,7 @@ def modifier_produit(id):
         form.id_statut.data = produit['id_statut']
 
     if form.validate_on_submit():
+
         with bd.creer_curseur() as curseur:
             bd.modifier_produit(
                 curseur,
@@ -389,10 +362,15 @@ def modifier_produit(id):
         image = request.files.get("image")
 
         if image and image.filename:
-            image.save(chemin_image)
+            image.save(
+                chemin_image
+            )
 
         return redirect(
-            url_for("produits.details_produit", id=id)
+            url_for(
+                "produits.details_produit",
+                id=id
+            )
         )
 
     if os.path.exists(chemin_image):
