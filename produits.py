@@ -392,8 +392,8 @@ def modifier_produit(id):
     )
 
 
-@bp_produits.route('/historique_encheres')
-def historique_encheres():
+@bp_produits.route('/historique_transaction')
+def historique_transaction():
     """Affiche l'historique des transactions"""
 
     if "id_utilisateur" not in session:
