@@ -62,7 +62,7 @@ def details_produit(id):
     form_panier = PanierForm()
 
     with bd.creer_curseur() as curseur:
-        produit = bd.get_produit(curseur, id)
+        produit = bd.get_produit_by_id(curseur, id)
 
         if produit is None:
             abort(404)
@@ -134,7 +134,7 @@ def miser_produit(id):
     erreur = ""
 
     with bd.creer_curseur() as curseur:
-        produit = bd.get_produit(curseur, id)
+        produit = bd.get_produit_by_id(curseur, id)
 
         if produit is None:
             abort(404)
@@ -283,7 +283,7 @@ def archiver_produit(id):
         abort(400)
 
     with bd.creer_curseur() as curseur:
-        produit = bd.get_produit(curseur, id)
+        produit = bd.get_produit_by_id(curseur, id)
 
         if produit is None:
             abort(404)
@@ -309,7 +309,7 @@ def modifier_produit(id):
         abort(401)
 
     with bd.creer_curseur() as curseur:
-        produit = bd.get_produit(
+        produit = bd.get_produit_by_id(
             curseur,
             id
         )
@@ -392,8 +392,8 @@ def modifier_produit(id):
     )
 
 
-@bp_produits.route('/historique_encheres')
-def historique_encheres():
+@bp_produits.route('/historique_transaction')
+def historique_transaction():
     """Affiche l'historique des transactions"""
 
     if "id_utilisateur" not in session:

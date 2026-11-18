@@ -48,7 +48,7 @@ def ajouter(id):
         abort(400)
 
     with bd.creer_curseur() as curseur:
-        produit = bd.get_produit(curseur, id)
+        produit = bd.get_produit_by_id(curseur, id)
         if produit is None or produit["archive"] or produit["id_statut"] == 4:
             abort(404)
         if produit["id_vendeur"] == session["id_utilisateur"]:

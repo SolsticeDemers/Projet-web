@@ -46,7 +46,7 @@
         <div class="actions flex-column ms-auto">
 
             <a
-                href="{{ url_for('compte.notification') }}"
+                href="{{ url_for('notification.notification') }}"
                 class="button"
             >
                 Mes notifications
@@ -70,7 +70,7 @@
         </div>
 
         <a
-            href="{{ url_for('produits.historique_encheres') }}"
+            href="{{ url_for('produits.historique_transaction') }}"
             class="button"
         >
             Historique des transactions
@@ -143,21 +143,18 @@
                             {{ produit.description }}
                         </p>
 
-                        <p class="prix">
-                            {{ produit.prix }} $
-                        </p>
+                <p class="prix">
+                    {{ produit.prix }} $
+                </p>
+            </div>
 
-                    </div>
-
-
-                    <div class="actions">
-
-                        <a
-                            href="{{ url_for('produits.modifier_produit', id=produit.id_produit) }}"
-                            class="btn-modifier"
-                        >
-                            Modifier
-                        </a>
+            <div class="actions">
+                {% if session['mode_echange'] and produit.nom_statut!= "Vendu" %}
+                <a href="/notification/creer_echange/{{produit.id_produit}}">Choisir</a>
+                {% elif session['mode_echange'] == False %}
+                <a href="{{ url_for('produits.modifier_produit', id=produit.id_produit) }}" class="btn-modifier">
+                    Modifier
+                </a>
 
                         <form
                             action="{{ url_for('produits.archiver_produit', id=produit.id_produit) }}"
@@ -173,9 +170,9 @@
                                 Supprimer
                             </button>
 
-                        </form>
-
-                    </div>
+                </form>
+                {% endif %}
+            </div>
 
                 </div>
 

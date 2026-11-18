@@ -15,24 +15,9 @@
         <li class="carte-produit carte-mon-produit affichage_notif">
 
             <div id="notif_detail">
-
-                <p id="nom_offrant">
-                    <strong>{{ notif.offrant }}</strong>
-                </p>
-
-                <p>
-                    Votre produit:
-                    <a href="/produits/{{ notif.id_produit }}">
-                        {{ notif.echange_nom }}
-                    </a>
-                </p>
-
-                <p>
-                    Le produit offert:
-                    <a href="/produits/{{ notif.id_produit_offert }}">
-                        {{ notif.offert_nom }}
-                    </a>
-                </p>
+                <p id="nom_proprio"><strong>{{notif.proprio}}</strong></p>
+                <p>Le produit souhaité: <a href="/produits/{{ notif.id_produit }}">{{notif.echange_nom}}</a></p>
+                <p>Votre produit : <a href="/produits/{{ notif.id_produit_offert }}">{{notif.offert_nom}}</a></p>
 
                 {% if notif.approuve == 1 %}
 
@@ -57,32 +42,16 @@
         <li class="carte-produit carte-mon-produit affichage_notif">
 
             <div id="notif_detail">
-
-                <p id="nom_offrant">
-                    <strong>{{ notif.offrant }}</strong>
-                </p>
-
-                <p>
-                    Votre produit:
-                    <a href="/produits/{{ notif.id_produit }}">
-                        {{ notif.echange_nom }}
-                    </a>
-                </p>
-
-                <p>
-                    Le produit offert:
-                    <a href="/produits/{{ notif.id_produit_offert }}">
-                        {{ notif.offert_nom }}
-                    </a>
-                </p>
-
+                <p id="nom_offrant"><strong>{{notif.offrant}}</strong></p>
+                <p>Votre produit: <a href="/produits/{{ notif.id_produit }}">{{notif.echange_nom}}</a></p>
+                <p>Le produit offert: <a href="/produits/{{ notif.id_produit_offert }}">{{notif.offert_nom}}</a></p>
             </div>
 
             <div class="actions">
 
                 <a
                     class="btn-accepter"
-                    href="/compte/accepter_echange/{{ notif.id_proposition }}/oui"
+                    href="/notification/accepter_echange/{{ notif.id_proposition }}/oui"
                     id="echange_accepter"
                     value="oui"
                 >
@@ -91,7 +60,7 @@
 
                 <a
                     class="btn-refuser"
-                    href="/compte/accepter_echange/{{ notif.id_proposition }}/non"
+                    href="/notification/accepter_echange/{{ notif.id_proposition }}/non"
                     id="echange_refuser"
                     value="non"
                 >
