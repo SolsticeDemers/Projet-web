@@ -63,6 +63,7 @@ def mes_produits():
         form_archiver=form
     )
 
+
 @bp_produits.route('/mes_encheres')
 def mes_encheres():
     """Affiche les enchères en cours sur lesquelles l'utilisateur a misé"""
@@ -101,6 +102,7 @@ def mes_encheres():
         "mes_encheres.jinja",
         encheres=encheres
     )
+
 
 @bp_produits.route('/<int:id>', methods=['GET', 'POST'])
 def details_produit(id):
@@ -168,6 +170,7 @@ def details_produit(id):
         form_archiver=form_archiver,
         form=form_panier
     )
+
 
 @bp_produits.route('/<int:id>/mise', methods=['GET', 'POST'])
 def miser_produit(id):
@@ -414,8 +417,8 @@ def modifier_produit(id):
     )
 
 
-@bp_produits.route('/historique_encheres')
-def historique_encheres():
+@bp_produits.route('/historique_transaction')
+def historique_transaction():
     """Affiche l'historique des transactions"""
 
     if "id_utilisateur" not in session:
@@ -433,6 +436,12 @@ def historique_encheres():
         )
 
         encheres = bd.get_historique_encheres(
+            curseur,
+            session["id_utilisateur"],
+            tri
+        )
+
+        echanges = bd.get_historique_echanges(
             curseur,
             session["id_utilisateur"],
             tri
@@ -462,5 +471,6 @@ def historique_encheres():
         "historique.jinja",
         achats=achats,
         encheres=encheres,
+        echanges = echanges,
         tri=tri
     )
