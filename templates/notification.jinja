@@ -9,9 +9,9 @@
         {% if session['nom'] == notif.offrant and notif.approuve != None %}
         <li class="carte-produit carte-mon-produit  affichage_notif">
             <div id="notif_detail">
-                <p id="nom_offrant"><strong>{{notif.offrant}}</strong></p>
-                <p>Votre produit: <a href="/produits/{{ notif.id_produit }}">{{notif.echange_nom}}</a></p>
-                <p>Le produit offert: <a href="/produits/{{ notif.id_produit_offert }}">{{notif.offert_nom}}</a></p>
+                <p id="nom_proprio"><strong>{{notif.proprio}}</strong></p>
+                <p>Le produit souhaité: <a href="/produits/{{ notif.id_produit }}">{{notif.echange_nom}}</a></p>
+                <p>Votre produit : <a href="/produits/{{ notif.id_produit_offert }}">{{notif.offert_nom}}</a></p>
 
                 {% if notif.approuve == 1 %}
                 <p class="alert theme-success" role="alert">Votre demande d'échange à été approuvé!</p>
@@ -31,12 +31,6 @@
                 <p id="nom_offrant"><strong>{{notif.offrant}}</strong></p>
                 <p>Votre produit: <a href="/produits/{{ notif.id_produit }}">{{notif.echange_nom}}</a></p>
                 <p>Le produit offert: <a href="/produits/{{ notif.id_produit_offert }}">{{notif.offert_nom}}</a></p>
-                {# <div id="notif_detail">
-                    <p>Le produit offert: {{notif.offert_nom}}</p>
-                    <a href="/produits/{{ notif.id_produit_offert }}">
-                        Détails du profuit offert
-                    </a>
-                </div> #}
             </div>
             <div class="actions">
                 <a class="btn-accepter" href="/compte/accepter_echange/{{notif.id_proposition}}/oui"

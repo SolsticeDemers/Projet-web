@@ -676,3 +676,11 @@ def update_notification(curseur, id_proposition, vue):
                         'vue': vue
                     })
     return curseur.fetchall()
+
+def update_produit_echange(curseur, id, id_utilisateur):
+    curseur.execute("UPDATE `produit` SET `id_vendeur`= %(id_utilisateur)s WHERE id_produit = %(id)s;",
+                    {
+                        'id_utilisateur': id_utilisateur,
+                        'id': id
+                    })
+
