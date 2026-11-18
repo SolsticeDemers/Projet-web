@@ -141,9 +141,9 @@
 
                     <div class="actions">
 
-                        {% if produit.nom_statut == "En vente" %}
+                        {% if "id_utilisateur" in session %}
 
-                            {% if "id_utilisateur" in session %}
+                            {% if produit.nom_statut == "En vente" %}
 
                                 <form
                                     method="POST"
@@ -158,17 +158,15 @@
 
                                 </form>
 
-                            {% endif %}
+                            {% elif produit.nom_statut == "Aux enchères" %}
 
+                                <a
+                                    href="{{ url_for('produits.miser_produit', id=produit.id_produit) }}"
+                                >
+                                    Enchérir
+                                </a>
 
-                        {% elif produit.nom_statut == "Aux enchères" %}
-
-                            <button>
-                                Enchérir
-                            </button>
-
-
-                        {% elif produit.nom_statut == "À échanger" %}
+                            {% elif produit.nom_statut == "À échanger" %}
 
                             <form
                                     method="GET"
@@ -184,7 +182,7 @@
                                 </form>
 
                         {% endif %}
-
+                         {% endif %}
 
                         <a href="/produits/{{ produit.id_produit }}">
                             Détails
@@ -211,7 +209,6 @@
     <nav class="mt-5">
 
         <ul class="pagination justify-content-center">
-
 
             <li class="page-item {% if page <= 1 %}disabled{% endif %}">
 

@@ -1,0 +1,220 @@
+{% extends "_modele.jinja" %}
+
+{% block contenu %}
+
+<div class="container my-5">
+
+    <h2 class="mb-4">
+        Historique des transactions
+    </h2>
+
+    <form method="GET" class="mb-4">
+
+        <label for="tri" class="form-label">
+            Trier par
+        </label>
+
+        <select
+            name="tri"
+            id="tri"
+            class="form-select"
+            onchange="this.form.submit()"
+        >
+
+            <option
+                value="recent"
+                {% if tri == "recent" %}selected{% endif %}
+            >
+                Plus récent
+            </option>
+
+            <option
+                value="ancien"
+                {% if tri == "ancien" %}selected{% endif %}
+            >
+                Plus ancien
+            </option>
+
+            <option
+                value="prix_croissant"
+                {% if tri == "prix_croissant" %}selected{% endif %}
+            >
+                Prix croissant
+            </option>
+
+            <option
+                value="prix_decroissant"
+                {% if tri == "prix_decroissant" %}selected{% endif %}
+            >
+                Prix décroissant
+            </option>
+
+        </select>
+
+    </form>
+
+    <div class="row g-4">
+
+        <div class="col-md-6">
+
+            <div class="border rounded p-4 h-100">
+
+                <h3 class="mb-4">
+                    Achats
+                </h3>
+
+                <hr>
+
+                {% if achats %}
+
+                    {% for achat in achats %}
+
+                        <div class="py-3 border-bottom">
+
+                            <h4>
+                                {{ achat.nom }}
+                            </h4>
+
+                            <p class="mb-1">
+                                Prix payé :
+                                <strong>
+                                    {{ achat.prix_achat }} $
+                                </strong>
+                            </p>
+
+                            <p class="mb-3 text-muted">
+                                Date d'achat :
+                                {{ achat.date_achat }}
+                            </p>
+
+                            <a
+                                href="/produits/{{ achat.id_produit }}"
+                                class="button"
+                            >
+                                Voir le produit
+                            </a>
+
+                        </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <p class="text-muted">
+                        Vous n'avez effectué aucun achat.
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        <div class="col-md-6">
+
+            <div class="border rounded p-4 h-100">
+
+                <h3 class="mb-4">
+                    Échanges
+                </h3>
+
+                <hr>
+
+                <p class="text-muted">
+                    Aucun produit échangé.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="row mt-4">
+
+        <div class="col-12">
+
+            <div class="border rounded p-4">
+
+                <h3 class="mb-4">
+                    Enchères gagnées
+                </h3>
+
+                <hr>
+
+                {% if encheres %}
+
+                    {% for produit in encheres %}
+
+                        <div class="row align-items-center py-3 border-bottom">
+
+                            <div class="col-md-2">
+
+                                {% if produit.src %}
+
+                                    <img
+                                        src="{{ produit.src }}"
+                                        alt="{{ produit.nom }}"
+                                        class="img-fluid rounded"
+                                    >
+
+                                {% endif %}
+
+                            </div>
+
+                            <div class="col-md-7">
+
+                                <h4>
+                                    {{ produit.nom }}
+                                </h4>
+
+                                <p class="mb-1">
+                                    Prix final :
+                                    <strong>
+                                        {{ produit.prix }} $
+                                    </strong>
+                                </p>
+
+                                {% if produit.date_fin %}
+
+                                    <p class="mb-0 text-muted">
+                                        Date de fin :
+                                        {{ produit.date_fin }}
+                                    </p>
+
+                                {% endif %}
+
+                            </div>
+
+                            <div class="col-md-3 text-md-end">
+
+                                <a
+                                    href="/produits/{{ produit.id_produit }}"
+                                    class="button"
+                                >
+                                    Voir le produit
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <p class="text-muted">
+                        Vous n'avez remporté aucune enchère.
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

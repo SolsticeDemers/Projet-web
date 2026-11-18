@@ -27,6 +27,39 @@ app.config["CHEMIN_IMAGES"] = os.path.join(
     "utiles"
 )
 
+@app.before_request
+def verifier_encheres_terminees():
+    """Vérifie les enchères terminées et crée la notification du gagnant"""
+
+    with bd.creer_curseur() as curseur:
+
+        encheres = bd.get_encheres_terminees(curseur)
+
+        for produit in encheres:
+
+            mise_gagnante = bd.get_mise_gagnante(
+                curseur,
+                produit["id_produit"]
+            )
+
+            if mise_gagnante is not None:
+
+                id_notification = bd.create_notif_gagnant(
+                    curseur,
+                    mise_gagnante["id_utilisateur"]
+                )
+
+                bd.create_notif_enchere(
+                    curseur,
+                    id_notification,
+                    produit["id_produit"]
+                )
+
+            bd.marquer_vendu(
+                curseur,
+                produit["id_produit"]
+            )
+            
 
 @app.route("/")
 def index():

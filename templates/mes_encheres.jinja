@@ -1,0 +1,88 @@
+{% extends "_modele.jinja" %}
+
+{% block contenu %}
+
+<section class="container my-4">
+
+    <h2 class="m-5">Mes enchères</h2>
+
+    {% if encheres %}
+    <div class="liste-mes-produits">
+
+        {% for produit in encheres %}
+        <div class="carte-produit carte-mon-produit">
+
+            <div class="image-produit">
+
+                <a href="/produits/{{ produit.id_produit }}">
+
+                    {% if produit.src %}
+                    <img
+                        src="{{ produit.src }}"
+                        alt="{{ produit.nom }}"
+                    >
+                    {% endif %}
+
+                </a>
+
+                <span class="badge-statut badge-enchere">
+                    Aux enchères
+                </span>
+
+            </div>
+
+            <div class="contenu-produit">
+
+                <h3>
+                    <a href="/produits/{{ produit.id_produit }}">
+                        {{ produit.nom }}
+                    </a>
+                </h3>
+
+                <p>
+                    {{ produit.description }}
+                </p>
+
+                <p class="prix">
+                    Mise actuelle : {{ produit.prix }} $
+                </p>
+
+                <p>
+                    Fin de l'enchère : {{ produit.date_fin }}
+                </p>
+
+            </div>
+
+            <div class="actions">
+
+                <a
+                    href="{{ url_for('produits.details_produit', id=produit.id_produit) }}"
+                >
+                    Détails
+                </a>
+
+                <a
+                    href="{{ url_for('produits.miser_produit', id=produit.id_produit) }}"
+                    class="btn-modifier"
+                >
+                    Miser
+                </a>
+
+            </div>
+
+        </div>
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <p>
+        Vous n'avez aucune enchère en cours.
+    </p>
+
+    {% endif %}
+
+</section>
+
+{% endblock %}
