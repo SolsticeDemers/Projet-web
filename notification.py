@@ -18,7 +18,7 @@ def faire_echange(id_produit):
 def creer_echange(id_produit_offert):
 
     with bd.creer_curseur() as curseur:
-        produit_echange = bd.get_produit(
+        produit_echange = bd.get_produit_by_id(
             curseur, session['id_produit_echange'])
     with bd.creer_curseur() as curseur:
         proprio = bd.get_utilisateur_name(
@@ -26,7 +26,7 @@ def creer_echange(id_produit_offert):
     nom_proprio = proprio['nom']
     nom_produit = produit_echange['nom']
     with bd.creer_curseur() as curseur:
-            produit_offert = bd.get_produit(curseur, id_produit_offert)
+            produit_offert = bd.get_produit_by_id(curseur, id_produit_offert)
     nom_produit_offert = produit_offert['nom']
     if request.method == "GET":
         return render_template('faire_echange.jinja', nom_produit=nom_produit, nom_proprio=nom_proprio, nom_produit_offert=nom_produit_offert, id_produit_offert = id_produit_offert)

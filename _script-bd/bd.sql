@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.3
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : mar. 17 nov. 2026 à 21:23
--- Version du serveur : 8.4.7
--- Version de PHP : 8.3.28
+-- Généré le : mer. 18 nov. 2026 à 15:35
+-- Version du serveur : 9.1.0
+-- Version de PHP : 8.3.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `achat` (
   PRIMARY KEY (`id_achat`),
   UNIQUE KEY `id_produit` (`id_produit`),
   KEY `id_acheteur` (`id_acheteur`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `achat`
@@ -48,11 +48,20 @@ INSERT INTO `achat` (`id_achat`, `id_produit`, `id_acheteur`, `prix_achat`, `dat
 (1, 1, 2, 34.00, '2026-06-20', 1),
 (2, 7, 3, 185.00, '2026-05-03', 1),
 (3, 10, 4, 110.00, '2026-02-02', 1),
+(4, 15, 5, 145.00, '2025-12-01', 1),
+(5, 18, 6, 420.00, '2026-03-07', 1),
+(6, 22, 2, 275.00, '2025-06-01', 1),
 (7, 4, 1, 1350.00, '2026-03-18', 1),
 (8, 8, 3, 2100.00, '2025-11-02', 1),
 (9, 13, 5, 780.00, '2026-01-04', 1),
+(10, 17, 6, 890.00, '2025-08-01', 1),
+(11, 5, 4, 1850.00, '2026-05-28', 1),
+(12, 2, 6, 850.00, '2026-05-09', 1),
+(15, 3, 1, 1150.00, '2026-11-17', 1),
 (17, 24, 1, 1750.00, '2026-11-17', 0),
-(18, 25, 3, 18900.00, '2026-11-17', 1);
+(18, 25, 3, 18900.00, '2026-11-17', 1),
+(20, 20, 4, 950.00, '2026-11-18', 1),
+(22, 9, 4, 980.00, '2026-11-18', 1);
 
 -- --------------------------------------------------------
 
@@ -67,22 +76,21 @@ CREATE TABLE IF NOT EXISTS `echange` (
   `id_utilisateur` int NOT NULL,
   `produit` int NOT NULL,
   `produit_offert` int DEFAULT NULL,
-  `commentaire` text DEFAULT NULL,
   `approuver` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id_echange`),
   KEY `echange_ibfk_1` (`proprio`),
   KEY `echange_ibfk_2` (`id_utilisateur`),
   KEY `echange_ibfk_3` (`produit`),
   KEY `echange_ibfk_4` (`produit_offert`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `echange`
 --
 
 INSERT INTO `echange` (`id_echange`, `proprio`, `id_utilisateur`, `produit`, `produit_offert`, `approuver`) VALUES
-(2, 3, 1, 16, 25, 1),
-(3, 3, 1, 16, 25, NULL);
+(1, 3, 1, 16, 25, 1),
+(2, 6, 4, 35, 24, 1);
 
 -- --------------------------------------------------------
 
@@ -100,14 +108,15 @@ CREATE TABLE IF NOT EXISTS `mise` (
   PRIMARY KEY (`id_mise`),
   KEY `id_produit` (`id_produit`),
   KEY `id_utilisateur` (`id_utilisateur`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `mise`
 --
 
 INSERT INTO `mise` (`id_mise`, `id_produit`, `id_utilisateur`, `montant`, `date_mise`) VALUES
-(1, 21, 1, 800.00, '2026-11-17 00:59:26');
+(1, 21, 1, 800.00, '2026-11-17 00:59:26'),
+(2, 36, 2, 4505.00, '2026-11-17 19:30:31');
 
 -- --------------------------------------------------------
 
@@ -123,9 +132,8 @@ CREATE TABLE IF NOT EXISTS `notification` (
   `notif_vue` tinyint NOT NULL DEFAULT '0',
   `date` date NOT NULL,
   PRIMARY KEY (`id_notification`),
-  KEY `CLE_ETRANGERE_DESTINATAIRE` (`id_destinataire`) USING BTREE,
   KEY `notification_ibfk_1` (`id_statut`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `notification`
@@ -134,10 +142,13 @@ CREATE TABLE IF NOT EXISTS `notification` (
 INSERT INTO `notification` (`id_notification`, `id_destinataire`, `id_statut`, `notif_vue`, `date`) VALUES
 (1, 1, 2, 1, '2026-11-17'),
 (2, 3, 3, 1, '2026-11-17'),
-(3, 3, 3, 1, '2026-11-17'),
-(4, 1, 3, 1, '2026-11-17'),
-(5, 1, 3, 1, '2026-11-17'),
-(7, 1, 1, 1, '2026-11-17');
+(3, 1, 3, 1, '2026-11-17'),
+(4, 1, 1, 1, '2026-11-17'),
+(5, 2, 2, 1, '2026-11-17'),
+(6, 6, 1, 1, '2026-11-18'),
+(7, 6, 3, 1, '2026-11-18'),
+(8, 4, 3, 1, '2026-11-18'),
+(9, 3, 1, 1, '2026-11-18');
 
 -- --------------------------------------------------------
 
@@ -158,7 +169,9 @@ CREATE TABLE IF NOT EXISTS `notification_achat` (
 --
 
 INSERT INTO `notification_achat` (`id_notification`, `id_achat`) VALUES
-(7, 18);
+(4, 18),
+(6, 20),
+(9, 22);
 
 -- --------------------------------------------------------
 
@@ -179,10 +192,10 @@ CREATE TABLE IF NOT EXISTS `notification_echange` (
 --
 
 INSERT INTO `notification_echange` (`id_notification`, `id_echange`) VALUES
-(2, 2),
-(3, 3),
-(4, 3),
-(5, 2);
+(2, 1),
+(3, 1),
+(7, 2),
+(8, 2);
 
 -- --------------------------------------------------------
 
@@ -203,54 +216,10 @@ CREATE TABLE IF NOT EXISTS `notification_enchere` (
 --
 
 INSERT INTO `notification_enchere` (`id_notification`, `id_produit`) VALUES
-(1, 21);
+(1, 21),
+(5, 36);
 
 -- --------------------------------------------------------
-
---
--- Structure de la table `notification`
---
-
-DROP TABLE IF EXISTS `notification`;
-CREATE TABLE IF NOT EXISTS `notification` (
-  `id_notification` int NOT NULL AUTO_INCREMENT,
-  `id_destinataire` int NOT NULL,
-  `id_statut` int NOT NULL,
-  `notif_vue` tinyint NOT NULL DEFAULT '0',
-  `date` date NOT NULL,
-  PRIMARY KEY (`id_notification`),
-  KEY `CLE_ETRANGERE_DESTINATAIRE` (`id_destinataire`) USING BTREE,
-  KEY `CLE_ETRANGERE_STATUT` (`id_statut`)
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Déchargement des données de la table `notification`
---
-
-INSERT INTO `notification` (`id_notification`, `id_destinataire`, `id_statut`, `notif_vue`, `date`) VALUES
-(1, 5, 3, 1, '2026-11-11'),
-(2, 3, 3, 0, '0000-00-00'),
-(3, 3, 3, 0, '0000-00-00');
---
--- Structure de la table `notification_echange`
---
-
-DROP TABLE IF EXISTS `notification_echange`;
-CREATE TABLE IF NOT EXISTS `notification_echange` (
-  `id_notification` int NOT NULL,
-  `id_echange` int NOT NULL,
-  KEY `CLE_ETRANGERE_NOTIFICATION` (`id_notification`),
-  KEY `CLE_ETRANGERE_ECHANGE` (`id_echange`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Déchargement des données de la table `notification_echange`
---
-
-INSERT INTO `notification_echange` (`id_notification`, `id_echange`) VALUES
-(1, 1),
-(2, 2),
-(3, 3);
 
 --
 -- Structure de la table `produit`
@@ -259,51 +228,63 @@ INSERT INTO `notification_echange` (`id_notification`, `id_echange`) VALUES
 DROP TABLE IF EXISTS `produit`;
 CREATE TABLE IF NOT EXISTS `produit` (
   `id_produit` int NOT NULL AUTO_INCREMENT,
-  `nom` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  `description` text COLLATE utf8mb4_general_ci,
+  `nom` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `prix` decimal(10,2) NOT NULL,
   `id_vendeur` int NOT NULL,
   `id_statut` int NOT NULL,
   `date` date NOT NULL,
-  `date_fin` date DEFAULT NULL,
+  `date_fin` date NOT NULL,
   `archive` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_produit`),
   KEY `id_vendeur` (`id_vendeur`),
   KEY `id_statut` (`id_statut`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `produit`
 --
 
 INSERT INTO `produit` (`id_produit`, `nom`, `description`, `prix`, `id_vendeur`, `id_statut`, `date`, `date_fin`, `archive`) VALUES
-(1, 'Belles Ongles amande renforcés', 'Faux ongles courts en forme d\'amande plus épais à l\'avant pour éviter les fissures et plus fins à l\'arrière', 34.50, 1, 4, '2026-06-12', NULL, 0),
-(2, 'Portrait à l\'huile Femme au chapeau rouge', 'Portrait original peint à l\'huile représentant une femme avec un chapeau rouge', 850.00, 2, 2, '2026-04-18', '2026-11-28', 0),
-(3, 'Fauteuil Art déco années 1930', 'Fauteuil ancien avec structure en bois et tissu restauré', 1150.00, 3, 1, '2026-09-18', NULL, 0),
-(4, 'Le Petit Prince édition 1946', 'Ancienne édition française du Petit Prince publiée en 1946', 1350.00, 4, 4, '2026-03-02', NULL, 0),
-(5, 'Sculpture femme en bronze', 'Sculpture ancienne en bronze représentant une femme debout', 1850.00, 5, 3, '2026-05-08', NULL, 0),
-(6, 'Game Boy édition Pokémon jaune', 'Console Game Boy Pokémon jaune encore fonctionnelle', 650.00, 6, 1, '2026-09-21', NULL, 0),
-(7, 'Palette Dior édition limitée', 'Palette Dior provenant d\'une ancienne collection limitée difficile à trouver', 185.00, 1, 4, '2026-04-20', NULL, 0),
-(8, 'Les Misérables édition reliée', 'Ancienne édition des Misérables avec reliure en cuir', 2100.00, 4, 4, '2025-10-14', NULL, 0),
-(9, 'Commode en noyer massif 1920', 'Commode ancienne en noyer avec cinq tiroirs et poignées en laiton', 980.00, 3, 1, '2026-09-12', NULL, 0),
-(10, 'Rouge à lèvres Lancôme collection archive', 'Rouge à lèvres Lancôme provenant d\'une collection qui n\'est plus vendue', 110.00, 1, 4, '2026-01-15', NULL, 0),
-(11, 'Buste en marbre blanc italien', 'Buste décoratif sculpté dans du marbre blanc', 2400.00, 5, 1, '2026-09-17', NULL, 0),
-(12, 'PlayStation Net Yaroze', 'Console PlayStation noire rare destinée à la création de jeux', 3201.00, 6, 2, '2026-11-28', '2027-11-03', 0),
-(13, 'L\'Étranger édition canadienne ancienne', 'Ancienne édition canadienne du roman L\'Étranger', 780.00, 4, 4, '2025-12-11', NULL, 0),
-(14, 'Portrait familial québécois de 1918', 'Ancien portrait d\'une famille québécoise avec son cadre original', 320.00, 2, 1, '2026-08-28', NULL, 0),
-(15, 'Poudre compacte MAC édition 2008', 'Poudre MAC provenant d\'une collection limitée de 2008', 145.00, 1, 1, '2025-11-20', NULL, 0),
-(16, 'Brochure Ford Mustang 1967', 'Brochure publicitaire originale de la Ford Mustang 1967', 225.00, 3, 3, '2025-08-03', NULL, 0),
-(17, 'Dracula édition illustrée ancienne', 'Ancienne édition illustrée de Dracula avec couverture rigide', 890.00, 4, 1, '2025-07-08', NULL, 0),
-(18, 'Ensemble couture rose années 1990', 'Ensemble deux pièces sur mesure avec veste et jupe assorties', 420.00, 1, 3, '2026-02-19', NULL, 0),
-(19, 'Coffret skincare Sulwhasoo édition limitée', 'Coffret de soins Sulwhasoo provenant d\'une édition limitée', 315.00, 5, 3, '2026-09-10', NULL, 0),
-(20, 'iPod Classic première génération', 'iPod Apple de première génération avec sa molette originale', 950.00, 6, 1, '2026-08-30', NULL, 0),
-(21, 'Portrait miniature peint ancien', 'Petit portrait ancien peint à la main dans un cadre ovale', 800.00, 2, 4, '2026-09-15', '2026-11-10', 0),
-(22, 'Sac à main perlé fait main', 'Sac à main vintage couvert de perles et fabriqué à la main', 275.00, 1, 1, '2025-05-13', NULL, 0),
-(23, 'Volant Porsche 911 classique', 'Volant original provenant d\'une ancienne Porsche 911', 1450.00, 3, 3, '2026-08-22', NULL, 0),
-(24, 'Atlas mondial relié en cuir 1904', 'Ancien atlas mondial avec cartes en couleur et reliure en cuir', 1750.00, 4, 1, '2026-09-15', NULL, 0),
-(25, 'Cadillac DeVille 1994 rose', 'Cadillac DeVille de 1994 avec peinture rose et intérieur restauré', 18900.00, 1, 4, '2026-09-22', NULL, 0),
-(26, 'Bague en Pierre Précieuse Rouge ancien, datant de l\'époque médiévale ', 'C\'est une bague hors de prix, portant par des grands seigneurs. Cette bague a été conservée dans des grands musées et aujourd\'hui elle est mise en vente pour pouvoir embéllir le doigt de son(sa) futur(e) propriétaire. ', 4000.00, 5, 1, '2026-10-30', NULL, 0),
-(28, 'Collection de Papillon figé dans de la cire d\'abeille', 'Une super belle Collection de Lépidoptères remplis de couleur. Parfait sur le mur de votre Pièce. Les insectes dessus n\'ont pas de cicatrises et ont été bien conservés. ', 300.00, 4, 3, '2026-10-15', NULL, 0);
+(1, 'Belles Ongles amande renforcés', 'Faux ongles courts en forme d\'amande plus épais à l\'avant pour éviter les fissures et plus fins à l\'arrière', 34.50, 1, 4, '2026-06-12', '0000-00-00', 0),
+(2, 'Portrait à l\'huile Femme au chapeau rouge', 'Portrait original peint à l\'huile représentant une femme avec un chapeau rouge', 850.00, 2, 4, '2026-04-18', '2026-11-28', 0),
+(3, 'Fauteuil Art déco années 1930', 'Fauteuil ancien avec structure en bois et tissu restauré', 1150.00, 3, 4, '2026-09-18', '0000-00-00', 0),
+(4, 'Le Petit Prince édition 1946', 'Ancienne édition française du Petit Prince publiée en 1946', 1350.00, 4, 4, '2026-03-02', '0000-00-00', 0),
+(5, 'Sculpture femme en bronze', 'Sculpture ancienne en bronze représentant une femme debout', 1850.00, 5, 4, '2026-05-08', '0000-00-00', 0),
+(6, 'Game Boy édition Pokémon jaune', 'Console Game Boy Pokémon jaune encore fonctionnelle', 650.00, 6, 1, '2026-09-21', '0000-00-00', 0),
+(7, 'Palette Dior édition limitée', 'Palette Dior provenant d\'une ancienne collection limitée difficile à trouver', 185.00, 1, 4, '2026-04-20', '0000-00-00', 0),
+(8, 'Les Misérables édition reliée', 'Ancienne édition des Misérables avec reliure en cuir', 2100.00, 4, 4, '2025-10-14', '0000-00-00', 0),
+(9, 'Commode en noyer massif 1920', 'Commode ancienne en noyer avec cinq tiroirs et poignées en laiton', 980.00, 3, 4, '2026-09-12', '0000-00-00', 0),
+(10, 'Rouge à lèvres Lancôme collection archive', 'Rouge à lèvres Lancôme provenant d\'une collection qui n\'est plus vendue', 110.00, 1, 4, '2026-01-15', '0000-00-00', 0),
+(11, 'Buste en marbre blanc italien', 'Buste décoratif sculpté dans du marbre blanc', 2400.00, 5, 4, '2026-09-17', '0000-00-00', 0),
+(12, 'PlayStation Net Yaroze', 'Console PlayStation noire rare destinée à la création de jeux', 3201.00, 6, 4, '2026-11-28', '2027-11-03', 0),
+(13, 'L\'Étranger édition canadienne ancienne', 'Ancienne édition canadienne du roman L\'Étranger', 780.00, 4, 4, '2025-12-11', '0000-00-00', 0),
+(14, 'Portrait familial québécois de 1918', 'Ancien portrait d\'une famille québécoise avec son cadre original', 320.00, 2, 1, '2026-08-28', '2026-11-28', 0),
+(15, 'Poudre compacte MAC édition 2008', 'Poudre MAC provenant d\'une collection limitée de 2008', 145.00, 1, 4, '2025-11-20', '0000-00-00', 1),
+(16, 'Brochure Ford Mustang 1967', 'Brochure publicitaire originale de la Ford Mustang 1967', 225.00, 1, 3, '2025-08-03', '0000-00-00', 0),
+(17, 'Dracula édition illustrée ancienne', 'Ancienne édition illustrée de Dracula avec couverture rigide', 890.00, 4, 4, '2025-07-08', '0000-00-00', 0),
+(18, 'Ensemble couture rose années 1990', 'Ensemble deux pièces sur mesure avec veste et jupe assorties', 420.00, 1, 4, '2026-02-19', '0000-00-00', 0),
+(19, 'Coffret skincare Sulwhasoo édition limitée', 'Coffret de soins Sulwhasoo provenant d\'une édition limitée', 315.00, 5, 3, '2026-09-10', '0000-00-00', 0),
+(20, 'iPod Classic première génération', 'iPod Apple de première génération avec sa molette originale', 950.00, 6, 4, '2026-08-30', '0000-00-00', 0),
+(21, 'Portrait miniature peint ancien', 'Petit portrait ancien peint à la main dans un cadre ovale', 800.00, 2, 4, '2027-09-15', '2026-11-10', 0),
+(22, 'Sac à main perlé fait main', 'Sac à main vintage couvert de perles et fabriqué à la main', 275.00, 1, 4, '2025-05-13', '0000-00-00', 0),
+(23, 'Volant Porsche 911 classique', 'Volant original provenant d\'une ancienne Porsche 911', 1450.00, 3, 3, '2026-08-22', '0000-00-00', 0),
+(24, 'Atlas mondial relié en cuir 1904', 'Ancien atlas mondial avec cartes en couleur et reliure en cuir', 1750.00, 6, 1, '2026-09-15', '0000-00-00', 0),
+(25, 'Cadillac DeVille 1994 rose', 'Cadillac DeVille de 1994 avec peinture rose et intérieur restauré', 18900.00, 3, 4, '2026-09-22', '0000-00-00', 0),
+(26, 'Bague en Pierre Précieuse Rouge ancien, datant de l\'époque médiévale ', 'C\'est une bague hors de prix, portant par des grands seigneurs. Cette bague a été conservée dans des grands musées et aujourd\'hui elle est mise en vente pour pouvoir embéllir le doigt de son(sa) futur(e) propriétaire. ', 4000.00, 5, 4, '2026-10-30', '2026-10-31', 0),
+(28, 'Collection de Papillon figé dans de la cire d\'abeille', 'Une super belle Collection de Lépidoptères remplis de couleur. Parfait sur le mur de votre Pièce. Les insectes dessus n\'ont pas de cicatrises et ont été bien  conservés. ', 300.00, 4, 4, '2026-10-15', '2026-10-28', 0),
+(30, 'Appareil photo Polaroid vintage', 'Appareil photo Polaroid des années 1980 en bon état. À échanger contre un autre objet de collection.', 120.00, 1, 3, '2026-11-17', '2026-11-17', 0),
+(31, 'Machine à écrire Underwood 1950', 'Machine à écrire mécanique ancienne avec touches originales. Idéale pour les collectionneurs.', 275.00, 2, 3, '2026-11-17', '2026-11-17', 0),
+(32, 'Radio rétro Philips années 1960', 'Radio vintage avec boîtier en bois et boutons d origine. Objet décoratif de collection.', 180.00, 3, 3, '2026-11-17', '2026-11-17', 0),
+(33, 'Montre de poche ancienne', 'Montre de poche mécanique avec boîtier doré et chaîne. Pièce de collection.', 350.00, 4, 3, '2026-11-17', '2026-11-17', 0),
+(34, 'Tourne-disque portable vintage', 'Tourne-disque portable des années 1970 avec valise intégrée.', 225.00, 5, 3, '2026-11-17', '2026-11-17', 0),
+(35, 'Console Nintendo Game Boy Color', 'Console Nintendo Game Boy Color originale en bon état avec son compartiment à piles.', 160.00, 4, 3, '2026-11-17', '2026-11-17', 0),
+(36, 'Montre Rolex Oyster Perpetual vintage', 'Montre mécanique Rolex des années 1970 avec cadran argenté et bracelet original.', 4505.00, 1, 4, '2026-11-17', '2026-11-17', 0),
+(37, 'Appareil photo Leica M3 1954', 'Appareil photo argentique Leica M3 avec objectif Summicron et étui en cuir.', 2800.00, 2, 2, '2026-11-17', '2026-11-27', 0),
+(38, 'Jukebox Wurlitzer années 1950', 'Jukebox américain rétro avec éclairage coloré et mécanisme de lecture de vinyles.', 6200.00, 3, 2, '2026-11-17', '2026-12-08', 0),
+(39, 'Première édition Astérix le Gaulois', 'Album de bande dessinée Astérix le Gaulois de collection avec couverture originale.', 950.00, 4, 2, '2026-11-17', '2026-11-24', 0),
+(40, 'Lampe Tiffany ancienne', 'Lampe décorative de style Tiffany avec abat-jour en vitrail multicolore.', 1350.00, 5, 2, '2026-11-17', '2026-11-29', 0),
+(41, 'Console Nintendo NES édition originale', 'Console Nintendo Entertainment System des années 1980 avec deux manettes et câbles.', 425.00, 6, 2, '2026-11-17', '2026-12-02', 0);
 
 -- --------------------------------------------------------
 
@@ -314,7 +295,7 @@ INSERT INTO `produit` (`id_produit`, `nom`, `description`, `prix`, `id_vendeur`,
 DROP TABLE IF EXISTS `statut_produit`;
 CREATE TABLE IF NOT EXISTS `statut_produit` (
   `id_statut` int NOT NULL AUTO_INCREMENT,
-  `nom_statut` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `nom_statut` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id_statut`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -337,9 +318,9 @@ INSERT INTO `statut_produit` (`id_statut`, `nom_statut`) VALUES
 DROP TABLE IF EXISTS `utilisateur`;
 CREATE TABLE IF NOT EXISTS `utilisateur` (
   `id_utilisateur` int NOT NULL AUTO_INCREMENT,
-  `nom` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `courriel` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  `mot_de_passe` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `nom` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `courriel` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `mot_de_passe` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id_utilisateur`),
   UNIQUE KEY `courriel` (`courriel`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

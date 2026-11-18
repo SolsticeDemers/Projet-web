@@ -802,16 +802,6 @@ def echange(notif, notifications, id_status, id_notif):
             "id_produit_offert": produit_offert['id_produit'],
             "status": status,
 
-            "echange_nom": produit[0]['nom'],
-
-            "id_produit": produit[0]['id_produit'],
-
-            "offert_nom": produit_offert[0]['nom'],
-
-            "id_produit_offert": produit_offert[0]['id_produit'],
-
-            "status" : status,
-
             "approuve": notif['approuver']
 
         }
@@ -917,26 +907,31 @@ def notification():
     )
 
 
-@bp_compte.route('/accepter_echange/<int:id_proposition>/<string:approuve>')
+@bp_compte.route('/accepter_echange/<int:id_echange>/<string:approuve>')
 
-def accepter_echange(id_proposition, approuve):
+def accepter_echange(id_echange, approuve):
 
 
     if approuve == "oui":
 
         reponse = 1
-
     else:
 
         reponse = 0
 
     with bd.creer_curseur() as curseur:
 
-        bd.update_offer(curseur, id_proposition, reponse)
+        bd.update_offer(curseur, id_echange, reponse)
 
-        id_notification= bd.create_notif_offrant(curseur, id_proposition)
+        id_notification= bd.create_notif_offrant(curseur, id_echange)
 
-        bd.create_notif_echange(curseur,id_proposition, id_notification)
+        bd.create_notif_echange(curseur,id_echange, id_notification)
 
+    if reponse == 1:
+        with bd.creer_curseur() as curseur:
+            echange= bd.get_echange_by_id(curseur, id_echange)
+            bd.update_produit_echange(curseur, echange['produit_offert'], session['id_utilisateur'])
+            bd.update_produit_echange(curseur, echange['produit'], echange['id_utilisateur'])
+        
 
     return redirect("/compte/notification", code=303)
