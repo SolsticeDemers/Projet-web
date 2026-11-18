@@ -877,10 +877,19 @@ def get_notif_enchere(curseur, id_notification):
 
     return curseur.fetchone()
 
-def get_historique_encheres(curseur, id_utilisateur):
+def get_historique_encheres(curseur, id_utilisateur, tri="recent"):
     """Retourne les enchères gagnées par l'utilisateur"""
 
-    curseur.execute("""
+    if tri == "ancien":
+        ordre = "ORDER BY p.date_fin ASC"
+    elif tri == "prix_croissant":
+        ordre = "ORDER BY p.prix ASC"
+    elif tri == "prix_decroissant":
+        ordre = "ORDER BY p.prix DESC"
+    else:
+        ordre = "ORDER BY p.date_fin DESC"
+
+    requete = """
         SELECT
             p.id_produit,
             p.nom,
@@ -893,8 +902,41 @@ def get_historique_encheres(curseur, id_utilisateur):
             ON ne.id_produit = p.id_produit
         WHERE n.id_destinataire = %(id_utilisateur)s
         AND n.id_statut = 2
-        ORDER BY p.date_fin DESC
-    """, {
+    """ + ordre
+
+    curseur.execute(requete, {
+        "id_utilisateur": id_utilisateur
+    })
+
+    return curseur.fetchall()
+
+
+def get_historique_achats(curseur, id_utilisateur, tri="recent"):
+    """Retourne les achats payés de l'utilisateur"""
+
+    if tri == "ancien":
+        ordre = "ORDER BY a.date_achat ASC"
+    elif tri == "prix_croissant":
+        ordre = "ORDER BY a.prix_achat ASC"
+    elif tri == "prix_decroissant":
+        ordre = "ORDER BY a.prix_achat DESC"
+    else:
+        ordre = "ORDER BY a.date_achat DESC"
+
+    requete = """
+        SELECT
+            p.id_produit,
+            p.nom,
+            a.prix_achat,
+            a.date_achat
+        FROM achat a
+        JOIN produit p
+            ON a.id_produit = p.id_produit
+        WHERE a.id_acheteur = %(id_utilisateur)s
+        AND a.paye = 1
+    """ + ordre
+
+    curseur.execute(requete, {
         "id_utilisateur": id_utilisateur
     })
 

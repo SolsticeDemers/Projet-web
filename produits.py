@@ -392,20 +392,28 @@ def modifier_produit(id):
     )
 
 
-
 @bp_produits.route('/historique_encheres')
 def historique_encheres():
-    """Affiche les enchères gagnées par l'utilisateur"""
+    """Affiche l'historique des transactions"""
 
     if "id_utilisateur" not in session:
         return redirect(
             url_for("compte.authentification")
         )
 
+    tri = request.args.get("tri", "recent")
+
     with bd.creer_curseur() as curseur:
+        achats = bd.get_historique_achats(
+            curseur,
+            session["id_utilisateur"],
+            tri
+        )
+
         encheres = bd.get_historique_encheres(
             curseur,
-            session["id_utilisateur"]
+            session["id_utilisateur"],
+            tri
         )
 
     for produit in encheres:
@@ -430,5 +438,7 @@ def historique_encheres():
 
     return render_template(
         "historique.jinja",
-        encheres=encheres
+        achats=achats,
+        encheres=encheres,
+        tri=tri
     )
