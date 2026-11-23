@@ -2,9 +2,8 @@
 
 {% block contenu %}
 
-<section class="container my-4">
-
-    <div class="profil-entete">
+<section class="container my-4 page-vintage">
+    <div class="profil-entete profil-vintage">
 
         <div class="d-flex flex-column align-items-center">
 
@@ -17,7 +16,7 @@
             <div>
                 <a
                     href="{{ url_for('compte.modifier_profil') }}"
-                    class="lien-modifier-profil"
+                    class="lien-modifier-profil lien-vintage"
                 >
                     Modifier mon profil
                 </a>
@@ -25,11 +24,10 @@
 
         </div>
 
+
         <div class="profil-informations">
 
-            <h3>
-                {{ utilisateur.nom }}
-            </h3>
+            <h3>{{ utilisateur.nom }}</h3>
 
             <p>
                 <strong>Nom d'utilisateur :</strong>
@@ -43,21 +41,16 @@
 
         </div>
 
-        <div class="actions flex-column ms-auto">
 
-            <a
-                href="{{ url_for('compte.notification') }}"
-                class="button"
+        <div class="actions flex-column ms-auto profil-actions">
+
+            <button
+                type="button"
+                class="bouton-secondaire"
+                disabled
             >
                 Mes notifications
-            </a>
-
-            <a
-                href="{{ url_for('produits.mes_encheres') }}"
-                class="button"
-            >
-                Mes enchères misées
-            </a>
+            </button>
 
             <button
                 type="button"
@@ -69,31 +62,25 @@
 
         </div>
 
-        <a
-            href="{{ url_for('produits.historique_encheres') }}"
-            class="button"
-        >
-            Historique des transactions
-        </a>
-
     </div>
-
 </section>
 
 
-<section class="container my-4">
+
+<section class="container my-4 page-vintage">
 
     <div class="d-flex justify-content-between align-items-center gap-3 mb-4">
 
-        <h2 class="m-5">
+        <h2 class="m-5 titre-page-vintage">
             Mes produits
         </h2>
+
 
         <div class="actions">
 
             <a
                 href="/produits/ajouter_produit"
-                class="button"
+                class="button btn-vintage"
             >
                 Ajouter un produit
             </a>
@@ -105,89 +92,98 @@
 
     {% if produits %}
 
-        <div class="liste-mes-produits">
-
-            {% for produit in produits %}
-
-                <div class="carte-produit carte-mon-produit">
-
-                    <div class="image-produit">
-
-                        <a href="/produits/{{ produit.id_produit }}">
-
-                            <img
-                                src="{{ produit.src or url_for('static', filename='images/default.png') }}"
-                                alt="{{ produit.nom }}"
-                            >
-
-                        </a>
-
-                        <span class="badge-statut badge-{{ produit.code_statut }}">
-                            {{ produit.nom_statut }}
-                        </span>
-
-                    </div>
+    <div class="liste-mes-produits">
 
 
-                    <div class="contenu-produit">
+        {% for produit in produits %}
 
-                        <h3>
-
-                            <a href="/produits/{{ produit.id_produit }}">
-                                {{ produit.nom }}
-                            </a>
-
-                        </h3>
-
-                        <p>
-                            {{ produit.description }}
-                        </p>
-
-                        <p class="prix">
-                            {{ produit.prix }} $
-                        </p>
-
-                    </div>
+        <div class="carte-produit carte-mon-produit">
 
 
-                    <div class="actions">
+            <div class="image-produit">
 
-                        <a
-                            href="{{ url_for('produits.modifier_produit', id=produit.id_produit) }}"
-                            class="btn-modifier"
-                        >
-                            Modifier
-                        </a>
+                <a href="/produits/{{ produit.id_produit }}">
 
-                        <form
-                            action="{{ url_for('produits.archiver_produit', id=produit.id_produit) }}"
-                            method="post"
-                        >
+                    <img
+                        src="{{ produit.src or url_for('static', filename='images/default.png') }}"
+                        alt="{{ produit.nom }}"
+                    >
 
-                            {{ form_archiver.hidden_tag() }}
+                </a>
 
-                            <button
-                                type="submit"
-                                class="btn-supprimer"
-                            >
-                                Supprimer
-                            </button>
 
-                        </form>
+                <span class="badge-statut badge-{{ produit.code_statut }}">
+                    {{ produit.nom_statut }}
+                </span>
 
-                    </div>
+            </div>
 
-                </div>
 
-            {% endfor %}
+            <div class="contenu-produit">
+
+                <h3>
+
+                    <a href="/produits/{{ produit.id_produit }}">
+                        {{ produit.nom }}
+                    </a>
+
+                </h3>
+
+
+                <p>
+                    {{ produit.description }}
+                </p>
+
+
+                <p class="prix">
+                    {{ produit.prix }} $
+                </p>
+
+            </div>
+
+
+            <div class="actions">
+
+
+                <a
+                    href="{{ url_for('produits.modifier_produit', id=produit.id_produit) }}"
+                    class="btn-modifier btn-vintage-secondaire"
+                >
+                    Modifier
+                </a>
+
+
+                <form
+                    action="{{ url_for('produits.archiver_produit', id=produit.id_produit) }}"
+                    method="post"
+                >
+
+                    {{ form_archiver.hidden_tag() }}
+
+                    <button
+                        type="submit"
+                        class="btn-supprimer btn-vintage-danger"
+                    >
+                        Supprimer
+                    </button>
+
+                </form>
+
+
+            </div>
 
         </div>
 
+        {% endfor %}
+
+
+    </div>
+
     {% else %}
 
-        <p>
-            Vous n'avez ajouté aucun produit.
-        </p>
+    <p>
+        Vous n'avez ajouté aucun produit.
+    </p>
 
     {% endif %}
 

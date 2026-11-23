@@ -91,6 +91,298 @@ header
     transform: scale(1.5)
     transform-origin: left center
 
+.page-vintage
+    width: 100%
+    min-height: 650px
+    padding: 70px 6% 100px
+    background: $blanc
+    color: $noir
+
+
+.titre-page-vintage
+    margin: 0 0 40px
+    font: 46px Georgia, serif
+    font-weight: bold
+    color: $bleu
+
+
+.sous-titre-vintage
+    margin-bottom: 25px
+    font: 32px Georgia, serif
+    font-weight: bold
+    color: $bleu
+
+
+.btn-vintage
+    min-width: 160px
+    height: 52px
+    padding: 0 25px
+    border: 0
+    display: inline-flex
+    align-items: center
+    justify-content: center
+    background: $creme
+    color: $noir
+    font-size: 15px
+    font-weight: bold
+    cursor: pointer
+
+    clip-path: polygon(
+        12% 0%,
+        88% 0%,
+        100% 50%,
+        88% 100%,
+        12% 100%,
+        0% 50%
+    )
+
+    &:hover
+        background: $bleu
+        color: $creme
+
+
+.btn-vintage-secondaire
+    min-width: 150px
+    height: 48px
+    padding: 0 22px
+    border: 1px solid $brun
+    display: inline-flex
+    align-items: center
+    justify-content: center
+    background: transparent
+    color: $brun
+    font-weight: bold
+    cursor: pointer
+
+    clip-path: polygon(
+        12% 0%,
+        88% 0%,
+        100% 50%,
+        88% 100%,
+        12% 100%,
+        0% 50%
+    )
+
+    &:hover
+        background: $brun
+        color: $blanc
+
+
+.btn-vintage-danger
+    min-width: 140px
+    height: 48px
+    padding: 0 22px
+    border: 0
+    display: inline-flex
+    align-items: center
+    justify-content: center
+    background: $orange
+    color: $noir
+    font-weight: bold
+    cursor: pointer
+
+    clip-path: polygon(
+        12% 0%,
+        88% 0%,
+        100% 50%,
+        88% 100%,
+        12% 100%,
+        0% 50%
+    )
+
+    &:hover
+        background: $danger
+        color: $blanc
+
+
+.btn-vintage-accepter
+    min-width: 130px
+    height: 46px
+    padding: 0 20px
+    border: 0
+    display: inline-flex
+    align-items: center
+    justify-content: center
+    background: $vert
+    color: $noir
+    font-weight: bold
+
+    clip-path: polygon(
+        12% 0%,
+        88% 0%,
+        100% 50%,
+        88% 100%,
+        12% 100%,
+        0% 50%
+    )
+
+    &:hover
+        background: $bleu
+        color: $blanc
+
+
+.lien-vintage
+    color: $brun
+    font-weight: bold
+    text-decoration: underline
+    text-underline-offset: 4px
+
+    &:hover
+        color: $creme
+
+
+.formulaire-vintage
+    max-width: 650px
+    margin: auto
+
+    .form-label
+        margin-bottom: 8px
+        color: $noir
+        font-weight: 500
+
+    .form-control
+        min-height: 48px
+        border: 1px solid #ced4da
+        border-radius: 6px
+        background: $blanc
+        color: $noir
+
+        &:focus
+            border-color: $brun
+            box-shadow: 0 0 0 .2rem rgba(128, 78, 55, .15)
+
+
+.profil-vintage
+    width: 100%
+    padding: 50px
+    display: flex
+    align-items: center
+    gap: 50px
+    border: 1px solid rgba(0, 0, 0, .08)
+    background: $blanc
+    box-shadow: 0 12px 30px rgba(0, 0, 0, .08)
+
+
+.profil-vintage .profil-avatar
+    width: 170px
+    height: 170px
+    border: 3px solid $creme
+
+
+.profil-informations
+    flex: 1
+
+    h3
+        margin-bottom: 20px
+        font: 36px Georgia, serif
+        font-weight: bold
+        color: $bleu
+
+    p
+        margin-bottom: 10px
+
+
+.profil-actions
+    display: flex
+    flex-direction: column
+    gap: 15px
+
+
+.details-produit-vintage
+    max-width: 1250px
+    margin: auto
+    display: grid
+    grid-template-columns: 1fr 1fr
+    gap: 70px
+    align-items: center
+
+
+.details-image-vintage
+    width: 100%
+    min-height: 550px
+
+    img
+        width: 100%
+        height: 550px
+        object-fit: cover
+
+
+.details-info-vintage
+    h2
+        margin-bottom: 5px
+        font: 46px Georgia, serif
+        font-weight: bold
+        color: $bleu
+
+
+.details-vendeur
+    margin-bottom: 35px
+    color: $brun
+    font-weight: bold
+
+
+.details-prix
+    margin-bottom: 30px
+    font-size: 32px
+    font-weight: bold
+    color: $bleu
+
+
+.details-description
+    margin-bottom: 40px
+    line-height: 1.7
+    font-size: 17px
+
+
+.panier-total
+    margin-top: 50px
+    display: flex
+    justify-content: flex-end
+    align-items: center
+    gap: 30px
+
+
+.panier-total .prix
+    margin: 0
+    font-size: 28px
+
+
+.notification-section
+    margin-bottom: 70px
+
+    h2
+        margin-bottom: 30px
+        font: 36px Georgia, serif
+        font-weight: bold
+        color: $bleu
+
+
+.notification-vintage
+    min-height: 0
+    height: auto
+    padding: 30px
+    border-radius: 0
+    border-left: 5px solid $creme
+    box-shadow: 0 8px 25px rgba(0, 0, 0, .08)
+
+
+.notification-vintage + .notification-vintage
+    margin-top: 20px
+
+
+.actions-notification
+    margin-top: 20px
+    display: flex
+    gap: 15px
+
+
+.image-actuelle
+    width: 220px
+    height: 220px
+    object-fit: cover
+    border: 1px solid #ddd
+    background: $blanc
+    
 .page-compte
     width: 100%
     min-height: 700px

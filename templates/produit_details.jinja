@@ -2,11 +2,12 @@
 
 {% block contenu %}
 
-<div class="container my-4">
+<div class="container my-4 page-vintage">
 
-    <div class="row">
+    <div class="row details-produit-vintage">
 
-        <div class="col-md-6">
+
+        <div class="col-md-6 details-image-vintage">
 
             <img
                 src="{{ img_source }}"
@@ -17,7 +18,8 @@
         </div>
 
 
-        <div class="col-md-6">
+        <div class="col-md-6 details-info-vintage">
+
 
             <div class="mb-3">
 
@@ -25,41 +27,23 @@
                     {{ produit.nom }}
                 </h2>
 
-                <p class="px-3 pb-2 mb-0 text-muted">
+                <p class="px-3 pb-2 mb-0 text-muted details-vendeur">
                     {{ vendeur.nom }}
                 </p>
 
             </div>
 
 
-            <div class="prix p-2 mb-3">
+            <div class="prix p-2 mb-3 details-prix">
 
-                {% if produit.id_statut == 2 %}
-
-                    <p>
-                        Mise actuelle : {{ produit.prix }} $
-                    </p>
-
-                    {% if produit.date_fin %}
-
-                        <p>
-                            Fin de l'enchère : {{ produit.date_fin }}
-                        </p>
-
-                    {% endif %}
-
-                {% else %}
-
-                    <p>
-                        Prix : {{ produit.prix }} $
-                    </p>
-
-                {% endif %}
+                <p>
+                    Prix : {{ produit.prix }} $
+                </p>
 
             </div>
 
 
-            <div class="p-2 mb-3">
+            <div class="p-2 mb-3 details-description">
 
                 <p>
                     {{ produit.description }}
@@ -70,51 +54,52 @@
 
             <div class="actions">
 
+
                 {% if not est_disponible %}
 
                     <p class="text-danger">
                         Ce produit n'est plus disponible.
                     </p>
 
-                {% elif est_connecte %}
 
-                    {% if produit.id_statut == 2 and not est_vendeur %}
+                {% elif not est_connecte %}
 
-                        <a
-                            href="{{ url_for('produits.miser_produit', id=produit.id_produit) }}"
-                            class="button"
+                    <a
+                        href="/compte/authentification"
+                        class="button btn-vintage"
+                    >
+                        Connectez-vous pour acheter
+                    </a>
+
+
+                {% elif not est_vendeur %}
+
+                    <form
+                        method="POST"
+                        action="/panier/ajouter/{{ produit.id_produit }}"
+                    >
+
+                        {{ form.hidden_tag() }}
+
+                        <button
+                            type="submit"
+                            class="button btn-vintage"
                         >
-                            Enchérir
-                        </a>
+                            Ajouter au panier
+                        </button>
 
-                    {% elif produit.id_statut == 1 and not est_vendeur %}
-
-                        <form
-                            method="POST"
-                            action="/panier/ajouter/{{ produit.id_produit }}"
-                        >
-
-                            {{ form.hidden_tag() }}
-
-                            <button
-                                type="submit"
-                                class="button"
-                            >
-                                Ajouter au panier
-                            </button>
-
-                        </form>
-
-                    {% endif %}
+                    </form>
 
                 {% endif %}
 
 
+
                 {% if est_connecte and produit.id_vendeur == session.id_utilisateur %}
+
 
                     <a
                         href="/produits/{{ id }}/modifier"
-                        class="button"
+                        class="button btn-vintage-secondaire"
                     >
                         Modifier
                     </a>
@@ -122,7 +107,7 @@
 
                     <button
                         type="button"
-                        class="button bouton-supprimer"
+                        class="button bouton-supprimer btn-vintage-danger"
                         data-bs-toggle="modal"
                         data-bs-target="#modal-archiver"
                     >
@@ -139,6 +124,7 @@
                         <div class="modal-dialog">
 
                             <div class="modal-content">
+
 
                                 <div class="modal-header">
 
@@ -202,6 +188,7 @@
                     </div>
 
                 {% endif %}
+
 
             </div>
 
