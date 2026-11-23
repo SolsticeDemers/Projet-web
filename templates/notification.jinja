@@ -110,45 +110,103 @@
 
 </div>
 
-
 <div class="mt-5">
 
-    <h2>Notification d'enchère</h2>
+    <h2>
+        Notifications d'enchère
+    </h2>
 
     <ul class="liste-mes-produits">
 
         {% for notif in notifications_enchere %}
 
-        <li class="carte-produit carte-mon-produit affichage_notif">
 
-            <div id="notif_detail">
+            {% if notif.type_notif == "gagnant" %}
 
-                <p>
-                    <strong>
-                        Vous avez remporté l'enchère !
-                    </strong>
-                </p>
 
-                <p>
-                    Produit :
-                    <a href="/produits/{{ notif.id_produit }}">
-                        {{ notif.nom_produit }}
-                    </a>
-                </p>
+                <li class="carte-produit carte-mon-produit affichage_notif">
 
-                <p>
-                    Mise gagnante : {{ notif.prix }} $
-                </p>
+                    <div id="notif_detail">
 
-            </div>
+                        <p>
+                            <strong>
+                                Vous avez remporté l'enchère
+                            </strong>
+                        </p>
 
-        </li>
+                        <p>
+                            Produit :
+                            <a href="/produits/{{ notif.id_produit }}">
+                                {{ notif.nom_produit }}
+                            </a>
+                        </p>
+
+                        <p>
+                            Mise gagnante :
+                            {{ notif.prix }} $
+                        </p>
+
+                    </div>
+
+                </li>
+
+
+            {% elif notif.type_notif == "proprietaire" %}
+
+
+                <li class="carte-produit carte-mon-produit affichage_notif">
+
+                    <div id="notif_detail">
+
+                        <p>
+                            <strong>
+                                Votre enchère est terminée
+                            </strong>
+                        </p>
+
+                        <p>
+                            Produit :
+                            <a href="/produits/{{ notif.id_produit }}">
+                                {{ notif.nom_produit }}
+                            </a>
+                        </p>
+
+
+                        {% if notif.nom_gagnant %}
+
+                            <p>
+                                Remportée par :
+                                <strong>
+                                    {{ notif.nom_gagnant }}
+                                </strong>
+                            </p>
+
+                            <p>
+                                Mise gagnante :
+                                {{ notif.prix }} $
+                            </p>
+
+                        {% else %}
+
+                            <p>
+                                Aucune mise n'a été placée sur ce produit
+                            </p>
+
+                        {% endif %}
+
+                    </div>
+
+                </li>
+
+
+            {% endif %}
+
 
         {% else %}
 
-        <p>
-            Vous n'avez aucune notification d'enchère
-        </p>
+            <p>
+                Vous n'avez aucune notification d'enchère
+            </p>
 
         {% endfor %}
 

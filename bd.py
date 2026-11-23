@@ -52,7 +52,7 @@ def creer_curseur():
 
 
 def get_nouveaux_produits(curseur):
-    """Permet d'obtenir les 4 produits les plus récents"""
+    """Permet d'obtenir les 6 produits les plus récents"""
 
     curseur.execute("""
         SELECT
@@ -68,7 +68,7 @@ def get_nouveaux_produits(curseur):
         WHERE s.nom_statut <> 'Vendu'
         AND p.archive = FALSE
         ORDER BY p.date DESC
-        LIMIT 4
+        LIMIT 6
     """)
 
     return curseur.fetchall()
@@ -98,7 +98,7 @@ def get_produit_aleatoire(curseur):
 
 
 def get_produits_aleatoires(curseur):
-    """Permet d'obtenir 4 produits au hasard"""
+    """Permet d'obtenir 9 produits au hasard"""
 
     curseur.execute("""
         SELECT
@@ -114,7 +114,7 @@ def get_produits_aleatoires(curseur):
         WHERE s.nom_statut <> 'Vendu'
         AND p.archive = FALSE
         ORDER BY RAND()
-        LIMIT 4
+        LIMIT 9
     """)
 
     return curseur.fetchall()
@@ -415,7 +415,7 @@ def get_produits_par_vendeur(curseur, id_vendeur):
 
 
 def get_enchere_future(curseur):
-    """Permet d'obtenir les 4 prochains produits mis aux enchères"""
+    """Permet d'obtenir les 3 prochains produits mis aux enchères"""
     curseur.execute("""
         SELECT
             p.id_produit,
@@ -430,7 +430,7 @@ def get_enchere_future(curseur):
         WHERE s.nom_statut = 'Aux enchères' AND NOW() < p.date
         AND p.archive = FALSE
         ORDER BY p.date ASC
-        LIMIT 4
+        LIMIT 3
     """)
 
     return curseur.fetchall()
@@ -877,36 +877,65 @@ def get_notif_enchere(curseur, id_notification):
 
     return curseur.fetchone()
 
-def get_historique_encheres(curseur, id_utilisateur, tri="recent"):
-    """Retourne les enchères gagnées par l'utilisateur"""
+
+
+def get_historique_encheres(
+    curseur,
+    id_utilisateur,
+    tri="recent"
+):
+    """Retourne les enchères réellement
+    gagnées par l'utilisateur"""
 
     if tri == "ancien":
+
         ordre = "ORDER BY p.date_fin ASC"
+
     elif tri == "prix_croissant":
+
         ordre = "ORDER BY p.prix ASC"
+
     elif tri == "prix_decroissant":
+
         ordre = "ORDER BY p.prix DESC"
+
     else:
+
         ordre = "ORDER BY p.date_fin DESC"
 
+
     requete = """
-        SELECT
+        SELECT DISTINCT
             p.id_produit,
             p.nom,
             p.prix,
             p.date_fin
-        FROM notification n
-        JOIN notification_enchere ne
-            ON n.id_notification = ne.id_notification
-        JOIN produit p
-            ON ne.id_produit = p.id_produit
-        WHERE n.id_destinataire = %(id_utilisateur)s
-        AND n.id_statut = 2
+
+        FROM produit p
+
+        JOIN mise m
+            ON m.id_produit = p.id_produit
+
+        WHERE
+            m.id_utilisateur = %(id_utilisateur)s
+
+        AND p.id_statut = 4
+
+        AND m.montant = (
+            SELECT MAX(m2.montant)
+            FROM mise m2
+            WHERE m2.id_produit = p.id_produit
+        )
+
     """ + ordre
 
-    curseur.execute(requete, {
-        "id_utilisateur": id_utilisateur
-    })
+
+    curseur.execute(
+        requete,
+        {
+            "id_utilisateur": id_utilisateur
+        }
+    )
 
     return curseur.fetchall()
 
@@ -941,3 +970,29 @@ def get_historique_achats(curseur, id_utilisateur, tri="recent"):
     })
 
     return curseur.fetchall()
+
+
+def create_notif_proprietaire_enchere(
+    curseur,
+    id_proprietaire
+):
+    """Crée une notification pour le propriétaire lorsque lorsque enchère est terminé"""
+
+    curseur.execute("""
+        INSERT INTO notification (
+            id_destinataire,
+            id_statut,
+            notif_vue,
+            date
+        )
+        VALUES (
+            %(id_proprietaire)s,
+            2,
+            0,
+            CURRENT_DATE
+        )
+    """, {
+        "id_proprietaire": id_proprietaire
+    })
+
+    return curseur.lastrowid

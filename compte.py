@@ -659,7 +659,7 @@ def modifier_profil():
             confirmation_mdp = form.mdp2.data or ""
 
 
-            # Si les trois champs sont vides, le mot de passe ne change pas.
+
 
             if mdp_actuel or nouveau_mdp or confirmation_mdp:
 
@@ -819,36 +819,67 @@ def echange(notif, notifications, id_status, id_notif):
 
 
 def enchere(notif, notifications, id_notif):
-
-    """Prépare une notification d'enchère gagnée"""
-
+    """Prépare une notification d'enchère"""
 
     with bd.creer_curseur() as curseur:
 
         produit = bd.get_notif_enchere(
-
             curseur,
-
             id_notif
-
         )
 
+        mise_gagnante = bd.get_mise_gagnante(
+            curseur,
+            produit["id_produit"]
+        )
+
+        nom_gagnant = None
+        montant_gagnant = None
+
+        if mise_gagnante is not None:
+
+            gagnant = bd.get_utilisateur_name(
+                curseur,
+                mise_gagnante["id_utilisateur"]
+            )
+
+            nom_gagnant = gagnant["nom"]
+
+            montant_gagnant = (
+                mise_gagnante["montant"]
+            )
+
+
+    if (
+        notif["id_destinataire"]
+        == produit["id_vendeur"]
+    ):
+
+        type_notif = "proprietaire"
+
+    else:
+
+        type_notif = "gagnant"
 
     une_notification = {
 
         "id_notif": id_notif,
 
+        "type_notif": type_notif,
+
         "nom_produit": produit["nom"],
 
         "id_produit": produit["id_produit"],
 
-        "prix": produit["prix"]
+        "prix": montant_gagnant,
+
+        "nom_gagnant": nom_gagnant
 
     }
 
-
-    notifications.append(une_notification)
-
+    notifications.append(
+        une_notification
+    )
 
     return notifications
 

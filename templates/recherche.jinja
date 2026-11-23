@@ -2,243 +2,408 @@
 
 {% block contenu %}
 
-<section class="section-produits">
 
-    <div class="d-flex justify-content-end mb-4">
+<section class="section-recherche">
+
+
+    <div class="entete-recherche">
+
+        <h1>
+            Rechercher
+        </h1>
+
 
         <form
             method="get"
-            action="/produits/recherche"
-            class="d-flex gap-2"
+            action="{{ url_for('recherche_produits') }}"
+            class="form-recherche-page"
         >
 
-            <input
-                type="hidden"
-                name="mot_cle"
-                value="{{ mot_cle }}"
-            >
 
-            <input
-                type="number"
-                name="prix_min"
-                value="{{ prix_min if prix_min is not none else '' }}"
-                class="form-control form-control-sm filtre"
-                placeholder="Min"
-                min="0"
-            >
+            <div class="barre-recherche-page">
 
-            <input
-                type="number"
-                name="prix_max"
-                value="{{ prix_max if prix_max is not none else '' }}"
-                class="form-control form-control-sm filtre"
-                placeholder="Max"
-                min="0"
-            >
-
-            <select
-                name="tri"
-                class="form-select form-select-sm filtre"
-            >
-
-                <option
-                    value="nom_ASC"
-                    {% if tri == "nom_ASC" %}selected{% endif %}
+                <input
+                    type="search"
+                    name="mot_cle"
+                    value="{{ mot_cle }}"
+                    placeholder="Que recherchez-vous ?"
                 >
-                    Trier : A - Z
-                </option>
 
-                <option
-                    value="nom_DESC"
-                    {% if tri == "nom_DESC" %}selected{% endif %}
+                <button
+                    type="submit"
+                    aria-label="Rechercher"
                 >
-                    Trier : Z - A
-                </option>
+                    <i class="bi bi-search"></i>
+                </button>
 
-                <option
-                    value="prix_ASC"
-                    {% if tri == "prix_ASC" %}selected{% endif %}
+            </div>
+
+
+            <div class="filtres-recherche">
+
+
+                <div class="filtre-prix">
+
+                    <label>
+                        Prix minimum
+                    </label>
+
+                    <input
+                        type="number"
+                        name="prix_min"
+                        value="{{ prix_min if prix_min is not none else '' }}"
+                        placeholder="Min"
+                        min="0"
+                    >
+
+                </div>
+
+
+                <div class="filtre-prix">
+
+                    <label>
+                        Prix maximum
+                    </label>
+
+                    <input
+                        type="number"
+                        name="prix_max"
+                        value="{{ prix_max if prix_max is not none else '' }}"
+                        placeholder="Max"
+                        min="0"
+                    >
+
+                </div>
+
+
+                <div class="filtre-tri">
+
+                    <label>
+                        Trier par
+                    </label>
+
+                    <select name="tri">
+
+                        <option
+                            value="nom_ASC"
+                            {% if tri == "nom_ASC" %}selected{% endif %}
+                        >
+                            A - Z
+                        </option>
+
+                        <option
+                            value="nom_DESC"
+                            {% if tri == "nom_DESC" %}selected{% endif %}
+                        >
+                            Z - A
+                        </option>
+
+                        <option
+                            value="prix_ASC"
+                            {% if tri == "prix_ASC" %}selected{% endif %}
+                        >
+                            Prix croissant
+                        </option>
+
+                        <option
+                            value="prix_DESC"
+                            {% if tri == "prix_DESC" %}selected{% endif %}
+                        >
+                            Prix décroissant
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="bouton-filtrer"
                 >
-                    Prix : moins cher en premier
-                </option>
+                    Filtrer
+                </button>
 
-                <option
-                    value="prix_DESC"
-                    {% if tri == "prix_DESC" %}selected{% endif %}
-                >
-                    Prix : plus cher en premier
-                </option>
 
-            </select>
+            </div>
 
-            <button class="btn btn-sm btn-secondary">
-                Filtrer
-            </button>
 
         </form>
 
     </div>
 
 
-    {% if mot_cle %}
 
-        <h2>
-            Résultats pour "{{ mot_cle }}"
-        </h2>
-
-    {% else %}
-
-        <h2>
-            Tous les produits
-        </h2>
-
-    {% endif %}
+    <div class="resultats-recherche">
 
 
-    <div class="grille-produits">
+        {% if mot_cle %}
 
-        {% for produit in produits %}
+            <div class="titre-section">
 
-            <div class="carte-produit">
+                <h2>
+                    Résultats pour « {{ mot_cle }} »
+                </h2>
 
-                <div class="image-produit">
+                <div class="titre-etoiles-nosproduits">
 
-                    {% if produit.src %}
-
-                        <img
-                            src="{{ produit.src }}"
-                            alt="{{ produit.nom }}"
-                        >
-
-                    {% endif %}
-
-
-                    <span class="badge-statut
-                        {% if produit.nom_statut == 'En vente' %}
-                            badge-vente
-                        {% elif produit.nom_statut == 'Aux enchères' %}
-                            badge-enchere
-                        {% elif produit.nom_statut == 'À échanger' %}
-                            badge-echange
-                        {% endif %}
-                    ">
-                        {{ produit.nom_statut }}
-                    </span>
-
-                </div>
-
-
-                <div class="contenu-produit">
-
-                    <h3>
-                        {{ produit.nom }}
-                    </h3>
-
-                    <p class="prix">
-                        {{ produit.prix }} $
-                    </p>
-
-
-                    <div class="actions">
-
-                        {% if "id_utilisateur" in session %}
-
-                            {% if produit.nom_statut == "En vente" %}
-
-                                <form
-                                    method="POST"
-                                    action="/panier/ajouter/{{ produit.id_produit }}"
-                                >
-
-                                    {{ form_panier.hidden_tag() }}
-
-                                    <button type="submit">
-                                        Ajouter
-                                    </button>
-
-                                </form>
-
-                            {% elif produit.nom_statut == "Aux enchères" %}
-
-                                <a
-                                    href="{{ url_for('produits.miser_produit', id=produit.id_produit) }}"
-                                >
-                                    Enchérir
-                                </a>
-
-                            {% elif produit.nom_statut == "À échanger" %}
-
-                                <button>
-                                    Échanger
-                                </button>
-
-                            {% endif %}
-
-                        {% endif %}
-
-
-                        <a href="/produits/{{ produit.id_produit }}">
-                            Détails
-                        </a>
-
-                    </div>
+                    <span class="e1">★</span>
+                    <span class="e2">★</span>
+                    <span class="e3">★</span>
 
                 </div>
 
             </div>
 
-
         {% else %}
 
-            <p>
-                Aucun produit disponible
-            </p>
+            <div class="titre-section">
 
-        {% endfor %}
+                <h2>
+                    Tous les produits
+                </h2>
+
+                <div class="titre-etoiles-nosproduits">
+
+                    <span class="e1">★</span>
+                    <span class="e2">★</span>
+                    <span class="e3">★</span>
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+
+
+        <div class="grille-produits">
+
+            {% for produit in produits %}
+
+
+                <div class="carte-produit">
+
+
+                    <div class="image-produit">
+
+
+                        {% if produit.src %}
+
+                            <img
+                                src="{{ produit.src }}"
+                                alt="{{ produit.nom }}"
+                            >
+
+                        {% endif %}
+
+
+                        <span class="badge-statut
+
+                            {% if produit.nom_statut == 'En vente' %}
+
+                                badge-vente
+
+                            {% elif produit.nom_statut == 'Aux enchères' %}
+
+                                badge-enchere
+
+                            {% elif produit.nom_statut == 'À échanger' %}
+
+                                badge-echange
+
+                            {% endif %}
+
+                        ">
+
+                            {{ produit.nom_statut }}
+
+                        </span>
+
+
+                    </div>
+
+
+
+                    <div class="contenu-produit">
+
+
+                        <h3>
+                            {{ produit.nom }}
+                        </h3>
+
+
+                        <p class="prix">
+                            {{ produit.prix }} $
+                        </p>
+
+
+
+                        <div class="actions">
+
+
+                            {% if "id_utilisateur" in session %}
+
+
+                                {% if produit.nom_statut == "En vente" %}
+
+
+                                    <form
+                                        method="POST"
+                                        action="/panier/ajouter/{{ produit.id_produit }}"
+                                    >
+
+                                        {{ form_panier.hidden_tag() }}
+
+
+                                        <button
+                                            type="submit"
+                                            class="btn-action-produit"
+                                        >
+                                            Ajouter
+                                        </button>
+
+
+                                    </form>
+
+
+                                {% elif produit.nom_statut == "Aux enchères" %}
+
+
+                                    <a
+                                        href="{{ url_for('produits.miser_produit', id=produit.id_produit) }}"
+                                        class="btn-action-produit"
+                                    >
+                                        Enchérir
+                                    </a>
+
+
+                                {% elif produit.nom_statut == "À échanger" %}
+
+
+                                    <button
+                                        class="btn-action-produit"
+                                    >
+                                        Échanger
+                                    </button>
+
+
+                                {% endif %}
+
+
+                            {% endif %}
+
+
+
+                            <a
+                                href="/produits/{{ produit.id_produit }}"
+                                class="btn-details-produit"
+                            >
+                                Détails
+                            </a>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+            {% else %}
+
+
+                <p class="aucun-produit">
+
+                    Aucun produit disponible
+
+                </p>
+
+
+            {% endfor %}
+
+
+        </div>
+
+
+
+        <nav class="pagination-recherche">
+
+
+            <div class="pagination-contenu">
+
+
+                {% if page > 1 %}
+
+                    <a
+                        class="bouton-pagination"
+                        href="/produits/recherche?mot_cle={{ mot_cle }}&prix_min={{ prix_min if prix_min is not none else '' }}&prix_max={{ prix_max if prix_max is not none else '' }}&tri={{ tri }}&page={{ page - 1 }}"
+                        title="Page précédente"
+                    >
+
+                        <i class="bi bi-arrow-left-circle icone-normal"></i>
+
+                        <i class="bi bi-arrow-left-circle-fill icone-hover"></i>
+
+                    </a>
+
+                {% else %}
+
+                    <span class="bouton-pagination pagination-desactive">
+
+                        <i class="bi bi-arrow-left-circle"></i>
+
+                    </span>
+
+                {% endif %}
+
+
+
+                <span class="numero-page">
+
+                    {{ page }}
+
+                </span>
+
+
+
+                {% if produits|length >= limite %}
+
+                    <a
+                        class="bouton-pagination"
+                        href="/produits/recherche?mot_cle={{ mot_cle }}&prix_min={{ prix_min if prix_min is not none else '' }}&prix_max={{ prix_max if prix_max is not none else '' }}&tri={{ tri }}&page={{ page + 1 }}"
+                        title="Page suivante"
+                    >
+
+                        <i class="bi bi-arrow-right-circle icone-normal"></i>
+
+                        <i class="bi bi-arrow-right-circle-fill icone-hover"></i>
+
+                    </a>
+
+                {% else %}
+
+                    <span class="bouton-pagination pagination-desactive">
+
+                        <i class="bi bi-arrow-right-circle"></i>
+
+                    </span>
+
+                {% endif %}
+
+
+            </div>
+
+
+        </nav>
+
 
     </div>
 
 
-    <nav class="mt-5">
-
-        <ul class="pagination justify-content-center">
-
-            <li class="page-item {% if page <= 1 %}disabled{% endif %}">
-
-                <a
-                    class="page-link"
-                    href="/produits/recherche?mot_cle={{ mot_cle }}&prix_min={{ prix_min if prix_min is not none else '' }}&prix_max={{ prix_max if prix_max is not none else '' }}&tri={{ tri }}&page={{ page - 1 }}"
-                >
-                    &laquo;
-                </a>
-
-            </li>
-
-
-            <li class="page-item">
-
-                <span class="page-link">
-                    {{ page }}
-                </span>
-
-            </li>
-
-
-            <li class="page-item {% if produits|length < limite %}disabled{% endif %}">
-
-                <a
-                    class="page-link"
-                    href="/produits/recherche?mot_cle={{ mot_cle }}&prix_min={{ prix_min if prix_min is not none else '' }}&prix_max={{ prix_max if prix_max is not none else '' }}&tri={{ tri }}&page={{ page + 1 }}"
-                >
-                    &raquo;
-                </a>
-
-            </li>
-
-        </ul>
-
-    </nav>
-
 </section>
+
 
 {% endblock %}
