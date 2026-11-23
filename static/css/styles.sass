@@ -91,6 +91,83 @@ header
     transform: scale(1.5)
     transform-origin: left center
 
+.page-compte
+    width: 100%
+    min-height: 700px
+    padding: 48px 0 80px
+    background: #F9F8F3
+    color: $noir
+
+    h2
+        color: $noir
+        font-size: 32px
+        font-weight: 500
+
+
+.page-compte .form-label
+    color: $noir
+    font-size: 16px
+
+
+.page-compte .form-control
+    width: 100%
+    padding: 10px 12px
+    font-size: 16px
+    color: $noir
+    background: $blanc
+    border: 1px solid #ced4da
+    border-radius: 6px
+
+    &:focus
+        border-color: #323550
+        outline: 0
+        box-shadow: 0 0 0 .25rem rgba(50, 53, 80, .25)
+
+    &.is-invalid
+        border-color: #C0392B
+
+    &.is-valid
+        border-color: #B0E6C7
+
+
+.invalid-feedback
+    color: #C0392B
+    font-size: 14px
+
+
+.actions-compte
+    margin-bottom: 10px
+
+    button
+        min-width: 170px
+        height: 54px
+        padding: 0 26px
+        border: 1px solid #363229
+        background: #E0CD94
+        color: #111111
+        font-size: 16px
+        font-weight: 600
+        cursor: pointer
+        display: inline-flex
+        align-items: center
+        justify-content: center
+        clip-path: polygon(12% 0, 88% 0, 100% 50%, 88% 100%, 12% 100%, 0 50%)
+
+        &:hover
+            background: #363229
+            color: #E0CD94
+            border-color: #363229
+
+
+.lien-compte
+    color: #E0CD94
+    font-weight: 700
+    text-decoration: underline
+    text-underline-offset: 4px
+
+
+    &:hover
+        color: #111111
 
 .recherche-navigation
     display: flex
