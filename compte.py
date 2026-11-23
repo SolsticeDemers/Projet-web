@@ -2,6 +2,7 @@
 Ce script décrit le blue print Compte
 """
 
+from email.mime import image
 import os
 import re
 import hashlib
@@ -38,32 +39,65 @@ def authentification():
             nom_page="Authentification"
         )
 
-    nom = request.form.get("nom")
+    nom = request.form.get("nom").strip()
     mdp = request.form.get("mdp")
 
-    mdp = hacher_mdp(mdp)
+    classe_nom = ""
+    classe_mdp = ""
+    erreur_nom = ""
+    erreur_mdp = ""
+    est_valide = True
 
-    with bd.creer_curseur() as curseur:
+    if nom == "":
+        classe_nom = "is-invalid"
+        erreur_nom = "Veuillez entrer votre nom d'utilisateur ou courriel."
+        est_valide = False
 
-        utilisateur = bd.get_utilisateur(
-            curseur,
-            nom,
-            mdp
-        )
+    if mdp == "":
+        classe_mdp = "is-invalid"
+        erreur_mdp = "Veuillez entrer votre mot de passe."
+        est_valide = False
 
-    if utilisateur is not None:
+    # Vérifier si le nom ou le courriel existe
+    if nom != "":
+        with bd.creer_curseur() as curseur:
+            compte_existant = (
+                bd.get_nom_unique(curseur, nom)
+                or bd.get_courriel_unique(curseur, nom)
+            )
 
+        if compte_existant is None:
+            classe_nom = "is-invalid"
+            erreur_nom = "Ce nom d'utilisateur ou courriel n'existe pas."
+            est_valide = False
+        else:
+            classe_nom = "is-valid"
+
+    # Vérifier le mot de passe si les champs précédents sont valides
+    if est_valide:
+        with bd.creer_curseur() as curseur:
+            utilisateur = bd.get_utilisateur(
+                curseur, nom, hacher_mdp(mdp)
+            )
+
+        if utilisateur is None:
+            classe_mdp = "is-invalid"
+            erreur_mdp = "Mot de passe incorrect."
+            est_valide = False
+
+    if est_valide:
         session.permanent = True
-
         session['id_utilisateur'] = utilisateur['id_utilisateur']
-
         session['nom'] = utilisateur['nom']
-
         return redirect('/', code=303)
 
     return render_template(
         "compte/authentification.jinja",
-        nom_page="Marche pas"
+        nom=nom,
+        classe_nom=classe_nom,
+        classe_mdp=classe_mdp,
+        erreur_nom=erreur_nom,
+        erreur_mdp=erreur_mdp
     )
 
 
@@ -77,48 +111,36 @@ def creer_compte():
             page="Créer un compte"
         )
 
-    nom = request.form.get("nom")
-
-    courriel = request.form.get("courriel")
+    nom = request.form.get("nom").strip()
+    courriel = request.form.get("courriel").strip()
     mdp1 = request.form.get("mdp1")
-
     mdp2 = request.form.get("mdp2")
 
     classe_nom = ""
-
     classe_courriel = ""
     classe_mdp1 = ""
-
     classe_mdp2 = ""
 
     liste_courriel = []
-
     liste_nom = []
 
     erreur = False
-
     num_nom_erreur = 0
-
     num_courriel_erreur = 0
-
     num_mdp_erreur = 0
 
     image = request.files.get("image")
     erreur_image = None
 
-    if not image or not image.filename:
-        erreur_image = "Veuillez sélectionner une image de profil."
-        erreur = True
-    elif not image.filename.lower().endswith((".png", ".jpg", ".jpeg")):
-        erreur_image = "Choisissez une image PNG ou JPG."
-        erreur = True
+    if image and image.filename:
+        if not image.filename.lower().endswith((".png", ".jpg", ".jpeg")):
+            erreur_image = "Choisissez une image PNG ou JPG."
+            erreur = True
 
     with bd.creer_curseur() as curseur:
-
         dict_compte = bd.get_nom_utiliser(curseur)
 
     for u in dict_compte:
-
         liste_courriel.append(
             u['courriel']
         )
@@ -241,19 +263,16 @@ def creer_compte():
             mdp1
         )
 
-    nom_image = f"vendeur_{id_util}.png"
-
-    chemin_image = os.path.join(
-        current_app.config["CHEMIN_IMAGES"],
-        nom_image
-    )
-
-    image.save(chemin_image)
+    if image and image.filename:
+        nom_image = f"vendeur_{id_util}.png"
+        chemin_image = os.path.join(
+            current_app.config["CHEMIN_IMAGES"],
+            nom_image
+        )
+        image.save(chemin_image)
 
     session.permanent = True
-
     session['id_utilisateur'] = id_util
-
     session['nom'] = nom
 
     return redirect("/", code=303)
