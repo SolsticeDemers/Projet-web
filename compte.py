@@ -869,7 +869,7 @@ def notification():
             session['id_utilisateur']
         )
 
-        notifications_achat = bd.get_notifications_achat_non_lues(
+        notifications_achat = bd.get_notifications_achat(
             curseur,
             session['id_utilisateur']
         )

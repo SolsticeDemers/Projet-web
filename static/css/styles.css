@@ -12999,15 +12999,21 @@ p a {
 }
 
 .affichage_notif {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px;
+  padding: 24px;
   text-align: left;
-  height: 250px;
-  padding-left: 20px;
 }
 
-#notif_detail a {
+.notif-detail {
+  flex: 1 1 280px;
+}
+.notif-detail a {
   color: #111111;
 }
-#notif_detail a:hover {
+.notif-detail a:hover {
   color: #7E7B85;
 }
 

@@ -503,16 +503,22 @@ p
     text-align: right
 
 .affichage_notif
+    display: flex
+    flex-wrap: wrap
+    align-items: center
+    gap: 20px
+    padding: 24px
     text-align: left
-    height: 250px
-    padding-left: 20px
 
-#notif_detail
+.notif-detail
+    flex: 1 1 280px
+
     a
         color: $noir
 
         &:hover
             color: $gris
+
 
 .theme-success
     color: #146c43 !important
