@@ -18,7 +18,16 @@ def faire_echange(id_produit):
 def creer_echange(id_produit_offert):
     if "id_produit_echange" not in session:
         abort(409)
-    
+    with bd.creer_curseur() as curseur:
+        echange_existant = bd.get_echange_existant(
+            curseur,
+            session['id_produit_echange'],
+            session['id_utilisateur'],
+            id_produit_offert
+        )
+
+    if echange_existant:
+        abort(409)
     with bd.creer_curseur() as curseur:
         produit_echange = bd.get_produit_by_id(
             curseur, session['id_produit_echange'])

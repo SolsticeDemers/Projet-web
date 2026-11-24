@@ -687,6 +687,20 @@ def get_notif_echange(curseur, id):
                     })
     return curseur.fetchone()
 
+def get_echange_existant(curseur, produit, id_utilisateur, produit_offert):
+
+    curseur.execute("""
+        SELECT
+        *
+        FROM echange
+        WHERE produit =  %(produit)s AND id_utilisateur =  %(id_utilisateur)s AND produit_offert =  %(produit_offert)s
+    """,
+                    {
+                        'produit': produit,
+                        'id_utilisateur': id_utilisateur,
+                        'produit_offert': produit_offert
+                    })
+    return curseur.fetchone()
 
 
 def get_nouvelle_notification(curseur, id_utilisateur):
