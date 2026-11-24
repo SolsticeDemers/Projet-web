@@ -30,9 +30,7 @@ bp_compte = Blueprint('compte', __name__)
 
 
 def hacher_mdp(mdp_en_clair):
-
     """Prend un mot de passe en clair et lui applique une fonction de hachage"""
-
 
     return hashlib.sha512(
 
@@ -42,14 +40,10 @@ def hacher_mdp(mdp_en_clair):
 
 
 @bp_compte.route('/authentification', methods=['GET', 'POST'])
-
 def authentification():
-
     """Formulaire d'authentification"""
 
-
     if request.method == 'GET':
-
 
         return render_template(
 
@@ -59,17 +53,13 @@ def authentification():
 
         )
 
-
     nom = request.form.get("nom")
 
     mdp = request.form.get("mdp")
 
-
     mdp = hacher_mdp(mdp)
 
-
     with bd.creer_curseur() as curseur:
-
 
         utilisateur = bd.get_utilisateur(
 
@@ -81,21 +71,15 @@ def authentification():
 
         )
 
-
     if utilisateur is not None:
-
 
         session.permanent = True
 
-
         session['id_utilisateur'] = utilisateur['id_utilisateur']
-
 
         session['nom'] = utilisateur['nom']
 
-
         return redirect('/', code=303)
-
 
     return render_template(
 
@@ -107,11 +91,8 @@ def authentification():
 
 
 @bp_compte.route('/creer_compte', methods=['GET', 'POST'])
-
 def creer_compte():
-
     """Affiche un formulaire"""
-
 
     if request.method == 'GET':
 
@@ -123,51 +104,37 @@ def creer_compte():
 
         )
 
-
     nom = request.form.get("nom")
-
 
     courriel = request.form.get("courriel")
 
     mdp1 = request.form.get("mdp1")
 
-
     mdp2 = request.form.get("mdp2")
 
-
     classe_nom = ""
-
 
     classe_courriel = ""
 
     classe_mdp1 = ""
 
-
     classe_mdp2 = ""
-
 
     liste_courriel = []
 
-
     liste_nom = []
-
 
     erreur = False
 
-
     num_nom_erreur = 0
-
 
     num_courriel_erreur = 0
 
-
     num_mdp_erreur = 0
-
 
     image = request.files.get("image")
 
     erreur_image = None
-
 
     if not image or not image.filename:
 
@@ -181,15 +148,11 @@ def creer_compte():
 
         erreur = True
 
-
     with bd.creer_curseur() as curseur:
-
 
         dict_compte = bd.get_nom_utiliser(curseur)
 
-
     for u in dict_compte:
-
 
         liste_courriel.append(
 
@@ -197,9 +160,7 @@ def creer_compte():
 
         )
 
-
     for u in dict_compte:
-
 
         liste_nom.append(
 
@@ -207,47 +168,33 @@ def creer_compte():
 
         )
 
-
     if nom == "" or nom is None:
-
 
         classe_nom = "is-invalid"
 
-
         erreur = True
-
 
         num_nom_erreur = 1
 
     elif nom in liste_nom:
 
-
         classe_nom = "is-invalid"
 
-
         erreur = True
-
 
         num_nom_erreur = 2
 
-
     else:
-
 
         classe_nom = "is-valid"
 
-
     if courriel == "" or courriel is None:
-
 
         classe_courriel = "is-invalid"
 
-
         erreur = True
 
-
         num_courriel_erreur = 1
-
 
     elif not re.match(
 
@@ -259,77 +206,53 @@ def creer_compte():
 
         classe_courriel = "is-invalid"
 
-
         erreur = True
-
 
         num_courriel_erreur = 2
 
     elif courriel in liste_courriel:
 
-
         classe_courriel = "is-invalid"
 
-
         erreur = True
-
 
         num_courriel_erreur = 3
 
-
     else:
-
 
         classe_courriel = "is-valid"
 
-
     if mdp1 == "" or mdp1 is None:
-
 
         classe_mdp1 = "is-invalid"
 
-
         erreur = True
 
-
     else:
-
 
         classe_mdp1 = "is-valid"
 
-
     if mdp2 == "" or mdp2 is None:
-
 
         classe_mdp2 = "is-invalid"
 
-
         erreur = True
-
 
         num_mdp_erreur = 1
 
-
     elif mdp2 != mdp1:
-
 
         classe_mdp2 = "is-invalid"
 
-
         erreur = True
-
 
         num_mdp_erreur = 2
 
-
     else:
-
 
         classe_mdp2 = "is-valid"
 
-
     if erreur is True:
-
 
         return render_template(
 
@@ -363,12 +286,9 @@ def creer_compte():
 
         )
 
-
     mdp1 = hacher_mdp(mdp1)
 
-
     with bd.creer_curseur() as curseur:
-
 
         id_util = bd.inserer_utilisateur_bd(
 
@@ -382,9 +302,7 @@ def creer_compte():
 
         )
 
-
     nom_image = f"vendeur_{id_util}.png"
-
 
     chemin_image = os.path.join(
 
@@ -394,59 +312,43 @@ def creer_compte():
 
     )
 
-
     image.save(chemin_image)
-
 
     session.permanent = True
 
-
     session['id_utilisateur'] = id_util
 
-
     session['nom'] = nom
-
 
     return redirect("/", code=303)
 
 
 @bp_compte.route('/deconnection')
-
 def deconnection():
-
     """Détruit la session"""
 
-
     session.clear()
-
 
     return redirect("/", code=303)
 
 
 @bp_compte.route("/profil")
-
 def profil():
-
     """Affiche le profil de l'utilisateur connecté"""
-
 
     if "id_utilisateur" not in session:
 
         return redirect(url_for("compte.authentification"))
 
-
     id_utilisateur = session["id_utilisateur"]
-
 
     with bd.creer_curseur() as curseur:
 
         utilisateur = bd.get_vendeur(curseur, id_utilisateur)
 
-
         if utilisateur is None:
 
             abort(404)
-
 
         produits = bd.get_produits_par_vendeur(
 
@@ -455,7 +357,6 @@ def profil():
             id_utilisateur
 
         )
-
 
         codes_statut = {
 
@@ -469,7 +370,6 @@ def profil():
 
         }
 
-
         for produit in produits:
 
             produit["code_statut"] = codes_statut.get(
@@ -480,11 +380,9 @@ def profil():
 
             )
 
-
             nom_image = f"produit_{produit['id_produit']}.png"
 
             produit["src"] = None
-
 
             if os.path.exists(
 
@@ -506,12 +404,9 @@ def profil():
 
                 )
 
-
         form = ArchiverProduitForm()
 
-
         nom_image_vendeur = f"vendeur_{id_utilisateur}.png"
-
 
         chemin_image_vendeur = os.path.join(
 
@@ -520,7 +415,6 @@ def profil():
             nom_image_vendeur
 
         )
-
 
         if os.path.exists(chemin_image_vendeur):
 
@@ -540,7 +434,6 @@ def profil():
 
             )
 
-
         return render_template(
 
             'profil.jinja',
@@ -557,24 +450,18 @@ def profil():
 
 
 @bp_compte.route("/modifier_profil", methods=["GET", "POST"])
-
 def modifier_profil():
-
     """Affiche et modifie le profil de l'utilisateur connecté."""
-
 
     if "id_utilisateur" not in session:
 
         return redirect(url_for("compte.authentification"))
 
-
     id_utilisateur = session["id_utilisateur"]
 
     form = ModifierProfilForm()
 
-
     nom_image = f"vendeur_{id_utilisateur}.png"
-
 
     chemin_image = os.path.join(
 
@@ -584,7 +471,6 @@ def modifier_profil():
 
     )
 
-
     if os.path.exists(chemin_image):
 
         image_vendeur = current_app.config["ROUTE_IMAGES"] + nom_image
@@ -593,16 +479,13 @@ def modifier_profil():
 
         image_vendeur = url_for("static", filename="images/default_user.png")
 
-
     with bd.creer_curseur() as curseur:
 
         utilisateur = bd.get_vendeur(curseur, id_utilisateur)
 
-
         if utilisateur is None:
 
             abort(404)
-
 
         if request.method == "GET":
 
@@ -610,14 +493,11 @@ def modifier_profil():
 
             form.courriel.data = utilisateur["courriel"]
 
-
         elif form.validate_on_submit():
 
             erreur = False
 
-
             compte_nom = bd.get_nom_unique(curseur, form.nom.data)
-
 
             if compte_nom and compte_nom["id_utilisateur"] != id_utilisateur:
 
@@ -625,10 +505,10 @@ def modifier_profil():
 
                 erreur = True
 
-
             if not regex_courriel.fullmatch(form.courriel.data):
 
-                form.courriel.errors.append("Veuillez entrer un courriel valide.")
+                form.courriel.errors.append(
+                    "Veuillez entrer un courriel valide.")
 
                 erreur = True
 
@@ -642,13 +522,12 @@ def modifier_profil():
 
                 )
 
-
                 if (compte_courriel and compte_courriel["id_utilisateur"] != id_utilisateur):
 
-                    form.courriel.errors.append("Ce courriel est déjà utilisé.")
+                    form.courriel.errors.append(
+                        "Ce courriel est déjà utilisé.")
 
                     erreur = True
-
 
             mdp_actuel = form.mdp_actuel.data or ""
 
@@ -656,39 +535,37 @@ def modifier_profil():
 
             confirmation_mdp = form.mdp2.data or ""
 
-
             # Si les trois champs sont vides, le mot de passe ne change pas.
 
             if mdp_actuel or nouveau_mdp or confirmation_mdp:
 
-
                 if not mdp_actuel:
 
-                    form.mdp_actuel.errors.append("Veuillez entrer votre mot de passe actuel.")
+                    form.mdp_actuel.errors.append(
+                        "Veuillez entrer votre mot de passe actuel.")
 
                     erreur = True
-
 
                 elif hacher_mdp(mdp_actuel) != utilisateur["mot_de_passe"]:
 
-                    form.mdp_actuel.errors.append("Le mot de passe actuel est incorrect.")
+                    form.mdp_actuel.errors.append(
+                        "Le mot de passe actuel est incorrect.")
 
                     erreur = True
-
 
                 if not nouveau_mdp:
 
-                    form.mdp1.errors.append("Veuillez entrer un nouveau mot de passe.")
+                    form.mdp1.errors.append(
+                        "Veuillez entrer un nouveau mot de passe.")
 
                     erreur = True
-
 
                 if nouveau_mdp != confirmation_mdp:
 
-                    form.mdp2.errors.append("Les nouveaux mots de passe ne correspondent pas.")
+                    form.mdp2.errors.append(
+                        "Les nouveaux mots de passe ne correspondent pas.")
 
                     erreur = True
-
 
             if not erreur:
 
@@ -704,7 +581,6 @@ def modifier_profil():
 
                 )
 
-
                 if nouveau_mdp:
 
                     bd.modifier_mot_de_passe(
@@ -717,17 +593,13 @@ def modifier_profil():
 
                     )
 
-
                 if form.image.data:
 
                     form.image.data.save(chemin_image)
 
-
                 session["nom"] = form.nom.data
 
-
                 return redirect(url_for("compte.profil"), code=303)
-
 
     return render_template(
 

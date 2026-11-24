@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : mer. 18 nov. 2026 à 15:35
+-- Généré le : lun. 23 nov. 2026 à 18:23
 -- Version du serveur : 9.1.0
 -- Version de PHP : 8.3.14
 
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `achat` (
   PRIMARY KEY (`id_achat`),
   UNIQUE KEY `id_produit` (`id_produit`),
   KEY `id_acheteur` (`id_acheteur`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `achat`
@@ -89,8 +89,8 @@ CREATE TABLE IF NOT EXISTS `echange` (
 --
 
 INSERT INTO `echange` (`id_echange`, `proprio`, `id_utilisateur`, `produit`, `produit_offert`, `approuver`) VALUES
-(1, 3, 1, 16, 25, 1),
-(2, 6, 4, 35, 24, 1);
+(2, 3, 1, 16, 25, 1),
+(3, 3, 1, 16, 25, 0);
 
 -- --------------------------------------------------------
 
@@ -131,24 +131,23 @@ CREATE TABLE IF NOT EXISTS `notification` (
   `id_statut` int NOT NULL,
   `notif_vue` tinyint NOT NULL DEFAULT '0',
   `date` date NOT NULL,
+  `date_lecture` datetime DEFAULT NULL,
   PRIMARY KEY (`id_notification`),
   KEY `notification_ibfk_1` (`id_statut`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `notification`
 --
 
-INSERT INTO `notification` (`id_notification`, `id_destinataire`, `id_statut`, `notif_vue`, `date`) VALUES
-(1, 1, 2, 1, '2026-11-17'),
-(2, 3, 3, 1, '2026-11-17'),
-(3, 1, 3, 1, '2026-11-17'),
-(4, 1, 1, 1, '2026-11-17'),
-(5, 2, 2, 1, '2026-11-17'),
-(6, 6, 1, 1, '2026-11-18'),
-(7, 6, 3, 1, '2026-11-18'),
-(8, 4, 3, 1, '2026-11-18'),
-(9, 3, 1, 1, '2026-11-18');
+INSERT INTO `notification` (`id_notification`, `id_destinataire`, `id_statut`, `notif_vue`, `date`, `date_lecture`) VALUES
+(1, 1, 2, 1, '2026-11-17', '2026-11-23 13:22:50'),
+(2, 3, 3, 1, '2026-11-17', '2026-11-23 13:22:50'),
+(3, 3, 3, 1, '2026-11-17', '2026-11-23 13:22:50'),
+(4, 1, 3, 1, '2026-11-17', '2026-11-23 13:22:50'),
+(5, 1, 3, 1, '2026-11-17', '2026-11-23 13:22:50'),
+(7, 1, 1, 1, '2026-11-17', '2026-11-23 13:22:50'),
+(8, 2, 2, 1, '2026-11-17', '2026-11-23 13:22:50');
 
 -- --------------------------------------------------------
 
@@ -217,7 +216,7 @@ CREATE TABLE IF NOT EXISTS `notification_enchere` (
 
 INSERT INTO `notification_enchere` (`id_notification`, `id_produit`) VALUES
 (1, 21),
-(5, 36);
+(8, 36);
 
 -- --------------------------------------------------------
 
@@ -254,23 +253,23 @@ INSERT INTO `produit` (`id_produit`, `nom`, `description`, `prix`, `id_vendeur`,
 (6, 'Game Boy édition Pokémon jaune', 'Console Game Boy Pokémon jaune encore fonctionnelle', 650.00, 6, 1, '2026-09-21', '0000-00-00', 0),
 (7, 'Palette Dior édition limitée', 'Palette Dior provenant d\'une ancienne collection limitée difficile à trouver', 185.00, 1, 4, '2026-04-20', '0000-00-00', 0),
 (8, 'Les Misérables édition reliée', 'Ancienne édition des Misérables avec reliure en cuir', 2100.00, 4, 4, '2025-10-14', '0000-00-00', 0),
-(9, 'Commode en noyer massif 1920', 'Commode ancienne en noyer avec cinq tiroirs et poignées en laiton', 980.00, 3, 4, '2026-09-12', '0000-00-00', 0),
+(9, 'Commode en noyer massif 1920', 'Commode ancienne en noyer avec cinq tiroirs et poignées en laiton', 980.00, 3, 1, '2026-09-12', '0000-00-00', 0),
 (10, 'Rouge à lèvres Lancôme collection archive', 'Rouge à lèvres Lancôme provenant d\'une collection qui n\'est plus vendue', 110.00, 1, 4, '2026-01-15', '0000-00-00', 0),
 (11, 'Buste en marbre blanc italien', 'Buste décoratif sculpté dans du marbre blanc', 2400.00, 5, 4, '2026-09-17', '0000-00-00', 0),
 (12, 'PlayStation Net Yaroze', 'Console PlayStation noire rare destinée à la création de jeux', 3201.00, 6, 4, '2026-11-28', '2027-11-03', 0),
 (13, 'L\'Étranger édition canadienne ancienne', 'Ancienne édition canadienne du roman L\'Étranger', 780.00, 4, 4, '2025-12-11', '0000-00-00', 0),
 (14, 'Portrait familial québécois de 1918', 'Ancien portrait d\'une famille québécoise avec son cadre original', 320.00, 2, 1, '2026-08-28', '2026-11-28', 0),
 (15, 'Poudre compacte MAC édition 2008', 'Poudre MAC provenant d\'une collection limitée de 2008', 145.00, 1, 4, '2025-11-20', '0000-00-00', 1),
-(16, 'Brochure Ford Mustang 1967', 'Brochure publicitaire originale de la Ford Mustang 1967', 225.00, 1, 3, '2025-08-03', '0000-00-00', 0),
+(16, 'Brochure Ford Mustang 1967', 'Brochure publicitaire originale de la Ford Mustang 1967', 225.00, 3, 3, '2025-08-03', '0000-00-00', 0),
 (17, 'Dracula édition illustrée ancienne', 'Ancienne édition illustrée de Dracula avec couverture rigide', 890.00, 4, 4, '2025-07-08', '0000-00-00', 0),
 (18, 'Ensemble couture rose années 1990', 'Ensemble deux pièces sur mesure avec veste et jupe assorties', 420.00, 1, 4, '2026-02-19', '0000-00-00', 0),
 (19, 'Coffret skincare Sulwhasoo édition limitée', 'Coffret de soins Sulwhasoo provenant d\'une édition limitée', 315.00, 5, 3, '2026-09-10', '0000-00-00', 0),
-(20, 'iPod Classic première génération', 'iPod Apple de première génération avec sa molette originale', 950.00, 6, 4, '2026-08-30', '0000-00-00', 0),
+(20, 'iPod Classic première génération', 'iPod Apple de première génération avec sa molette originale', 950.00, 6, 1, '2026-08-30', '0000-00-00', 0),
 (21, 'Portrait miniature peint ancien', 'Petit portrait ancien peint à la main dans un cadre ovale', 800.00, 2, 4, '2027-09-15', '2026-11-10', 0),
 (22, 'Sac à main perlé fait main', 'Sac à main vintage couvert de perles et fabriqué à la main', 275.00, 1, 4, '2025-05-13', '0000-00-00', 0),
 (23, 'Volant Porsche 911 classique', 'Volant original provenant d\'une ancienne Porsche 911', 1450.00, 3, 3, '2026-08-22', '0000-00-00', 0),
-(24, 'Atlas mondial relié en cuir 1904', 'Ancien atlas mondial avec cartes en couleur et reliure en cuir', 1750.00, 6, 1, '2026-09-15', '0000-00-00', 0),
-(25, 'Cadillac DeVille 1994 rose', 'Cadillac DeVille de 1994 avec peinture rose et intérieur restauré', 18900.00, 3, 4, '2026-09-22', '0000-00-00', 0),
+(24, 'Atlas mondial relié en cuir 1904', 'Ancien atlas mondial avec cartes en couleur et reliure en cuir', 1750.00, 4, 1, '2026-09-15', '0000-00-00', 0),
+(25, 'Cadillac DeVille 1994 rose', 'Cadillac DeVille de 1994 avec peinture rose et intérieur restauré', 18900.00, 1, 4, '2026-09-22', '0000-00-00', 0),
 (26, 'Bague en Pierre Précieuse Rouge ancien, datant de l\'époque médiévale ', 'C\'est une bague hors de prix, portant par des grands seigneurs. Cette bague a été conservée dans des grands musées et aujourd\'hui elle est mise en vente pour pouvoir embéllir le doigt de son(sa) futur(e) propriétaire. ', 4000.00, 5, 4, '2026-10-30', '2026-10-31', 0),
 (28, 'Collection de Papillon figé dans de la cire d\'abeille', 'Une super belle Collection de Lépidoptères remplis de couleur. Parfait sur le mur de votre Pièce. Les insectes dessus n\'ont pas de cicatrises et ont été bien  conservés. ', 300.00, 4, 4, '2026-10-15', '2026-10-28', 0),
 (30, 'Appareil photo Polaroid vintage', 'Appareil photo Polaroid des années 1980 en bon état. À échanger contre un autre objet de collection.', 120.00, 1, 3, '2026-11-17', '2026-11-17', 0),
@@ -278,7 +277,7 @@ INSERT INTO `produit` (`id_produit`, `nom`, `description`, `prix`, `id_vendeur`,
 (32, 'Radio rétro Philips années 1960', 'Radio vintage avec boîtier en bois et boutons d origine. Objet décoratif de collection.', 180.00, 3, 3, '2026-11-17', '2026-11-17', 0),
 (33, 'Montre de poche ancienne', 'Montre de poche mécanique avec boîtier doré et chaîne. Pièce de collection.', 350.00, 4, 3, '2026-11-17', '2026-11-17', 0),
 (34, 'Tourne-disque portable vintage', 'Tourne-disque portable des années 1970 avec valise intégrée.', 225.00, 5, 3, '2026-11-17', '2026-11-17', 0),
-(35, 'Console Nintendo Game Boy Color', 'Console Nintendo Game Boy Color originale en bon état avec son compartiment à piles.', 160.00, 4, 3, '2026-11-17', '2026-11-17', 0),
+(35, 'Console Nintendo Game Boy Color', 'Console Nintendo Game Boy Color originale en bon état avec son compartiment à piles.', 160.00, 6, 3, '2026-11-17', '2026-11-17', 0),
 (36, 'Montre Rolex Oyster Perpetual vintage', 'Montre mécanique Rolex des années 1970 avec cadran argenté et bracelet original.', 4505.00, 1, 4, '2026-11-17', '2026-11-17', 0),
 (37, 'Appareil photo Leica M3 1954', 'Appareil photo argentique Leica M3 avec objectif Summicron et étui en cuir.', 2800.00, 2, 2, '2026-11-17', '2026-11-27', 0),
 (38, 'Jukebox Wurlitzer années 1950', 'Jukebox américain rétro avec éclairage coloré et mécanisme de lecture de vinyles.', 6200.00, 3, 2, '2026-11-17', '2026-12-08', 0),

@@ -52,7 +52,7 @@ def creer_echange(id_produit_offert):
     session["mode_echange"] = False
     session.pop("id_produit_echange", None)
 
-    return redirect('/produits/historique_transaction', 303)
+    return redirect('/produits/transaction', 303)
 
 
 
@@ -176,7 +176,7 @@ def notification():
             session['id_utilisateur']
         )
 
-        notifications_achat = bd.get_notifications_achat_non_lues(
+        notifications_achat = bd.get_notifications_achat(
             curseur,
             session['id_utilisateur']
         )

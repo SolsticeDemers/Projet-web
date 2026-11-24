@@ -392,8 +392,8 @@ def modifier_produit(id):
     )
 
 
-@bp_produits.route('/historique_transaction')
-def historique_transaction():
+@bp_produits.route('/transactions')
+def transactions():
     """Affiche l'historique des transactions"""
 
     if "id_utilisateur" not in session:
@@ -401,23 +401,70 @@ def historique_transaction():
             url_for("compte.authentification")
         )
 
+    id_utilisateur = session["id_utilisateur"]
     tri = request.args.get("tri", "recent")
 
     with bd.creer_curseur() as curseur:
         achats = bd.get_historique_achats(
             curseur,
-            session["id_utilisateur"],
+            id_utilisateur,
             tri
         )
 
         encheres = bd.get_historique_encheres(
             curseur,
-            session["id_utilisateur"],
+            id_utilisateur,
             tri
         )
 
-    for produit in encheres:
+        echanges = bd.get_historique_echanges(
+            curseur,
+            id_utilisateur
+        )
 
+    afficher_images(achats)
+    afficher_images(encheres)
+
+    produits_echanges = []
+
+    for echange in echanges:
+        produit_demande = {
+            "id_produit": echange["id_produit_demande"],
+            "nom": echange["nom_produit_demande"]
+        }
+
+        produit_offert = None
+
+        if echange["id_produit_offert"] is not None:
+            produit_offert = {
+                "id_produit": echange["id_produit_offert"],
+                "nom": echange["nom_produit_offert"]
+            }
+
+        if echange["id_offrant"] == id_utilisateur:
+            echange["produit_propose"] = produit_offert
+            echange["produit_autre"] = produit_demande
+        else:
+            echange["produit_propose"] = produit_demande
+            echange["produit_autre"] = produit_offert
+
+        produits_echanges.append(produit_demande)
+
+        if produit_offert is not None:
+            produits_echanges.append(produit_offert)
+
+    afficher_images(produits_echanges)
+
+    return render_template(
+        "historique.jinja",
+        achats=achats,
+        encheres=encheres,
+        echanges=echanges,
+        tri=tri
+    )
+
+def afficher_images(produits):
+    for produit in produits:
         nom_image = f"produit_{produit['id_produit']}.png"
 
         chemin_image = os.path.join(
@@ -436,9 +483,4 @@ def historique_transaction():
                 filename="images/default.png"
             )
 
-    return render_template(
-        "historique.jinja",
-        achats=achats,
-        encheres=encheres,
-        tri=tri
-    )
+
