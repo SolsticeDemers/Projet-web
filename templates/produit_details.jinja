@@ -68,27 +68,42 @@
                         href="/compte/authentification"
                         class="button btn-vintage"
                     >
-                        Connectez-vous pour acheter
+                        Connectez-vous
                     </a>
 
 
                 {% elif not est_vendeur %}
 
-                    <form
-                        method="POST"
-                        action="/panier/ajouter/{{ produit.id_produit }}"
-                    >
 
-                        {{ form.hidden_tag() }}
+                    {% if produit.id_statut == 2 %}
 
-                        <button
-                            type="submit"
+                        <a
+                            href="{{ url_for('produits.miser_produit', id=produit.id_produit) }}"
                             class="button btn-vintage"
                         >
-                            Ajouter au panier
-                        </button>
+                            Miser
+                        </a>
 
-                    </form>
+                    {% else %}
+
+                        <form
+                            method="POST"
+                            action="/panier/ajouter/{{ produit.id_produit }}"
+                        >
+
+                            {{ form.hidden_tag() }}
+
+                            <button
+                                type="submit"
+                                class="button btn-vintage"
+                            >
+                                Ajouter au panier
+                            </button>
+
+                        </form>
+
+                    {% endif %}
+
 
                 {% endif %}
 

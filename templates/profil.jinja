@@ -2,8 +2,9 @@
 
 {% block contenu %}
 
-<section class="container my-4 page-vintage">
-    <div class="profil-entete profil-vintage">
+<section class="container my-4">
+
+    <div class="profil-entete">
 
         <div class="d-flex flex-column align-items-center">
 
@@ -16,7 +17,7 @@
             <div>
                 <a
                     href="{{ url_for('compte.modifier_profil') }}"
-                    class="lien-modifier-profil lien-vintage"
+                    class="lien-modifier-profil"
                 >
                     Modifier mon profil
                 </a>
@@ -42,15 +43,21 @@
         </div>
 
 
-        <div class="actions flex-column ms-auto profil-actions">
+        <div class="actions flex-column ms-auto">
 
-            <button
-                type="button"
+            <a
+                href="{{ url_for('compte.notification') }}"
                 class="bouton-secondaire"
-                disabled
             >
                 Mes notifications
-            </button>
+            </a>
+
+            <a
+                href="{{ url_for('produits.mes_encheres') }}"
+                class="bouton-secondaire"
+            >
+                Mes enchères
+            </a>
 
             <button
                 type="button"
@@ -63,15 +70,16 @@
         </div>
 
     </div>
+
 </section>
 
 
 
-<section class="container my-4 page-vintage">
+<section class="container my-4">
 
     <div class="d-flex justify-content-between align-items-center gap-3 mb-4">
 
-        <h2 class="m-5 titre-page-vintage">
+        <h2 class="m-5">
             Mes produits
         </h2>
 
@@ -80,7 +88,7 @@
 
             <a
                 href="/produits/ajouter_produit"
-                class="button btn-vintage"
+                class="button"
             >
                 Ajouter un produit
             </a>
@@ -144,10 +152,9 @@
 
             <div class="actions">
 
-
                 <a
                     href="{{ url_for('produits.modifier_produit', id=produit.id_produit) }}"
-                    class="btn-modifier btn-vintage-secondaire"
+                    class="btn-modifier"
                 >
                     Modifier
                 </a>
@@ -162,13 +169,12 @@
 
                     <button
                         type="submit"
-                        class="btn-supprimer btn-vintage-danger"
+                        class="btn-supprimer"
                     >
                         Supprimer
                     </button>
 
                 </form>
-
 
             </div>
 
@@ -176,8 +182,8 @@
 
         {% endfor %}
 
-
     </div>
+
 
     {% else %}
 
