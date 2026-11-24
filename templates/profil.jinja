@@ -8,17 +8,10 @@
 
         <div class="d-flex flex-column align-items-center">
 
-            <img
-                src="{{ image_vendeur }}"
-                alt="Image de profil de {{ utilisateur.nom }}"
-                class="profil-avatar"
-            >
+            <img src="{{ image_vendeur }}" alt="Image de profil de {{ utilisateur.nom }}" class="profil-avatar">
 
             <div>
-                <a
-                    href="{{ url_for('compte.modifier_profil') }}"
-                    class="lien-modifier-profil"
-                >
+                <a href="{{ url_for('compte.modifier_profil') }}" class="lien-modifier-profil">
                     Modifier mon profil
                 </a>
             </div>
@@ -45,34 +38,21 @@
 
         <div class="actions flex-column ms-auto">
 
-            <a
-                href="{{ url_for('notification.notification') }}"
-                class="button"
-            >
+            <a href="{{ url_for('notification.notification') }}" class="button">
                 Mes notifications
             </a>
 
-            <a
-                href="{{ url_for('produits.mes_encheres') }}"
-                class="button"
-            >
+            <a href="{{ url_for('produits.mes_encheres') }}" class="button">
                 Mes enchères
             </a>
 
-            <button
-                type="button"
-                class="bouton-secondaire"
-                disabled
-            >
+            <button type="button" class="bouton-secondaire" disabled>
                 Mes transactions
             </button>
 
         </div>
 
-        <a
-            href="{{ url_for('produits.historique_transaction') }}"
-            class="button"
-        >
+        <a href="{{ url_for('produits.historique_transaction') }}" class="button">
             Historique des transactions
         </a>
 
@@ -91,10 +71,7 @@
 
         <div class="actions">
 
-            <a
-                href="/produits/ajouter_produit"
-                class="button"
-            >
+            <a href="/produits/ajouter_produit" class="button">
                 Ajouter un produit
             </a>
 
@@ -105,43 +82,42 @@
 
     {% if produits %}
 
-        <div class="liste-mes-produits">
+    <div class="liste-mes-produits">
 
-            {% for produit in produits %}
+        {% for produit in produits %}
+        {% if session['mode_echange'] and produit.nom_statut != "Vendu" %}
 
-                <div class="carte-produit carte-mon-produit">
+        <div class="carte-produit carte-mon-produit">
 
-                    <div class="image-produit">
+            <div class="image-produit">
 
-                        <a href="/produits/{{ produit.id_produit }}">
+                <a href="/produits/{{ produit.id_produit }}">
 
-                            <img
-                                src="{{ produit.src or url_for('static', filename='images/default.png') }}"
-                                alt="{{ produit.nom }}"
-                            >
+                    <img src="{{ produit.src or url_for('static', filename='images/default.png') }}"
+                        alt="{{ produit.nom }}">
 
-                        </a>
+                </a>
 
-                        <span class="badge-statut badge-{{ produit.code_statut }}">
-                            {{ produit.nom_statut }}
-                        </span>
+                <span class="badge-statut badge-{{ produit.code_statut }}">
+                    {{ produit.nom_statut }}
+                </span>
 
-                    </div>
+            </div>
 
 
-                    <div class="contenu-produit">
+            <div class="contenu-produit">
 
-                        <h3>
+                <h3>
 
-                            <a href="/produits/{{ produit.id_produit }}">
-                                {{ produit.nom }}
-                            </a>
+                    <a href="/produits/{{ produit.id_produit }}">
+                        {{ produit.nom }}
+                    </a>
 
-                        </h3>
+                </h3>
 
-                        <p>
-                            {{ produit.description }}
-                        </p>
+                <p>
+                    {{ produit.description }}
+                </p>
 
                 <p class="prix">
                     {{ produit.prix }} $
@@ -149,42 +125,79 @@
             </div>
 
             <div class="actions">
-                {% if session['mode_echange'] and produit.nom_statut!= "Vendu" %}
+                
                 <a href="/notification/creer_echange/{{produit.id_produit}}">Choisir</a>
-                {% elif session['mode_echange'] == False %}
+                
+            </div>
+
+        </div>
+        {% elif session['mode_echange'] == False %}
+        <div class="carte-produit carte-mon-produit">
+
+            <div class="image-produit">
+
+                <a href="/produits/{{ produit.id_produit }}">
+
+                    <img src="{{ produit.src or url_for('static', filename='images/default.png') }}"
+                        alt="{{ produit.nom }}">
+
+                </a>
+
+                <span class="badge-statut badge-{{ produit.code_statut }}">
+                    {{ produit.nom_statut }}
+                </span>
+
+            </div>
+
+
+            <div class="contenu-produit">
+
+                <h3>
+
+                    <a href="/produits/{{ produit.id_produit }}">
+                        {{ produit.nom }}
+                    </a>
+
+                </h3>
+
+                <p>
+                    {{ produit.description }}
+                </p>
+
+                <p class="prix">
+                    {{ produit.prix }} $
+                </p>
+            </div>
+
+            <div class="actions">
+                
                 <a href="{{ url_for('produits.modifier_produit', id=produit.id_produit) }}" class="btn-modifier">
                     Modifier
                 </a>
 
-                        <form
-                            action="{{ url_for('produits.archiver_produit', id=produit.id_produit) }}"
-                            method="post"
-                        >
+                <form action="{{ url_for('produits.archiver_produit', id=produit.id_produit) }}" method="post">
 
-                            {{ form_archiver.hidden_tag() }}
+                    {{ form_archiver.hidden_tag() }}
 
-                            <button
-                                type="submit"
-                                class="btn-supprimer"
-                            >
-                                Supprimer
-                            </button>
+                    <button type="submit" class="btn-supprimer">
+                        Supprimer
+                    </button>
 
                 </form>
-                {% endif %}
+                
             </div>
 
-                </div>
-
-            {% endfor %}
-
         </div>
+        {% endif %}
+        {% endfor %}
+
+    </div>
 
     {% else %}
 
-        <p>
-            Vous n'avez ajouté aucun produit.
-        </p>
+    <p>
+        Vous n'avez ajouté aucun produit.
+    </p>
 
     {% endif %}
 

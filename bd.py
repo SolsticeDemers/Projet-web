@@ -688,6 +688,7 @@ def get_notif_echange(curseur, id):
     return curseur.fetchone()
 
 
+
 def get_nouvelle_notification(curseur, id_utilisateur):
     curseur.execute("SELECT * FROM notification WHERE id_destinataire = %(id_utilisateur)s and notif_vue = 0;",
                     {
