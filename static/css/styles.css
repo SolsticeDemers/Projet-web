@@ -13036,4 +13036,12 @@ p a {
 .lien-modifier-profil:focus-visible {
   outline: 2px solid #323550;
   outline-offset: 3px;
+}
+
+.lien-profil-public {
+  color: #7E7B85;
+  text-decoration: underline;
+}
+.lien-profil-public:hover {
+  color: #5F5C67;
 }/*# sourceMappingURL=styles.css.map */
