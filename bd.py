@@ -696,13 +696,15 @@ def get_nouvelle_notification(curseur, id_utilisateur):
 
 
 def update_notification(curseur, id_proposition, vue):
-    curseur.execute("UPDATE notification " \
-        "SET notif_vue = %(vue)s, date_lecture = NOW()" \
-        "WHERE id_notification = %(id)s;",
-                    {
-                        'id': id_proposition,
-                        'vue': vue
-                    })
+    curseur.execute("""
+        UPDATE notification
+        SET notif_vue = %(vue)s, date_lecture = NOW()
+        WHERE id_notification = %(id)s
+          AND notif_vue = 0""",
+          {
+            "id": id_proposition,
+            "vue": vue
+        })
 
 
 def get_achat_paye(curseur, id_acheteur, id_produit):
@@ -770,7 +772,7 @@ def get_notifications_achat(curseur, id_utilisateur):
         ON u.id_utilisateur = a.id_acheteur
 
         WHERE n.id_destinataire = %(id_utilisateur)s
-        AND (n.notif_vue = 0 OR n.date > DATE_SUB(NOW(), INTERVAL 15 DAY)
+        AND (n.notif_vue = 0 OR n.date_lecture > DATE_SUB(NOW(), INTERVAL 15 DAY)
 )
         ORDER BY n.date DESC""",
                     {
@@ -985,5 +987,39 @@ def get_historique_achats(curseur, id_utilisateur, tri="recent"):
     curseur.execute(requete, {
         "id_utilisateur": id_utilisateur
     })
+
+    return curseur.fetchall()
+
+def get_historique_echanges(curseur, id_utilisateur):
+    """Retourne l'historique des échanges"""
+
+    curseur.execute("""
+        SELECT
+            e.id_echange,
+            e.id_utilisateur AS id_offrant,
+            e.produit AS id_produit_demande,
+            d.nom AS nom_produit_demande,
+            e.produit_offert AS id_produit_offert,
+            offert.nom AS nom_produit_offert,
+            partenaire.nom AS nom_partenaire
+        FROM echange e
+        JOIN produit d
+            ON d.id_produit = e.produit
+        LEFT JOIN produit offert
+            ON offert.id_produit = e.produit_offert
+        JOIN utilisateur partenaire
+            ON partenaire.id_utilisateur = CASE
+                WHEN e.id_utilisateur = %(id_utilisateur)s THEN e.proprio
+                ELSE e.id_utilisateur
+            END
+        WHERE e.approuver = 1
+          AND (
+              e.id_utilisateur = %(id_utilisateur)s
+              OR e.proprio = %(id_utilisateur)s
+          )
+        ORDER BY e.id_echange DESC""",
+        {
+            "id_utilisateur": id_utilisateur
+        })
 
     return curseur.fetchall()

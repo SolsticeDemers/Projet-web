@@ -12480,7 +12480,7 @@ header {
   min-height: 105px;
   padding: 20px 55px;
   display: grid;
-  grid-template-columns: 250px 1fr 240px;
+  grid-template-columns: 250px minmax(0, 1fr) max-content;
   align-items: center;
   gap: 40px;
 }
@@ -12524,10 +12524,13 @@ header {
 }
 
 .connecter {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 10px;
+}
+.connecter a {
+  white-space: nowrap;
 }
 
 .btn_deconnection {
@@ -12798,6 +12801,10 @@ footer {
   .produit-vedette {
     grid-template-columns: 1fr;
   }
+  .connecter {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
 }
 .liste-mes-produits {
   display: flex;
@@ -12993,11 +13000,6 @@ p a {
   outline-offset: 3px;
 }
 
-#img_notif {
-  max-height: 50px;
-  text-align: right;
-}
-
 .affichage_notif {
   display: flex;
   flex-wrap: wrap;
@@ -13015,6 +13017,16 @@ p a {
 }
 .notif-detail a:hover {
   color: #7E7B85;
+}
+
+.badge-nouvelle {
+  display: inline-block;
+  margin-bottom: 12px;
+  background: #323550;
+  color: #FFFFFF;
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 0.8rem;
 }
 
 .theme-success {
@@ -13042,4 +13054,37 @@ p a {
 .lien-modifier-profil:focus-visible {
   outline: 2px solid #323550;
   outline-offset: 3px;
+}
+
+.connexion a.icone-action {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  font-size: 1.4rem;
+}
+
+.badge-compteur {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #d32f2f;
+  color: white;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+.badge-compteur:empty {
+  display: none;
 }/*# sourceMappingURL=styles.css.map */
