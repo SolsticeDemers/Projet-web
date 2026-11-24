@@ -97,6 +97,7 @@
                 <div class="actions">
 
                     {% if "id_utilisateur" in session %}
+                    {% if session['id_utilisateur'] != produit.id_vendeur %}
 
                     {% if produit.nom_statut == 'En vente' %}
 
@@ -129,6 +130,11 @@
                     </form>
 
                     {% endif %}
+
+
+
+                    {% endif %}
+
 
                     {% endif %}
 
@@ -161,7 +167,6 @@
     <div class="grille-produits">
 
         {% for produit in encheres_futures %}
-
         <div class="carte-produit">
 
             <div class="image-produit">
@@ -189,7 +194,7 @@
                     {{ produit.nom_statut }}
                 </span>
 
-
+            
             </div>
 
 
@@ -210,7 +215,7 @@
                 <div class="actions">
 
                     {% if "id_utilisateur" in session %}
-
+                    {% if session['id_utilisateur'] != produit.id_vendeur %}
                     {% if produit.nom_statut == 'En vente' %}
 
                     <form method="POST" action="/panier/ajouter/{{ produit.id_produit }}">
@@ -240,6 +245,7 @@
 
                     </form>
 
+                    {% endif %}
                     {% endif %}
 
                     {% endif %}
@@ -301,7 +307,7 @@
         <div class="actions">
 
             {% if "id_utilisateur" in session %}
-
+            {% if session['id_utilisateur'] != produit_du_jour.id_vendeur %}
             {% if produit_du_jour.nom_statut == "En vente" %}
 
             <form method="POST" action="/panier/ajouter/{{ produit_du_jour.id_produit }}">
@@ -331,6 +337,7 @@
 
             </form>
 
+            {% endif %}
             {% endif %}
 
             {% endif %}
@@ -417,7 +424,7 @@
                 <div class="actions">
 
                     {% if "id_utilisateur" in session %}
-
+                    {% if session['id_utilisateur'] != produit.id_vendeur %}
                     {% if produit.nom_statut == 'En vente' %}
 
                     <form method="POST" action="/panier/ajouter/{{ produit.id_produit }}">
@@ -448,6 +455,7 @@
 
                     </form>
 
+                    {% endif %}
                     {% endif %}
 
                     {% endif %}

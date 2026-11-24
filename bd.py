@@ -61,6 +61,7 @@ def get_nouveaux_produits(curseur):
             p.description,
             p.prix,
             p.date,
+            p.id_vendeur,
             s.nom_statut
         FROM produit p
         JOIN statut_produit s
@@ -84,6 +85,7 @@ def get_produit_aleatoire(curseur):
             p.description,
             p.prix,
             p.date,
+            p.id_vendeur,
             s.nom_statut
         FROM produit p
         JOIN statut_produit s
@@ -107,6 +109,7 @@ def get_produits_aleatoires(curseur):
             p.description,
             p.prix,
             p.date,
+            p.id_vendeur,
             s.nom_statut
         FROM produit p
         JOIN statut_produit s
@@ -189,6 +192,7 @@ def get_produits(
             p.description,
             p.prix,
             p.date,
+            p.id_vendeur,
             s.nom_statut
 
         FROM produit p
@@ -250,6 +254,7 @@ def get_produits_recherche_filtre(
             p.description,
             p.prix,
             p.date,
+            p.id_vendeur,
             s.nom_statut
 
         FROM produit p

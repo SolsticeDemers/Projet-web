@@ -142,7 +142,7 @@
                     <div class="actions">
 
                         {% if "id_utilisateur" in session %}
-
+                            {% if session['id_utilisateur'] != produit.id_vendeur %}
                             {% if produit.nom_statut == "En vente" %}
 
                                 <form
@@ -181,6 +181,7 @@
 
                                 </form>
 
+                        {% endif %}
                         {% endif %}
                          {% endif %}
 
