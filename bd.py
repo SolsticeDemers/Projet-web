@@ -488,7 +488,7 @@ def archiver_produit(curseur, id_produit):
 def ajouter_au_panier(curseur, id_acheteur, id_produit):
     """Permet d'ajouter un produit au panier"""
     curseur.execute(
-        "INSERT IGNORE INTO achat "
+        "INSERT INTO achat "
         "(id_produit, id_acheteur, prix_achat, date_achat, paye) "
         "SELECT id_produit, %(id_acheteur)s, prix, CURDATE(), FALSE "
         "FROM produit WHERE id_produit = %(id_produit)s",
@@ -497,6 +497,31 @@ def ajouter_au_panier(curseur, id_acheteur, id_produit):
             "id_produit": id_produit
         }
     )
+
+def get_produit_pour_panier(curseur, id_produit):
+    curseur.execute("""
+        SELECT *
+        FROM produit
+        WHERE id_produit = %(id_produit)s
+        FOR UPDATE
+    """, {
+        "id_produit": id_produit
+    })
+
+    return curseur.fetchone()
+
+
+def get_achat_par_produit(curseur, id_produit):
+    curseur.execute("""
+        SELECT id_acheteur, paye
+        FROM achat
+        WHERE id_produit = %(id_produit)s
+        FOR UPDATE
+    """, {
+        "id_produit": id_produit
+    })
+
+    return curseur.fetchone()
 
 
 def supprimer_du_panier(curseur, id_acheteur, id_produit):
