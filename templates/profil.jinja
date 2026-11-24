@@ -81,7 +81,7 @@
     <div class="liste-mes-produits">
 
         {% for produit in produits %}
-        {% if session['mode_echange'] and produit.nom_statut != "Vendu" %}
+        {% if session['mode_echange'] == True and produit.nom_statut != "Vendu" %}
 
         <div class="carte-produit carte-mon-produit">
 
