@@ -46,35 +46,18 @@
         <div class="actions flex-column ms-auto">
 
             <a
-                href="{{ url_for('compte.notification') }}"
-                class="button"
-            >
-                Mes notifications
-            </a>
-
-            <a
                 href="{{ url_for('produits.mes_encheres') }}"
-                class="button"
-            >
+                class="button">
                 Mes enchères
             </a>
 
-            <button
-                type="button"
-                class="bouton-secondaire"
-                disabled
-            >
+            <a
+                href="{{ url_for('produits.transactions') }}"
+                class="button">
                 Mes transactions
-            </button>
+            </a>
 
         </div>
-
-        <a
-            href="{{ url_for('produits.historique_encheres') }}"
-            class="button"
-        >
-            Historique des transactions
-        </a>
 
     </div>
 

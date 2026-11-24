@@ -7,7 +7,6 @@
 
 let intervalVerif
 
-const imgNotif = document.getElementById("img_notif")
 const nbNotification = document.getElementById("nb_notification")
 
 async function afficherNotif() {
@@ -17,14 +16,9 @@ async function afficherNotif() {
     )
 
     if (nouvelleNotif.nouvelle == true) {
-        imgNotif.src = "/images/alarm.png"
-        imgNotif.alt = "image de nouvelle notification"
         nbNotification.textContent= nouvelleNotif.nb_notif
     } else {
-        imgNotif.src = "/images/bell.png"
-        imgNotif.alt = "image d'il n'y a pas de nouvelle notif"
         nbNotification.textContent= ""
-
     }
 
 }
@@ -38,7 +32,7 @@ function initialisation() {
     intervalVerif = setInterval(afficherNotif, 2000)
     console.log(document.getElementById("img_notif"));
 
-    
+
 
 }
 
