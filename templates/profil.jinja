@@ -81,7 +81,7 @@
     <div class="liste-mes-produits">
 
         {% for produit in produits %}
-        {% if session['mode_echange'] == True and produit.nom_statut != "Vendu" %}
+        {% if request.cookies.get('mode_echange') == 'True' and produit.nom_statut != "Vendu" %}
 
         <div class="carte-produit carte-mon-produit">
 
@@ -127,7 +127,8 @@
             </div>
 
         </div>
-        {% elif session['mode_echange'] == False %}
+        {% elif  request.cookies.get('mode_echange') == 'False' %}
+        {# {% else %} #}
         <div class="carte-produit carte-mon-produit">
 
             <div class="image-produit">

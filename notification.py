@@ -1,5 +1,5 @@
 
-from flask import Blueprint, render_template, request, redirect, session, abort
+from flask import Blueprint, render_template, request, redirect, session, abort, make_response
 import bd
 
 bp_notification = Blueprint('notification', __name__)
@@ -7,11 +7,12 @@ bp_notification = Blueprint('notification', __name__)
 
 @bp_notification.route("/faire_echange/<int:id_produit>")
 def faire_echange(id_produit):
-
+    response = make_response(
+        redirect('/compte/profil', 303)
+    )
     session['id_produit_echange'] = id_produit
-    session['mode_echange'] = True
-    return redirect('/compte/profil', code = 303)
-
+    response.set_cookie('mode_echange', 'True')
+    return response
 
 
 @bp_notification.route("/creer_echange/<int:id_produit_offert>", methods=['GET', 'POST'])
@@ -37,23 +38,27 @@ def creer_echange(id_produit_offert):
     nom_proprio = proprio['nom']
     nom_produit = produit_echange['nom']
     with bd.creer_curseur() as curseur:
-            produit_offert = bd.get_produit_by_id(curseur, id_produit_offert)
+        produit_offert = bd.get_produit_by_id(curseur, id_produit_offert)
     nom_produit_offert = produit_offert['nom']
     if request.method == "GET":
-        return render_template('faire_echange.jinja', nom_produit=nom_produit, nom_proprio=nom_proprio, nom_produit_offert=nom_produit_offert, id_produit_offert = id_produit_offert)
-
+        return render_template('faire_echange.jinja', nom_produit=nom_produit, nom_proprio=nom_proprio, nom_produit_offert=nom_produit_offert, id_produit_offert=id_produit_offert)
 
     with bd.creer_curseur() as curseur:
-        id_echange= bd.create_echange(curseur,produit_echange['id_produit'], produit_echange['id_vendeur'], session['id_utilisateur'], produit_offert['id_produit'])
+        id_echange = bd.create_echange(
+            curseur, produit_echange['id_produit'], produit_echange['id_vendeur'], session['id_utilisateur'], produit_offert['id_produit'])
         id_notif = bd.create_notif(curseur, produit_echange['id_vendeur'])
         bd.create_notif_echange(curseur, id_echange, id_notif)
-        
 
-    session["mode_echange"] = False
+    response = make_response(
+        redirect('/produits/transactions')
+    )
+
+
+    response.set_cookie('mode_echange', 'False')
+
     session.pop("id_produit_echange", None)
 
-    return redirect('/produits/transactions', 303)
-
+    return response
 
 
 def echange(notif, notifications, id_status, id_notif):
@@ -90,10 +95,9 @@ def echange(notif, notifications, id_status, id_notif):
 
         status = bd.get_statut_by_Id(
 
-                    curseur, id_status)
+            curseur, id_status)
 
     status = status['nom_statut']
-
 
     with bd.creer_curseur() as curseur:
 
@@ -126,9 +130,7 @@ def echange(notif, notifications, id_status, id_notif):
 
 
 def enchere(notif, notifications, id_notif):
-
     """Prépare une notification d'enchère gagnée"""
-
 
     with bd.creer_curseur() as curseur:
 
@@ -139,7 +141,6 @@ def enchere(notif, notifications, id_notif):
             id_notif
 
         )
-
 
     une_notification = {
 
@@ -153,9 +154,7 @@ def enchere(notif, notifications, id_notif):
 
     }
 
-
     notifications.append(une_notification)
-
 
     return notifications
 
@@ -222,9 +221,7 @@ def notification():
 
 
 @bp_notification.route('/accepter_echange/<int:id_echange>/<string:approuve>')
-
 def accepter_echange(id_echange, approuve):
-
 
     if approuve == "oui":
 
@@ -237,15 +234,16 @@ def accepter_echange(id_echange, approuve):
 
         bd.update_offer(curseur, id_echange, reponse)
 
-        id_notification= bd.create_notif_offrant(curseur, id_echange)
+        id_notification = bd.create_notif_offrant(curseur, id_echange)
 
-        bd.create_notif_echange(curseur,id_echange, id_notification)
+        bd.create_notif_echange(curseur, id_echange, id_notification)
 
     if reponse == 1:
         with bd.creer_curseur() as curseur:
-            echange= bd.get_echange_by_id(curseur, id_echange)
-            bd.update_produit_echange(curseur, echange['produit_offert'], session['id_utilisateur'])
-            bd.update_produit_echange(curseur, echange['produit'], echange['id_utilisateur'])
-        
+            echange = bd.get_echange_by_id(curseur, id_echange)
+            bd.update_produit_echange(
+                curseur, echange['produit_offert'], session['id_utilisateur'])
+            bd.update_produit_echange(
+                curseur, echange['produit'], echange['id_utilisateur'])
 
     return redirect("/notification/notification", code=303)
