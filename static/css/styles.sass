@@ -559,10 +559,13 @@ header
 
 
 .connecter
-    display: grid
-    grid-template-columns: 1fr 1fr
+    display: flex
     align-items: center
-    gap: 10px
+    justify-content: flex-end
+    gap: 20px
+
+    a
+        white-space: nowrap
 
 
 .btn_deconnection
@@ -1941,28 +1944,115 @@ p
         outline: 2px solid $bleu
         outline-offset: 3px
 
-
 .affichage_notif
+    display: flex
+    flex-wrap: wrap
+    align-items: center
+    gap: 20px
+    padding: 24px
     text-align: left
-    height: 250px
-    padding-left: 20px
+    height: auto
 
-
+.notif-detail,
 #notif_detail
+    flex: 1 1 280px
+
     a
         color: $noir
 
         &:hover
             color: $brun
 
+.badge-nouvelle
+    display: inline-block
+    margin-bottom: 12px
+    background: $bleu
+    color: $blanc
+    border-radius: 20px
+    padding: 5px 12px
+    font-size: 0.8rem
 
 .theme-success
     color: #146c43 !important
     background-color: #d1e7dd !important
     border: 1px solid #a3cfbb !important
 
-
 .theme-danger
     color: #842029 !important
     background-color: #f8d7da !important
     border: 1px solid #f1aeb5 !important
+
+.connexion a.icone-action
+    position: relative
+    display: flex
+    align-items: center
+    justify-content: center
+    justify-self: center
+    width: 32px
+    height: 32px
+    padding: 0
+    border: 0
+    font-size: 1.4rem
+
+    &:hover
+        background: transparent
+        color: $blanc
+
+.badge-compteur
+    position: absolute
+    top: -5px
+    right: -5px
+    min-width: 22px
+    height: 22px
+    padding: 0 5px
+    display: flex
+    align-items: center
+    justify-content: center
+    background: #d32f2f
+    color: $blanc
+    border-radius: 50%
+    font-size: 0.75rem
+    font-weight: bold
+
+    &:empty
+        display: none
+
+.lien-profil-public
+    color: $brun
+    text-decoration: underline
+
+    &:hover
+        color: $bleu
+
+.actions-notification,
+.affichage_notif .actions
+    .btn-accepter,
+    .btn-refuser
+        min-width: 130px
+        height: 46px
+        padding: 0 20px
+        border: 0
+        display: inline-flex
+        align-items: center
+        justify-content: center
+        color: $noir
+        font-weight: bold
+        text-decoration: none
+        clip-path: polygon(12% 0%, 88% 0%, 100% 50%, 88% 100%, 12% 100%, 0% 50%)
+
+    .btn-accepter
+        background: $vert
+
+        &:hover
+            background: $bleu
+            color: $blanc
+
+    .btn-refuser
+        background: $orange
+
+        &:hover
+            background: $danger
+            color: $blanc
+
+main
+    flex: 1

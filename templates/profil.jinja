@@ -19,7 +19,9 @@
 
         <div class="profil-informations">
 
-            <h3>{{ utilisateur.nom }}</h3>
+            <h3>
+                {{ utilisateur.nom }}
+            </h3>
 
             <a
                 href="{{ url_for('compte.modifier_profil') }}"
@@ -57,9 +59,13 @@
                 <span>Mes enchères misées</span>
             </a>
 
-            <a href="{{ url_for('produits.historique_encheres') }}" class="bouton-secondaire">
-    <span>Mes transactions</span>
-</a>
+            <a
+                href="{{ url_for('produits.historique_encheres') }}"
+                class="bouton-secondaire"
+            >
+                <span>Mes transactions</span>
+            </a>
+
             <a
                 href="/produits/ajouter_produit"
                 class="bouton-secondaire"
@@ -131,12 +137,16 @@
 
                     <div class="actions">
 
-                        <a
-                            href="{{ url_for('produits.modifier_produit', id=produit.id_produit) }}"
-                            class="btn-modifier"
-                        >
-                            Modifier
-                        </a>
+                        {% if produit.nom_statut != 'Vendu' %}
+
+                            <a
+                                href="{{ url_for('produits.modifier_produit', id=produit.id_produit) }}"
+                                class="btn-modifier"
+                            >
+                                Modifier
+                            </a>
+
+                        {% endif %}
 
                         <form
                             action="{{ url_for('produits.archiver_produit', id=produit.id_produit) }}"

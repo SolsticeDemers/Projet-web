@@ -14,7 +14,6 @@
                     Créer un compte
                 </h2>
 
-
                 <form
                     method="post"
                     action=""
@@ -23,13 +22,9 @@
                     class="d-grid gap-4"
                 >
 
-
                     <div class="mb-4">
 
-                        <label
-                            for="nom"
-                            class="form-label"
-                        >
+                        <label for="nom" class="form-label">
                             Nom d'utilisateur :
                         </label>
 
@@ -37,26 +32,19 @@
                             type="text"
                             name="nom"
                             id="nom"
-                            value="{{ nom }}"
-                            class="{{ classe_nom }} form-control"
+                            value="{{ nom | default('') }}"
+                            class="form-control {{ classe_nom | default('') }}"
                         >
-
 
                         {% if num_nom_erreur == 1 %}
 
-                            <p
-                                class="invalid-feedback"
-                                id="erreur_nom_1"
-                            >
+                            <p class="invalid-feedback" id="erreur_nom_1">
                                 Le champ nom ne peut pas être vide. Veuillez insérer un nom.
                             </p>
 
-                        {% else %}
+                        {% elif num_nom_erreur == 2 %}
 
-                            <p
-                                class="invalid-feedback"
-                                id="erreur_nom_2"
-                            >
+                            <p class="invalid-feedback" id="erreur_nom_2">
                                 Veuillez insérer un nom valide et unique.
                             </p>
 
@@ -64,13 +52,9 @@
 
                     </div>
 
-
                     <div class="mb-3">
 
-                        <label
-                            for="courriel"
-                            class="form-label"
-                        >
+                        <label for="courriel" class="form-label">
                             Courriel :
                         </label>
 
@@ -78,35 +62,25 @@
                             type="email"
                             name="courriel"
                             id="courriel"
-                            value="{{ courriel }}"
-                            class="{{ classe_courriel }} form-control"
+                            value="{{ courriel | default('') }}"
+                            class="form-control {{ classe_courriel | default('') }}"
                         >
-
 
                         {% if num_courriel_erreur == 1 %}
 
-                            <p
-                                class="invalid-feedback"
-                                id="erreur_courriel_1"
-                            >
+                            <p class="invalid-feedback" id="erreur_courriel_1">
                                 Le champ courriel ne peut pas être vide. Veuillez insérer un courriel.
                             </p>
 
                         {% elif num_courriel_erreur == 2 %}
 
-                            <p
-                                class="invalid-feedback"
-                                id="erreur_courriel_2"
-                            >
+                            <p class="invalid-feedback" id="erreur_courriel_2">
                                 Veuillez insérer un courriel valide.
                             </p>
 
                         {% elif num_courriel_erreur == 3 %}
 
-                            <p
-                                class="invalid-feedback"
-                                id="erreur_courriel_3"
-                            >
+                            <p class="invalid-feedback" id="erreur_courriel_3">
                                 Votre courriel doit être unique.
                             </p>
 
@@ -114,13 +88,9 @@
 
                     </div>
 
-
                     <div class="mb-3">
 
-                        <label
-                            for="mdp1"
-                            class="form-label"
-                        >
+                        <label for="mdp1" class="form-label">
                             Mot de passe :
                         </label>
 
@@ -128,26 +98,18 @@
                             type="password"
                             name="mdp1"
                             id="mdp1"
-                            value="{{ mdp1 }}"
-                            class="{{ classe_mdp1 }} form-control"
+                            class="form-control {{ classe_mdp1 | default('') }}"
                         >
 
-                        <p
-                            class="invalid-feedback"
-                            id="erreur_mdp1"
-                        >
+                        <p class="invalid-feedback" id="erreur_mdp1">
                             Veuillez insérer un mot de passe.
                         </p>
 
                     </div>
 
-
                     <div class="mb-3">
 
-                        <label
-                            for="mdp2"
-                            class="form-label"
-                        >
+                        <label for="mdp2" class="form-label">
                             Valider le mot de passe :
                         </label>
 
@@ -155,26 +117,18 @@
                             type="password"
                             name="mdp2"
                             id="mdp2"
-                            value="{{ mdp2 }}"
-                            class="{{ classe_mdp2 }} form-control"
+                            class="form-control {{ classe_mdp2 | default('') }}"
                         >
-
 
                         {% if num_mdp_erreur == 1 %}
 
-                            <p
-                                class="invalid-feedback"
-                                id="erreur_mdp2"
-                            >
+                            <p class="invalid-feedback" id="erreur_mdp2">
                                 Veuillez réinsérer votre mot de passe.
                             </p>
 
-                        {% else %}
+                        {% elif num_mdp_erreur == 2 %}
 
-                            <p
-                                class="invalid-feedback"
-                                id="erreur_mdp2"
-                            >
+                            <p class="invalid-feedback" id="erreur_mdp2">
                                 Les deux mots de passe ne sont pas identiques. Veuillez réinsérer votre mot de passe.
                             </p>
 
@@ -182,15 +136,19 @@
 
                     </div>
 
-
                     <div class="mb-3">
 
-                        <label
-                            for="image"
-                            class="form-label"
-                        >
+                        <label for="image" class="form-label">
                             Image de profil :
                         </label>
+
+                        <img
+                            id="apercu-image"
+                            src="{{ url_for('static', filename='images/default_user.png') }}"
+                            data-img-initiale="{{ url_for('static', filename='images/default_user.png') }}"
+                            alt="Aperçu de l'image de profil"
+                            class="img-thumbnail d-block mb-2 image-actuelle"
+                        >
 
                         <input
                             type="file"
@@ -210,7 +168,6 @@
 
                     </div>
 
-
                     <div class="actions-compte d-flex justify-content-end">
 
                         <button
@@ -222,7 +179,6 @@
                         </button>
 
                     </div>
-
 
                     <p class="mb-5">
 
@@ -246,5 +202,7 @@
     </div>
 
 </div>
+
+<script src="{{ url_for('static', filename='js/apercu_image.js') }}"></script>
 
 {% endblock %}

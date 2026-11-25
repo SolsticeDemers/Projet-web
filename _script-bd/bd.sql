@@ -1,4 +1,5 @@
 -- phpMyAdmin SQL Dump
+-- Fusion V1/V2/V3 : V2 comme base, produits V1 30-41 remappes en 82-93.
 -- version 5.2.3
 -- https://www.phpmyadmin.net/
 --
@@ -21,13 +22,24 @@ SET time_zone = "+00:00";
 -- Base de données : `vintagemarket`
 --
 
+-- Suppression des tables dependantes avant les tables parentes.
+DROP TABLE IF EXISTS `notification_achat`;
+DROP TABLE IF EXISTS `notification_echange`;
+DROP TABLE IF EXISTS `notification_enchere`;
+DROP TABLE IF EXISTS `mise`;
+DROP TABLE IF EXISTS `achat`;
+DROP TABLE IF EXISTS `echange`;
+DROP TABLE IF EXISTS `notification`;
+DROP TABLE IF EXISTS `produit`;
+DROP TABLE IF EXISTS `statut_produit`;
+DROP TABLE IF EXISTS `utilisateur`;
+
 -- --------------------------------------------------------
 
 --
 -- Structure de la table `achat`
 --
 
-DROP TABLE IF EXISTS `achat`;
 CREATE TABLE IF NOT EXISTS `achat` (
   `id_achat` int NOT NULL AUTO_INCREMENT,
   `id_produit` int NOT NULL,
@@ -58,6 +70,7 @@ INSERT INTO `achat` (`id_achat`, `id_produit`, `id_acheteur`, `prix_achat`, `dat
 (11, 5, 4, 1850.00, '2026-05-28', 1),
 (12, 2, 6, 850.00, '2026-05-09', 1),
 (15, 3, 1, 1150.00, '2026-11-17', 1),
+(17, 24, 1, 1750.00, '2026-11-17', 0),
 (18, 25, 3, 18900.00, '2026-11-17', 1),
 (19, 19, 3, 315.00, '2026-11-17', 0),
 (20, 53, 1, 145.00, '2026-11-23', 0),
@@ -71,7 +84,6 @@ INSERT INTO `achat` (`id_achat`, `id_produit`, `id_acheteur`, `prix_achat`, `dat
 -- Structure de la table `echange`
 --
 
-DROP TABLE IF EXISTS `echange`;
 CREATE TABLE IF NOT EXISTS `echange` (
   `id_echange` int NOT NULL AUTO_INCREMENT,
   `proprio` int NOT NULL,
@@ -102,7 +114,6 @@ INSERT INTO `echange` (`id_echange`, `proprio`, `id_utilisateur`, `produit`, `pr
 -- Structure de la table `mise`
 --
 
-DROP TABLE IF EXISTS `mise`;
 CREATE TABLE IF NOT EXISTS `mise` (
   `id_mise` int NOT NULL AUTO_INCREMENT,
   `id_produit` int NOT NULL,
@@ -112,7 +123,7 @@ CREATE TABLE IF NOT EXISTS `mise` (
   PRIMARY KEY (`id_mise`),
   KEY `id_produit` (`id_produit`),
   KEY `id_utilisateur` (`id_utilisateur`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `mise`
@@ -124,7 +135,8 @@ INSERT INTO `mise` (`id_mise`, `id_produit`, `id_utilisateur`, `montant`, `date_
 (3, 51, 1, 1000.00, '2026-11-21 16:49:28'),
 (4, 51, 3, 1150.00, '2026-11-21 16:50:47'),
 (5, 51, 2, 2000.00, '2026-11-21 16:51:56'),
-(6, 31, 1, 5555.00, '2026-11-23 13:41:56');
+(6, 31, 1, 5555.00, '2026-11-23 13:41:56'),
+(7, 88, 2, 4505.00, '2026-11-17 19:30:31');
 
 -- --------------------------------------------------------
 
@@ -132,7 +144,6 @@ INSERT INTO `mise` (`id_mise`, `id_produit`, `id_utilisateur`, `montant`, `date_
 -- Structure de la table `notification`
 --
 
-DROP TABLE IF EXISTS `notification`;
 CREATE TABLE IF NOT EXISTS `notification` (
   `id_notification` int NOT NULL AUTO_INCREMENT,
   `id_destinataire` int NOT NULL,
@@ -142,26 +153,27 @@ CREATE TABLE IF NOT EXISTS `notification` (
   `date_lecture` datetime DEFAULT NULL,
   PRIMARY KEY (`id_notification`),
   KEY `notification_ibfk_1` (`id_statut`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `notification`
 --
 
 INSERT INTO `notification` (`id_notification`, `id_destinataire`, `id_statut`, `notif_vue`, `date`, `date_lecture`) VALUES
-(1, 1, 2, 1, '2026-11-17', NULL),
-(2, 3, 3, 1, '2026-11-17', NULL),
-(3, 3, 3, 1, '2026-11-17', NULL),
-(4, 1, 3, 1, '2026-11-17', NULL),
-(5, 1, 3, 1, '2026-11-17', NULL),
-(7, 1, 1, 1, '2026-11-17', NULL),
+(1, 1, 2, 1, '2026-11-17', '2026-11-23 13:22:50'),
+(2, 3, 3, 1, '2026-11-17', '2026-11-23 13:22:50'),
+(3, 3, 3, 1, '2026-11-17', '2026-11-23 13:22:50'),
+(4, 1, 3, 1, '2026-11-17', '2026-11-23 13:22:50'),
+(5, 1, 3, 1, '2026-11-17', '2026-11-23 13:22:50'),
+(7, 1, 1, 1, '2026-11-17', '2026-11-23 13:22:50'),
 (8, 5, 3, 1, '2026-11-17', NULL),
 (9, 3, 3, 1, '2026-11-17', NULL),
 (10, 5, 3, 1, '2026-11-17', NULL),
 (11, 3, 3, 1, '2026-11-17', NULL),
 (12, 2, 2, 1, '2026-11-21', NULL),
 (13, 5, 2, 1, '2026-11-21', NULL),
-(14, 1, 1, 1, '2026-11-23', NULL);
+(14, 1, 1, 1, '2026-11-23', NULL),
+(15, 2, 2, 1, '2026-11-17', '2026-11-23 13:22:50');
 
 -- --------------------------------------------------------
 
@@ -169,7 +181,6 @@ INSERT INTO `notification` (`id_notification`, `id_destinataire`, `id_statut`, `
 -- Structure de la table `notification_achat`
 --
 
-DROP TABLE IF EXISTS `notification_achat`;
 CREATE TABLE IF NOT EXISTS `notification_achat` (
   `id_notification` int NOT NULL,
   `id_achat` int NOT NULL,
@@ -191,7 +202,6 @@ INSERT INTO `notification_achat` (`id_notification`, `id_achat`) VALUES
 -- Structure de la table `notification_echange`
 --
 
-DROP TABLE IF EXISTS `notification_echange`;
 CREATE TABLE IF NOT EXISTS `notification_echange` (
   `id_notification` int NOT NULL,
   `id_echange` int NOT NULL,
@@ -219,7 +229,6 @@ INSERT INTO `notification_echange` (`id_notification`, `id_echange`) VALUES
 -- Structure de la table `notification_enchere`
 --
 
-DROP TABLE IF EXISTS `notification_enchere`;
 CREATE TABLE IF NOT EXISTS `notification_enchere` (
   `id_notification` int NOT NULL,
   `id_produit` int NOT NULL,
@@ -234,7 +243,8 @@ CREATE TABLE IF NOT EXISTS `notification_enchere` (
 INSERT INTO `notification_enchere` (`id_notification`, `id_produit`) VALUES
 (1, 21),
 (12, 51),
-(13, 51);
+(13, 51),
+(15, 88);
 
 -- --------------------------------------------------------
 
@@ -242,7 +252,6 @@ INSERT INTO `notification_enchere` (`id_notification`, `id_produit`) VALUES
 -- Structure de la table `produit`
 --
 
-DROP TABLE IF EXISTS `produit`;
 CREATE TABLE IF NOT EXISTS `produit` (
   `id_produit` int NOT NULL AUTO_INCREMENT,
   `nom` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
@@ -256,7 +265,7 @@ CREATE TABLE IF NOT EXISTS `produit` (
   PRIMARY KEY (`id_produit`),
   KEY `id_vendeur` (`id_vendeur`),
   KEY `id_statut` (`id_statut`)
-) ENGINE=InnoDB AUTO_INCREMENT=82 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=94 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `produit`
@@ -341,7 +350,19 @@ INSERT INTO `produit` (`id_produit`, `nom`, `description`, `prix`, `id_vendeur`,
 (78, 'Nintendo Wii blanche', 'Console Wii avec câbles et manette', 165.00, 6, 1, '2026-10-27', '0000-00-00', 0),
 (79, 'Tourne-disque rétro', 'Tourne-disque ancien encore fonctionnel', 240.00, 7, 1, '2026-10-26', '0000-00-00', 0),
 (80, 'Boîte à bijoux ancienne', 'Petite boîte à bijoux en bois', 80.00, 1, 3, '2026-10-25', '0000-00-00', 0),
-(81, 'Caméra canon Candy', 'Caméra canon ancienne avec batterie', 275.00, 2, 1, '2026-10-24', '0000-00-00', 0);
+(81, 'Caméra canon Candy', 'Caméra canon ancienne avec batterie', 275.00, 2, 1, '2026-10-24', '0000-00-00', 0),
+(82, 'Appareil photo Polaroid vintage', 'Appareil photo Polaroid des années 1980 en bon état. À échanger contre un autre objet de collection.', 120.00, 1, 3, '2026-11-17', '2026-11-17', 0),
+(83, 'Machine à écrire Underwood 1950', 'Machine à écrire mécanique ancienne avec touches originales. Idéale pour les collectionneurs.', 275.00, 2, 3, '2026-11-17', '2026-11-17', 0),
+(84, 'Radio rétro Philips années 1960', 'Radio vintage avec boîtier en bois et boutons d origine. Objet décoratif de collection.', 180.00, 3, 3, '2026-11-17', '2026-11-17', 0),
+(85, 'Montre de poche ancienne', 'Montre de poche mécanique avec boîtier doré et chaîne. Pièce de collection.', 350.00, 4, 3, '2026-11-17', '2026-11-17', 0),
+(86, 'Tourne-disque portable vintage', 'Tourne-disque portable des années 1970 avec valise intégrée.', 225.00, 5, 3, '2026-11-17', '2026-11-17', 0),
+(87, 'Console Nintendo Game Boy Color', 'Console Nintendo Game Boy Color originale en bon état avec son compartiment à piles.', 160.00, 6, 3, '2026-11-17', '2026-11-17', 0),
+(88, 'Montre Rolex Oyster Perpetual vintage', 'Montre mécanique Rolex des années 1970 avec cadran argenté et bracelet original.', 4505.00, 1, 4, '2026-11-17', '2026-11-17', 0),
+(89, 'Appareil photo Leica M3 1954', 'Appareil photo argentique Leica M3 avec objectif Summicron et étui en cuir.', 2800.00, 2, 2, '2026-11-17', '2026-11-27', 0),
+(90, 'Jukebox Wurlitzer années 1950', 'Jukebox américain rétro avec éclairage coloré et mécanisme de lecture de vinyles.', 6200.00, 3, 2, '2026-11-17', '2026-12-08', 0),
+(91, 'Première édition Astérix le Gaulois', 'Album de bande dessinée Astérix le Gaulois de collection avec couverture originale.', 950.00, 4, 2, '2026-11-17', '2026-11-24', 0),
+(92, 'Lampe Tiffany ancienne', 'Lampe décorative de style Tiffany avec abat-jour en vitrail multicolore.', 1350.00, 5, 2, '2026-11-17', '2026-11-29', 0),
+(93, 'Console Nintendo NES édition originale', 'Console Nintendo Entertainment System des années 1980 avec deux manettes et câbles.', 425.00, 6, 2, '2026-11-17', '2026-12-02', 0);
 
 -- --------------------------------------------------------
 
@@ -349,7 +370,6 @@ INSERT INTO `produit` (`id_produit`, `nom`, `description`, `prix`, `id_vendeur`,
 -- Structure de la table `statut_produit`
 --
 
-DROP TABLE IF EXISTS `statut_produit`;
 CREATE TABLE IF NOT EXISTS `statut_produit` (
   `id_statut` int NOT NULL AUTO_INCREMENT,
   `nom_statut` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
@@ -372,7 +392,6 @@ INSERT INTO `statut_produit` (`id_statut`, `nom_statut`) VALUES
 -- Structure de la table `utilisateur`
 --
 
-DROP TABLE IF EXISTS `utilisateur`;
 CREATE TABLE IF NOT EXISTS `utilisateur` (
   `id_utilisateur` int NOT NULL AUTO_INCREMENT,
   `nom` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,

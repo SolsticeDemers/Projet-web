@@ -6,7 +6,6 @@
 
     <div class="row details-produit-vintage">
 
-
         <div class="col-md-6 details-image-vintage">
 
             <img
@@ -20,15 +19,21 @@
 
         <div class="col-md-6 details-info-vintage">
 
-
             <div class="mb-3">
 
                 <h2 class="fw-bold px-3 pt-2 mb-0">
                     {{ produit.nom }}
                 </h2>
 
-                <p class="px-3 pb-2 mb-0 text-muted details-vendeur">
-                    {{ vendeur.nom }}
+                <p class="px-3 pb-2 mb-0 details-vendeur">
+
+                    <a
+                        href="{{ url_for('compte.profil_public', id_utilisateur=vendeur.id_utilisateur) }}"
+                        class="lien-profil-public"
+                    >
+                        {{ vendeur.nom }}
+                    </a>
+
                 </p>
 
             </div>
@@ -36,9 +41,27 @@
 
             <div class="prix p-2 mb-3 details-prix">
 
-                <p>
-                    Prix : {{ produit.prix }} $
-                </p>
+                {% if produit.id_statut == 2 %}
+
+                    <p>
+                        Mise actuelle : {{ produit.prix }} $
+                    </p>
+
+                    {% if produit.date_fin %}
+
+                        <p>
+                            Fin de l'enchère : {{ produit.date_fin }}
+                        </p>
+
+                    {% endif %}
+
+                {% else %}
+
+                    <p>
+                        Prix : {{ produit.prix }} $
+                    </p>
+
+                {% endif %}
 
             </div>
 
@@ -54,13 +77,11 @@
 
             <div class="actions">
 
-
                 {% if not est_disponible %}
 
                     <p class="text-danger">
                         Ce produit n'est plus disponible.
                     </p>
-
 
                 {% elif not est_connecte %}
 
@@ -71,9 +92,7 @@
                         Connectez-vous
                     </a>
 
-
                 {% elif not est_vendeur %}
-
 
                     {% if produit.id_statut == 2 %}
 
@@ -81,10 +100,10 @@
                             href="{{ url_for('produits.miser_produit', id=produit.id_produit) }}"
                             class="button btn-vintage"
                         >
-                            Miser
+                            Enchérir
                         </a>
 
-                    {% else %}
+                    {% elif produit.id_statut == 1 %}
 
                         <form
                             method="POST"
@@ -104,13 +123,10 @@
 
                     {% endif %}
 
-
                 {% endif %}
 
 
-
                 {% if est_connecte and produit.id_vendeur == session.id_utilisateur %}
-
 
                     <a
                         href="/produits/{{ id }}/modifier"
@@ -134,12 +150,13 @@
                         class="modal fade"
                         id="modal-archiver"
                         tabindex="-1"
+                        aria-labelledby="modal-archiver-label"
+                        aria-hidden="true"
                     >
 
                         <div class="modal-dialog">
 
                             <div class="modal-content">
-
 
                                 <div class="modal-header">
 
@@ -154,6 +171,7 @@
                                         type="button"
                                         class="btn-close"
                                         data-bs-dismiss="modal"
+                                        aria-label="Fermer"
                                     >
                                     </button>
 
@@ -203,7 +221,6 @@
                     </div>
 
                 {% endif %}
-
 
             </div>
 

@@ -23,10 +23,7 @@
 
                     <div class="mb-4">
 
-                        <label
-                            for="nom"
-                            class="form-label"
-                        >
+                        <label for="nom" class="form-label">
                             Nom d'utilisateur ou courriel :
                         </label>
 
@@ -34,18 +31,23 @@
                             type="text"
                             name="nom"
                             id="nom"
-                            class="form-control"
+                            class="form-control {{ classe_nom | default('') }}"
+                            value="{{ nom | default('') }}"
                         >
+
+                        {% if erreur_nom %}
+
+                            <div id="erreur-nom" class="invalid-feedback">
+                                {{ erreur_nom }}
+                            </div>
+
+                        {% endif %}
 
                     </div>
 
-
                     <div class="mb-3">
 
-                        <label
-                            for="mdp"
-                            class="form-label"
-                        >
+                        <label for="mdp" class="form-label">
                             Mot de passe :
                         </label>
 
@@ -53,23 +55,26 @@
                             type="password"
                             name="mdp"
                             id="mdp"
-                            class="form-control"
+                            class="form-control {{ classe_mdp | default('') }}"
                         >
+
+                        {% if erreur_mdp %}
+
+                            <div id="erreur-mdp" class="invalid-feedback">
+                                {{ erreur_mdp }}
+                            </div>
+
+                        {% endif %}
 
                     </div>
 
-
                     <div class="actions-compte d-flex justify-content-end">
 
-                        <button
-                            type="submit"
-                            class="btn"
-                        >
+                        <button type="submit" class="btn">
                             Se connecter
                         </button>
 
                     </div>
-
 
                     <p class="mb-5">
 

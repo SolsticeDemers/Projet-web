@@ -4,7 +4,6 @@
 
 <section class="container my-4 page-vintage">
 
-
     <div class="notification-section">
 
         <h2>
@@ -19,17 +18,25 @@
 
                     <div class="notification-vintage">
 
-                        <div id="notif_detail">
+                        <div class="notif-detail">
+
+                            {% if notif.id_notif in notifications_non_lues %}
+
+                                <span class="badge-nouvelle">
+                                    Nouveau
+                                </span>
+
+                            {% endif %}
 
                             <p>
-                                Votre produit :
+                                Produit demandé :
                                 <a href="/produits/{{ notif.id_produit }}">
                                     {{ notif.echange_nom }}
                                 </a>
                             </p>
 
                             <p>
-                                Produit offert :
+                                Votre produit offert :
                                 <a href="/produits/{{ notif.id_produit_offert }}">
                                     {{ notif.offert_nom }}
                                 </a>
@@ -53,16 +60,23 @@
 
                     </div>
 
-
-                {% elif session['nom'] == notif.proprio and notif.approuve == None %}
+                {% elif session['nom'] == notif.proprio %}
 
                     <div class="notification-vintage">
 
-                        <div id="notif_detail">
+                        <div class="notif-detail">
+
+                            {% if notif.id_notif in notifications_non_lues %}
+
+                                <span class="badge-nouvelle">
+                                    Nouveau
+                                </span>
+
+                            {% endif %}
 
                             <p>
                                 <strong>{{ notif.offrant }}</strong>
-                                vous propose un échange
+                                vous propose un échange.
                             </p>
 
                             <p>
@@ -79,30 +93,47 @@
                                 </a>
                             </p>
 
-                        </div>
+                            {% if notif.approuve == 1 %}
 
+                                <p class="alert theme-success" role="alert">
+                                    Vous avez accepté cet échange.
+                                </p>
 
-                        <div class="actions-notification">
+                            {% elif notif.approuve == 0 %}
 
-                            <a
-                                class="btn-accepter"
-                                href="/compte/accepter_echange/{{ notif.id_proposition }}/oui"
-                                id="echange_accepter"
-                                value="oui"
-                            >
-                                Accepter
-                            </a>
+                                <p class="alert theme-danger" role="alert">
+                                    Vous avez refusé cet échange.
+                                </p>
 
-                            <a
-                                class="btn-refuser"
-                                href="/compte/accepter_echange/{{ notif.id_proposition }}/non"
-                                id="echange_refuser"
-                                value="non"
-                            >
-                                Refuser
-                            </a>
+                            {% endif %}
 
                         </div>
+
+                        {% if notif.approuve == None %}
+
+                            <div class="actions-notification">
+
+                                <a
+                                    class="btn-accepter"
+                                    href="/compte/accepter_echange/{{ notif.id_proposition }}/oui"
+                                    id="echange_accepter"
+                                    value="oui"
+                                >
+                                    Accepter
+                                </a>
+
+                                <a
+                                    class="btn-refuser"
+                                    href="/compte/accepter_echange/{{ notif.id_proposition }}/non"
+                                    id="echange_refuser"
+                                    value="non"
+                                >
+                                    Refuser
+                                </a>
+
+                            </div>
+
+                        {% endif %}
 
                     </div>
 
@@ -121,7 +152,6 @@
     </div>
 
 
-
     <div class="notification-section">
 
         <h2>
@@ -134,16 +164,24 @@
 
                 <div class="notification-vintage">
 
-                    {% if notif.type_notif == "proprietaire" %}
+                    <div class="notif-detail">
 
-                        <div>
+                        {% if notif.id_notif in notifications_non_lues %}
+
+                            <span class="badge-nouvelle">
+                                Nouveau
+                            </span>
+
+                        {% endif %}
+
+                        {% if notif.type_notif == "proprietaire" %}
 
                             <p>
                                 Votre enchère pour
                                 <a href="/produits/{{ notif.id_produit }}">
                                     {{ notif.nom_produit }}
                                 </a>
-                                est terminée
+                                est terminée.
                             </p>
 
                             {% if notif.nom_gagnant %}
@@ -157,17 +195,12 @@
                             {% else %}
 
                                 <p>
-                                    Aucun utilisateur n'a remporté cette enchère
+                                    Aucun utilisateur n'a remporté cette enchère.
                                 </p>
 
                             {% endif %}
 
-                        </div>
-
-
-                    {% elif notif.type_notif == "gagnant" %}
-
-                        <div>
+                        {% elif notif.type_notif == "gagnant" %}
 
                             <p>
                                 Félicitations ! Vous avez remporté l'enchère pour
@@ -181,16 +214,16 @@
                                 <strong>{{ notif.prix }} $</strong>.
                             </p>
 
-                        </div>
+                        {% endif %}
 
-                    {% endif %}
+                    </div>
 
                 </div>
 
             {% else %}
 
                 <p class="aucune-notification">
-                    Vous n'avez aucune notification d'enchère
+                    Vous n'avez aucune notification d'enchère.
                 </p>
 
             {% endfor %}
@@ -198,7 +231,6 @@
         </div>
 
     </div>
-
 
 
     <div class="notification-section">
@@ -214,10 +246,24 @@
                 <div class="notification-vintage notification-achat">
 
                     <div class="notification-icone">
+
                         <i class="bi bi-bag-check"></i>
+
                     </div>
 
                     <div class="notification-contenu">
+
+                        {% if notif.id_notification in notifications_non_lues %}
+
+                            <div>
+
+                                <span class="badge-nouvelle">
+                                    Nouveau
+                                </span>
+
+                            </div>
+
+                        {% endif %}
 
                         <p>
                             Votre produit
@@ -239,7 +285,7 @@
             {% else %}
 
                 <p class="aucune-notification">
-                    Vous n'avez aucune notification d'achat
+                    Vous n'avez aucune notification d'achat.
                 </p>
 
             {% endfor %}
@@ -247,7 +293,6 @@
         </div>
 
     </div>
-
 
 </section>
 

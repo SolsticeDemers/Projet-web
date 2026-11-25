@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="fr">
 
 <head>
@@ -22,11 +21,17 @@
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     >
 
+    <style>
+        label.required::after {
+            content: " *";
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+
 </head>
 
-
 <body>
-
 
     <header
         class="
@@ -40,7 +45,6 @@
 
         <nav class="navigation container-fluid">
 
-
             <a href="/" class="logo">
 
                 <img
@@ -49,7 +53,6 @@
                 >
 
             </a>
-
 
             <div class="recherche-navigation">
 
@@ -65,74 +68,66 @@
 
             </div>
 
-
             {% if session.get('id_utilisateur') %}
 
+                <div class="connexion connecter">
 
-                <div>
+                    <a
+                        href="/panier/"
+                        class="icone-action"
+                        title="Mon panier"
+                        aria-label="Mon panier"
+                    >
 
-                    <div class="connexion connecter">
+                        <i class="bi bi-cart3" aria-hidden="true"></i>
 
+                        {% if nb_articles > 0 %}
 
-                        <a
-                            href="/panier/"
-                            class="icone-panier"
-                            title="Mon panier"
-                        >
+                            <span class="badge-compteur">
+                                {{ nb_articles }}
+                            </span>
 
-                            <i class="bi bi-cart3"></i>
+                        {% endif %}
 
-
-                            {% if nb_articles > 0 %}
-
-                                <span class="nb-articles">
-                                    ({{ nb_articles }})
-                                </span>
-
-                            {% endif %}
-
-                        </a>
-
-
-                        <a
-                            href="/compte/profil"
-                            class="btn_profil"
-                        >
-                            Profil
-                        </a>
-
-
-                        <a
-                            href="/compte/deconnection"
-                            class="btn_deconnection"
-                        >
-                            Se déconnecter
-                        </a>
-
-
-                    </div>
-
+                    </a>
 
                     <a
                         href="/compte/notification"
                         id="btn_notification"
+                        class="icone-action"
+                        title="Notifications"
+                        aria-label="Notifications"
                     >
 
-                        <img
-                            src="{{ url_for('static', filename='images/bell.png') }}"
-                            alt="Notifications"
-                            id="img_notif"
-                        >
+                        <i class="bi bi-bell" aria-hidden="true"></i>
 
-                        <p id="nb_notification"></p>
+                        <span id="nb_notification" class="badge-compteur"></span>
+
+                    </a>
+
+                    <a
+                        href="/compte/profil"
+                        class="icone-action"
+                        title="Mon profil"
+                        aria-label="Mon profil"
+                    >
+
+                        <i class="bi bi-person-circle" aria-hidden="true"></i>
+
+                    </a>
+
+                    <a
+                        href="/compte/deconnection"
+                        class="btn_deconnection"
+                    >
+
+                        Se déconnecter
 
                     </a>
 
                 </div>
 
-
             {% else %}
-
 
                 <div class="connexion">
 
@@ -142,14 +137,11 @@
 
                 </div>
 
-
             {% endif %}
-
 
         </nav>
 
     </header>
-
 
     <main>
 
@@ -159,76 +151,93 @@
 
     </main>
 
-
     <footer class="footer">
-    
-    <i class="bi bi-asterisk footer-etoile gauche"></i>
 
-    <i class="bi bi-asterisk footer-etoile droite"></i>
+        <i class="bi bi-asterisk footer-etoile gauche"></i>
 
-    <h2>Vintage Market</h2>
+        <i class="bi bi-asterisk footer-etoile droite"></i>
 
-    <p class="footer-description">
-        Des objets uniques, des histoires que lon veut échanger
-    </p>
+        <h2>Vintage Market</h2>
 
-    <div class="footer-liens">
+        <p class="footer-description">
+            Des objets uniques, des histoires que l'on veut échanger
+        </p>
 
-        <a href="/">Accueil</a>
+        <div class="footer-liens">
 
-        <a href="{{ url_for('recherche_produits') }}">
-            Nos produits
-        </a>
+            <a href="/">
+                Accueil
+            </a>
 
-        <a href="/compte/creer_compte">
-            Nous rejoindre
-        </a>
+            <a href="{{ url_for('recherche_produits') }}">
+                Nos produits
+            </a>
 
-    </div>
+            <a href="/compte/creer_compte">
+                Nous rejoindre
+            </a>
 
-    <div class="footer-reseaux">
+        </div>
 
-        <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-            <i class="bi bi-instagram"></i>
-        </a>
+        <div class="footer-reseaux">
 
-        <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-            <i class="bi bi-facebook"></i>
-        </a>
+            <a
+                href="https://www.instagram.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+            >
+                <i class="bi bi-instagram"></i>
+            </a>
 
-        <a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
-            <i class="bi bi-tiktok"></i>
-        </a>
+            <a
+                href="https://www.facebook.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+            >
+                <i class="bi bi-facebook"></i>
+            </a>
 
-        <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
-            <i class="bi bi-youtube"></i>
-        </a>
+            <a
+                href="https://www.tiktok.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="TikTok"
+            >
+                <i class="bi bi-tiktok"></i>
+            </a>
 
-    </div>
+            <a
+                href="https://www.youtube.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="YouTube"
+            >
+                <i class="bi bi-youtube"></i>
+            </a>
 
-    <p class="footer-description">
-        Achetez, échangez et redonnez vie aux objets d'exception
-    </p>
+        </div>
 
-    <p class="footer-copyright">
-        © 2026 Vintage Market. Tous droits réservés.
-    </p>
+        <p class="footer-description">
+            Achetez, échangez et redonnez vie aux objets d'exception
+        </p>
+
+        <p class="footer-copyright">
+            © 2026 Vintage Market. Tous droits réservés.
+        </p>
 
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-    ></script>
+    <script src="{{ url_for('static', filename='js/utils-ajax.js') }}"></script>
 
-    <script
-        src="{{ url_for('static', filename='js/utils-ajax.js') }}"
-    ></script>
+    {% if session.get('id_utilisateur') %}
 
-    <script
-        src="{{ url_for('static', filename='js/notification.js') }}"
-    ></script>
+        <script src="{{ url_for('static', filename='js/notification.js') }}"></script>
 
+    {% endif %}
 
 </body>
 
