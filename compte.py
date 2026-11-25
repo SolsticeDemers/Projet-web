@@ -537,7 +537,6 @@ def echange(notif, notifications, id_status, id_notif):
 
     return notifications
 
-
 def enchere(notif, notifications, id_notif):
     """Prépare une notification d'enchère"""
 
@@ -547,6 +546,12 @@ def enchere(notif, notifications, id_notif):
             curseur,
             id_notif
         )
+
+        if produit is None:
+            current_app.logger.warning(
+                f"Notification {id_notif} sans enchère associée."
+            )
+            return notifications
 
         mise_gagnante = bd.get_mise_gagnante(
             curseur,
@@ -563,7 +568,9 @@ def enchere(notif, notifications, id_notif):
                 mise_gagnante["id_utilisateur"]
             )
 
-            nom_gagnant = gagnant["nom"]
+            if gagnant is not None:
+                nom_gagnant = gagnant["nom"]
+
             montant_gagnant = mise_gagnante["montant"]
 
     if notif["id_destinataire"] == produit["id_vendeur"]:

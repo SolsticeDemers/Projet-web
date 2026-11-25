@@ -2,11 +2,11 @@
 
 {% block contenu %}
 
-<div class="container my-4">
+<div class="container my-4 page-vintage">
 
-    <div class="row">
+    <div class="row details-produit-vintage">
 
-        <div class="col-md-6">
+        <div class="col-md-6 details-image-vintage">
 
             <img
                 src="{{ img_source }}"
@@ -16,8 +16,7 @@
 
         </div>
 
-
-        <div class="col-md-6">
+        <div class="col-md-6 details-info-vintage">
 
             <div class="mb-3">
 
@@ -25,14 +24,21 @@
                     {{ produit.nom }}
                 </h2>
 
-                <p class="px-3 pb-2 mb-0 text-muted">
-                    {{ vendeur.nom }}
+                <p class="px-3 pb-2 mb-0 details-vendeur">
+
+                    <a
+                        href="{{ url_for('compte.profil_public', id_utilisateur=vendeur.id_utilisateur) }}"
+                        class="lien-profil-public"
+                    >
+                        {{ vendeur.nom }}
+                    </a>
+
                 </p>
 
             </div>
 
 
-            <div class="prix p-2 mb-3">
+            <div class="prix p-2 mb-3 details-prix">
 
                 <p>
                     Mise actuelle : {{ produit.prix }} $
@@ -40,7 +46,7 @@
 
                 {% if produit.date_fin %}
 
-                    <p>
+                    <p class="fs-6 fw-normal">
                         Fin de l'enchère : {{ produit.date_fin }}
                     </p>
 
@@ -49,7 +55,7 @@
             </div>
 
 
-            <div class="p-2 mb-3">
+            <div class="p-2 mb-3 details-description">
 
                 <p>
                     {{ produit.description }}
@@ -58,29 +64,39 @@
             </div>
 
 
-            <form method="post" novalidate>
+            <form method="post" novalidate class="formulaire-vintage">
 
-                <input
-                    type="number"
-                    name="mise"
-                    step="0.01"
-                    placeholder="Votre mise"
-                >
+                <div class="mb-3">
 
-                {% if erreur %}
+                    <label for="mise" class="form-label">
+                        Votre mise
+                    </label>
 
-                    <p class="text-danger mt-2 mb-2">
-                        {{ erreur }}
-                    </p>
+                    <input
+                        type="number"
+                        name="mise"
+                        id="mise"
+                        step="0.01"
+                        placeholder="Votre mise"
+                        class="form-control {% if erreur %}is-invalid{% endif %}"
+                    >
 
-                {% endif %}
+                    {% if erreur %}
+
+                        <p class="invalid-feedback">
+                            {{ erreur }}
+                        </p>
+
+                    {% endif %}
+
+                </div>
 
 
-                <div class="actions mt-2">
+                <div class="actions mt-3">
 
                     <button
                         type="submit"
-                        class="button"
+                        class="button btn-vintage"
                     >
                         Miser
                     </button>
