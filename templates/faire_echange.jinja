@@ -8,6 +8,7 @@
             <h2 class="mb-4">Faire une proposition d'échange</h2>
 
             <form method="POST" action="/notification/creer_echange/{{id_produit_offert}}" novalidate class="d-grid gap-4" id="f_echange">
+                <p class="text-danger">{{message_erreur}}</p>
                 <div class="mb-4 grid">
                     <label for="nom_produit" class="form-label row">Nom du produit:</label>
                     <input type="text" class="form-control" name="nom_produit" id="nom_produit" value="{{ nom_produit }}">

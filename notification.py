@@ -17,8 +17,14 @@ def faire_echange(id_produit):
 
 @bp_notification.route("/creer_echange/<int:id_produit_offert>", methods=['GET', 'POST'])
 def creer_echange(id_produit_offert):
+    message_erreur= ""
     if "id_produit_echange" not in session:
-        abort(409)
+       message_erreur = "Votre proposition d'échange à déjà été envoyé."
+       nom_proprio =""
+       nom_produit =""
+       nom_produit_offert =""
+       id_produit_offert= ""
+       return render_template('faire_echange.jinja', nom_produit=nom_produit, nom_proprio=nom_proprio, nom_produit_offert=nom_produit_offert, id_produit_offert=id_produit_offert, message_erreur= message_erreur)
     with bd.creer_curseur() as curseur:
         echange_existant = bd.get_echange_existant(
             curseur,
@@ -28,7 +34,7 @@ def creer_echange(id_produit_offert):
         )
 
     if echange_existant:
-        abort(409)
+        message_erreur= "Cet demande d'échange à déjà été effectuer."
     with bd.creer_curseur() as curseur:
         produit_echange = bd.get_produit_by_id(
             curseur, session['id_produit_echange'])
@@ -41,7 +47,7 @@ def creer_echange(id_produit_offert):
         produit_offert = bd.get_produit_by_id(curseur, id_produit_offert)
     nom_produit_offert = produit_offert['nom']
     if request.method == "GET":
-        return render_template('faire_echange.jinja', nom_produit=nom_produit, nom_proprio=nom_proprio, nom_produit_offert=nom_produit_offert, id_produit_offert=id_produit_offert)
+        return render_template('faire_echange.jinja', nom_produit=nom_produit, nom_proprio=nom_proprio, nom_produit_offert=nom_produit_offert, id_produit_offert=id_produit_offert, message_erreur= message_erreur)
 
     with bd.creer_curseur() as curseur:
         id_echange = bd.create_echange(
