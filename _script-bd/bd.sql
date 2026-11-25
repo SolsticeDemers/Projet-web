@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS `echange` (
 --
 
 INSERT INTO `echange` (`id_echange`, `proprio`, `id_utilisateur`, `produit`, `produit_offert`, `approuver`) VALUES
-(2, 3, 1, 16, 25, 1),
+(2, 3, 1, 16, 25, 1);
 
 -- --------------------------------------------------------
 
