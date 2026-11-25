@@ -90,7 +90,6 @@ CREATE TABLE IF NOT EXISTS `echange` (
 
 INSERT INTO `echange` (`id_echange`, `proprio`, `id_utilisateur`, `produit`, `produit_offert`, `approuver`) VALUES
 (2, 3, 1, 16, 25, 1),
-(3, 3, 1, 16, 25, 0);
 
 -- --------------------------------------------------------
 
@@ -142,8 +141,6 @@ CREATE TABLE IF NOT EXISTS `notification` (
 
 INSERT INTO `notification` (`id_notification`, `id_destinataire`, `id_statut`, `notif_vue`, `date`, `date_lecture`) VALUES
 (1, 1, 2, 1, '2026-11-17', '2026-11-23 13:22:50'),
-(2, 3, 3, 1, '2026-11-17', '2026-11-23 13:22:50'),
-(3, 3, 3, 1, '2026-11-17', '2026-11-23 13:22:50'),
 (4, 1, 3, 1, '2026-11-17', '2026-11-23 13:22:50'),
 (5, 1, 3, 1, '2026-11-17', '2026-11-23 13:22:50'),
 (7, 1, 1, 1, '2026-11-17', '2026-11-23 13:22:50'),
@@ -191,8 +188,6 @@ CREATE TABLE IF NOT EXISTS `notification_echange` (
 --
 
 INSERT INTO `notification_echange` (`id_notification`, `id_echange`) VALUES
-(2, 1),
-(3, 1),
 (7, 2),
 (8, 2);
 
