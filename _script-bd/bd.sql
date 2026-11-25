@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : mer. 18 nov. 2026 à 04:34
+-- Généré le : mer. 25 nov. 2026 à 04:36
 -- Version du serveur : 8.4.7
 -- Version de PHP : 8.3.28
 
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `achat` (
   PRIMARY KEY (`id_achat`),
   UNIQUE KEY `id_produit` (`id_produit`),
   KEY `id_acheteur` (`id_acheteur`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `achat`
@@ -58,9 +58,12 @@ INSERT INTO `achat` (`id_achat`, `id_produit`, `id_acheteur`, `prix_achat`, `dat
 (11, 5, 4, 1850.00, '2026-05-28', 1),
 (12, 2, 6, 850.00, '2026-05-09', 1),
 (15, 3, 1, 1150.00, '2026-11-17', 1),
-(17, 24, 1, 1750.00, '2026-11-17', 0),
 (18, 25, 3, 18900.00, '2026-11-17', 1),
-(19, 19, 3, 315.00, '2026-11-17', 0);
+(19, 19, 3, 315.00, '2026-11-17', 0),
+(20, 53, 1, 145.00, '2026-11-23', 0),
+(21, 78, 1, 165.00, '2026-11-23', 0),
+(24, 73, 5, 55.00, '2026-11-23', 1),
+(25, 65, 1, 85.00, '2026-11-24', 0);
 
 -- --------------------------------------------------------
 
@@ -109,7 +112,7 @@ CREATE TABLE IF NOT EXISTS `mise` (
   PRIMARY KEY (`id_mise`),
   KEY `id_produit` (`id_produit`),
   KEY `id_utilisateur` (`id_utilisateur`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `mise`
@@ -117,7 +120,11 @@ CREATE TABLE IF NOT EXISTS `mise` (
 
 INSERT INTO `mise` (`id_mise`, `id_produit`, `id_utilisateur`, `montant`, `date_mise`) VALUES
 (1, 21, 1, 800.00, '2026-11-17 00:59:26'),
-(2, 35, 3, 876.00, '2026-11-17 23:20:55');
+(2, 35, 3, 876.00, '2026-11-17 23:20:55'),
+(3, 51, 1, 1000.00, '2026-11-21 16:49:28'),
+(4, 51, 3, 1150.00, '2026-11-21 16:50:47'),
+(5, 51, 2, 2000.00, '2026-11-21 16:51:56'),
+(6, 31, 1, 5555.00, '2026-11-23 13:41:56');
 
 -- --------------------------------------------------------
 
@@ -132,25 +139,29 @@ CREATE TABLE IF NOT EXISTS `notification` (
   `id_statut` int NOT NULL,
   `notif_vue` tinyint NOT NULL DEFAULT '0',
   `date` date NOT NULL,
+  `date_lecture` datetime DEFAULT NULL,
   PRIMARY KEY (`id_notification`),
   KEY `notification_ibfk_1` (`id_statut`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `notification`
 --
 
-INSERT INTO `notification` (`id_notification`, `id_destinataire`, `id_statut`, `notif_vue`, `date`) VALUES
-(1, 1, 2, 1, '2026-11-17'),
-(2, 3, 3, 1, '2026-11-17'),
-(3, 3, 3, 1, '2026-11-17'),
-(4, 1, 3, 1, '2026-11-17'),
-(5, 1, 3, 1, '2026-11-17'),
-(7, 1, 1, 1, '2026-11-17'),
-(8, 5, 3, 1, '2026-11-17'),
-(9, 3, 3, 1, '2026-11-17'),
-(10, 5, 3, 1, '2026-11-17'),
-(11, 3, 3, 1, '2026-11-17');
+INSERT INTO `notification` (`id_notification`, `id_destinataire`, `id_statut`, `notif_vue`, `date`, `date_lecture`) VALUES
+(1, 1, 2, 1, '2026-11-17', NULL),
+(2, 3, 3, 1, '2026-11-17', NULL),
+(3, 3, 3, 1, '2026-11-17', NULL),
+(4, 1, 3, 1, '2026-11-17', NULL),
+(5, 1, 3, 1, '2026-11-17', NULL),
+(7, 1, 1, 1, '2026-11-17', NULL),
+(8, 5, 3, 1, '2026-11-17', NULL),
+(9, 3, 3, 1, '2026-11-17', NULL),
+(10, 5, 3, 1, '2026-11-17', NULL),
+(11, 3, 3, 1, '2026-11-17', NULL),
+(12, 2, 2, 1, '2026-11-21', NULL),
+(13, 5, 2, 1, '2026-11-21', NULL),
+(14, 1, 1, 1, '2026-11-23', NULL);
 
 -- --------------------------------------------------------
 
@@ -171,7 +182,8 @@ CREATE TABLE IF NOT EXISTS `notification_achat` (
 --
 
 INSERT INTO `notification_achat` (`id_notification`, `id_achat`) VALUES
-(7, 18);
+(7, 18),
+(14, 24);
 
 -- --------------------------------------------------------
 
@@ -220,7 +232,9 @@ CREATE TABLE IF NOT EXISTS `notification_enchere` (
 --
 
 INSERT INTO `notification_enchere` (`id_notification`, `id_produit`) VALUES
-(1, 21);
+(1, 21),
+(12, 51),
+(13, 51);
 
 -- --------------------------------------------------------
 
@@ -242,7 +256,7 @@ CREATE TABLE IF NOT EXISTS `produit` (
   PRIMARY KEY (`id_produit`),
   KEY `id_vendeur` (`id_vendeur`),
   KEY `id_statut` (`id_statut`)
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=82 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `produit`
@@ -276,12 +290,12 @@ INSERT INTO `produit` (`id_produit`, `nom`, `description`, `prix`, `id_vendeur`,
 (25, 'Cadillac DeVille 1994 rose', 'Cadillac DeVille de 1994 avec peinture rose et intérieur restauré', 18900.00, 1, 4, '2026-09-22', '0000-00-00', 0),
 (26, 'Bague en Pierre Précieuse Rouge ancien, datant de l\'époque médiévale ', 'C\'est une bague hors de prix, portant par des grands seigneurs. Cette bague a été conservée dans des grands musées et aujourd\'hui elle est mise en vente pour pouvoir embéllir le doigt de son(sa) futur(e) propriétaire. ', 4000.00, 5, 4, '2026-10-30', '2026-10-31', 0),
 (28, 'Collection de Papillon figé dans de la cire d\'abeille', 'Une super belle Collection de Lépidoptères remplis de couleur. Parfait sur le mur de votre Pièce. Les insectes dessus n\'ont pas de cicatrises et ont été bien  conservés. ', 300.00, 4, 4, '2026-10-15', '2026-10-28', 0),
-(30, 'Kit de maquillage de Chine antique', 'Ancien coffret de maquillage inspiré de la Chine impériale', 625.00, 1, 2, '2026-12-05', '2026-12-12', 0),
-(31, 'Sac à main serti de diamants', 'Sac luxueux décoré de petits diamants et de cuir noir', 4800.00, 5, 2, '2026-12-10', '2026-12-17', 0),
-(32, 'Montre suisse vintage en or', 'Montre mécanique ancienne avec boîtier plaqué or', 1450.00, 2, 2, '2026-12-15', '2026-12-22', 0),
-(33, 'Collier émeraude ancien', 'Collier ancien avec pierre verte et monture dorée', 920.00, 3, 2, '2026-12-20', '2026-12-29', 0),
-(34, 'Appareil photo Leica vintage', 'Appareil photo argentique ancien en très bon état', 1100.00, 4, 2, '2027-01-05', '2027-01-12', 0),
-(35, 'Sabre décoratif japonais ancien', 'Sabre décoratif avec poignée traditionnelle travaillée', 876.00, 6, 2, '2027-01-12', '2027-01-19', 0),
+(30, 'Kit de maquillage de Chine antique', 'Ancien coffret de maquillage inspiré de la Chine impériale', 625.00, 1, 2, '2026-11-15', '2027-02-11', 0),
+(31, 'Sac à main serti de diamants', 'Sac luxueux décoré de petits diamants et de cuir noir', 5555.00, 5, 2, '2026-12-15', '2027-02-28', 0),
+(32, 'Montre suisse vintage en or', 'Montre mécanique ancienne avec boîtier plaqué or', 1450.00, 2, 2, '2025-09-26', '2027-03-17', 0),
+(33, 'Collier émeraude ancien', 'Collier ancien avec pierre verte et monture dorée', 920.00, 3, 2, '2026-02-09', '2027-04-03', 0),
+(34, 'Appareil photo Leica vintage', 'Appareil photo argentique ancien en très bon état', 1100.00, 4, 2, '2025-11-23', '2027-04-20', 0),
+(35, 'Sabre décoratif japonais ancien', 'Sabre décoratif avec poignée traditionnelle travaillée', 876.00, 6, 2, '2026-03-27', '2027-05-07', 0),
 (36, 'Sac Chanel vintage noir', 'Sac noir vintage avec chaîne dorée', 1800.00, 1, 3, '2026-11-17', '0000-00-00', 0),
 (37, 'Vinyle rare années 70', 'Ancien vinyle de collection dans sa pochette originale', 240.00, 2, 3, '2026-11-17', '0000-00-00', 0),
 (38, 'Console Nintendo GameCube', 'Console violette avec une manette originale', 310.00, 3, 3, '2026-11-17', '0000-00-00', 0),
@@ -296,7 +310,38 @@ INSERT INTO `produit` (`id_produit`, `nom`, `description`, `prix`, `id_vendeur`,
 (47, 'Coffret de bijoux ancien', 'Petit coffret en bois avec intérieur en velours', 295.00, 5, 1, '2026-11-17', '0000-00-00', 0),
 (48, 'Radio portable années 60', 'Petite radio vintage avec finition métallique', 210.00, 6, 1, '2026-11-17', '0000-00-00', 0),
 (49, 'Horloge murale ancienne', 'Grande horloge en bois avec chiffres romains', 475.00, 7, 1, '2026-11-17', '0000-00-00', 0),
-(50, 'Vinyle Doja Cat - Hot Pink', 'Vinyle rose de l’album Hot Pink de Doja Cat', 45.00, 1, 2, '2026-11-19', '2026-11-29', 0);
+(50, 'Vinyle Doja Cat - Hot Pink', 'Vinyle rose de l’album Hot Pink de Doja Cat', 45.00, 1, 2, '2025-05-11', '2027-05-12', 0),
+(51, 'PC de collection', 'PC de collection rare au design vintage, idéal pour les passionnés d informatique et les collectionneurs', 2000.00, 5, 4, '2026-01-01', '2026-11-01', 0),
+(52, 'Téléphone Nokia vintage', 'Ancien téléphone Nokia encore fonctionnel', 89.99, 1, 1, '2026-11-22', '0000-00-00', 0),
+(53, 'Veste Levi\'s vintage', 'Veste en jean Levi\'s ancienne collection', 145.00, 2, 1, '2026-11-21', '0000-00-00', 0),
+(54, 'Lampe de bureau rétro', 'Lampe métallique au style années 70', 79.50, 3, 1, '2026-11-20', '0000-00-00', 0),
+(55, 'Montre Casio rétro', 'Montre Casio numérique en bon état', 125.00, 4, 1, '2026-11-19', '0000-00-00', 0),
+(56, 'Sac Coach vintage', 'Sac Coach ancien en cuir brun', 210.00, 1, 1, '2026-11-18', '0000-00-00', 0),
+(57, 'Console Nintendo DS Lite', 'Nintendo DS Lite avec chargeur', 135.00, 6, 1, '2026-11-17', '0000-00-00', 0),
+(58, 'Appareil photo Polaroid', 'Polaroid vintage prêt à utiliser', 160.00, 7, 1, '2026-11-16', '0000-00-00', 0),
+(59, 'Miroir doré ancien', 'Petit miroir décoratif avec cadre doré', 95.00, 1, 3, '2026-11-15', '0000-00-00', 0),
+(60, 'Vinyle Rihanna Anti', 'Vinyle Rihanna Anti en excellent état', 75.00, 2, 1, '2026-11-14', '0000-00-00', 0),
+(61, 'Clavier mécanique rétro', 'Clavier mécanique au design classique', 110.00, 3, 3, '2026-11-13', '0000-00-00', 0),
+(62, 'Lunettes Ray-Ban vintage', 'Ancienne paire Ray-Ban avec étui', 190.00, 4, 1, '2026-11-12', '0000-00-00', 0),
+(63, 'Parfum Dior ancien', 'Flacon Dior provenant d\'une ancienne collection', 175.00, 5, 3, '2026-11-11', '0000-00-00', 0),
+(64, 'Game Boy Advance SP', 'Console portable en bon état général', 220.00, 6, 1, '2026-11-10', '0000-00-00', 0),
+(65, 'Affiche cinéma années 80', 'Affiche originale au style rétro', 85.00, 7, 1, '2026-11-09', '0000-00-00', 0),
+(66, 'Sac à dos en cuir', 'Sac à dos ancien en cuir véritable', 130.00, 1, 3, '2026-11-08', '0000-00-00', 0),
+(67, 'Machine à écrire Olympia', 'Machine à écrire ancienne avec boîtier', 260.00, 2, 1, '2026-11-07', '0000-00-00', 0),
+(68, 'Casque Sony vintage', 'Ancien casque Sony au design rétro', 115.00, 3, 1, '2026-11-06', '0000-00-00', 0),
+(69, 'Chaise en bois sculpté', 'Chaise décorative ancienne en bois', 195.00, 4, 3, '2026-11-05', '0000-00-00', 0),
+(70, 'Bracelet en argent ancien', 'Bracelet en argent au style classique', 140.00, 5, 1, '2026-11-04', '0000-00-00', 0),
+(71, 'PlayStation Portable PSP', 'Console PSP avec chargeur inclus', 185.00, 6, 1, '2026-11-03', '0000-00-00', 0),
+(72, 'Radio portable rétro', 'Petite radio portable ancienne', 70.00, 7, 3, '2026-11-02', '0000-00-00', 0),
+(73, 'Cadre photo en laiton', 'Cadre décoratif ancien en laiton', 55.00, 1, 4, '2026-11-01', '0000-00-00', 0),
+(74, 'Baskets Adidas vintage', 'Ancienne paire Adidas en bon état', 150.00, 2, 1, '2026-10-31', '0000-00-00', 0),
+(75, 'Horloge murale rétro', 'Horloge murale au style années 60', 120.00, 3, 3, '2026-10-30', '0000-00-00', 0),
+(76, 'Collier perles vintage', 'Collier ancien avec perles blanches', 105.00, 4, 1, '2026-10-29', '0000-00-00', 0),
+(77, 'Sac Chanel ancien', 'Sac ancien au style classique', 890.00, 5, 3, '2026-10-28', '0000-00-00', 0),
+(78, 'Nintendo Wii blanche', 'Console Wii avec câbles et manette', 165.00, 6, 1, '2026-10-27', '0000-00-00', 0),
+(79, 'Tourne-disque rétro', 'Tourne-disque ancien encore fonctionnel', 240.00, 7, 1, '2026-10-26', '0000-00-00', 0),
+(80, 'Boîte à bijoux ancienne', 'Petite boîte à bijoux en bois', 80.00, 1, 3, '2026-10-25', '0000-00-00', 0),
+(81, 'Caméra canon Candy', 'Caméra canon ancienne avec batterie', 275.00, 2, 1, '2026-10-24', '0000-00-00', 0);
 
 -- --------------------------------------------------------
 
@@ -335,7 +380,7 @@ CREATE TABLE IF NOT EXISTS `utilisateur` (
   `mot_de_passe` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id_utilisateur`),
   UNIQUE KEY `courriel` (`courriel`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `utilisateur`
@@ -348,7 +393,8 @@ INSERT INTO `utilisateur` (`id_utilisateur`, `nom`, `courriel`, `mot_de_passe`) 
 (4, 'Martin Bertrand', 'Mber007@market.com', 'f04ec289bcdc7b8154e2642fc3875df58bbef4ee56e5acc9e33b0f94609bbba882f7524f15315e84ab22c41b9ffa42432e9d000f2d0bdf6ee1e22d629eb9dbaa'),
 (5, 'Rose', 'PinkBarbie@market.com', '873492a645776b82c5a2378aa7d392923b8f8a12d79e0af30f903e100415124d1bfc5bcb310c380fc3c5a295955f88d95b7b5e615885274f119f3696333b6126'),
 (6, 'Ethan Manon', 'ManEt@market.com', '1ffb4eadaef5e3fcd9ed860ffe911c07284c94ac18b2b8e1d65daa048f6b0bfc39342b45371cbd7ab711344c36dfb321f401f875d14bec39e1453503dae6d538'),
-(7, 'Lutin', 'LT@market.com', '071d743e4b291bc4cd1a4867fe5281c9455c02a9140d8e42e48ebb538c27528e0dfa5bef91207a02ba58876ea28827c3282467d1f737003e507e6ea34461336f');
+(7, 'Lutin', 'LT@market.com', '071d743e4b291bc4cd1a4867fe5281c9455c02a9140d8e42e48ebb538c27528e0dfa5bef91207a02ba58876ea28827c3282467d1f737003e507e6ea34461336f'),
+(9, 'hhh', 'LsT@market.com', '071d743e4b291bc4cd1a4867fe5281c9455c02a9140d8e42e48ebb538c27528e0dfa5bef91207a02ba58876ea28827c3282467d1f737003e507e6ea34461336f');
 
 --
 -- Contraintes pour les tables déchargées
