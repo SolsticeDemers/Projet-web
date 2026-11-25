@@ -74,25 +74,33 @@
 
                 {% elif est_connecte %}
 
-                {% if produit.id_statut == 2 and not est_vendeur %}
+                    {% if produit.id_statut == 2 and not est_vendeur %}
 
-                <a href="{{ url_for('produits.miser_produit', id=produit.id_produit) }}" class="button">
-                    Enchérir
-                </a>
+                    <a href="{{ url_for('produits.miser_produit', id=produit.id_produit) }}" class="button">
+                        Enchérir
+                    </a>
 
-                {% elif produit.id_statut == 1 and not est_vendeur %}
+                    {% elif produit.id_statut == 1 and not est_vendeur %}
 
-                <form method="POST" action="/panier/ajouter/{{ produit.id_produit }}">
+                    <form method="POST" action="/panier/ajouter/{{ produit.id_produit }}">
 
-                    {{ form.hidden_tag() }}
+                        {{ form.hidden_tag() }}
 
-                    <button type="submit" class="button">
-                        Ajouter au panier
-                    </button>
+                        <button type="submit" class="button">
+                            Ajouter au panier
+                        </button>
 
-                </form>
+                    </form>
+                    {% elif produit.id_statut == 3  %}
+                    
 
-                {% endif %}
+                        <a href="/notification/faire_echange/{{ produit.id_produit }}" class="button">
+                            Échanger
+                        </a>
+
+                   
+
+                    {% endif %}
 
                 {% endif %}
 
