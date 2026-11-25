@@ -2,18 +2,22 @@
 
 {% block contenu %}
 
-<div class="container my-4">
+<div class="container my-4 page-vintage">
 
-    <div class="row">
+    <div class="row details-produit-vintage">
 
-        <div class="col-md-6">
+        <div class="col-md-6 details-image-vintage">
 
-            <img src="{{ img_source }}" alt="{{ produit.nom }}" class="img-fluid">
+            <img
+                src="{{ img_source }}"
+                alt="{{ produit.nom }}"
+                class="img-fluid"
+            >
 
         </div>
 
 
-        <div class="col-md-6">
+        <div class="col-md-6 details-info-vintage">
 
             <div class="mb-3">
 
@@ -21,41 +25,48 @@
                     {{ produit.nom }}
                 </h2>
 
-                <a href="{{ url_for('compte.profil_public', id_utilisateur=vendeur.id_utilisateur) }}"
-                    class="lien-profil-public">{{ vendeur.nom }}
-                </a>
+                <p class="px-3 pb-2 mb-0 details-vendeur">
+
+                    <a
+                        href="{{ url_for('compte.profil_public', id_utilisateur=vendeur.id_utilisateur) }}"
+                        class="lien-profil-public"
+                    >
+                        {{ vendeur.nom }}
+                    </a>
+
+                </p>
 
             </div>
 
 
-            <div class="prix p-2 mb-3">
+            <div class="prix p-2 mb-3 details-prix">
 
                 {% if produit.id_statut == 2 %}
 
-                <p>
-                    Mise actuelle : {{ produit.prix }} $
-                </p>
+                    <p>
+                        Mise actuelle : {{ produit.prix }} $
+                    </p>
 
-                {% if produit.date_fin %}
+                    {% if produit.date_fin %}
 
-                <p>
-                    Fin de l'enchère : {{ produit.date_fin }}
-                </p>
+                        <p>
+                            Fin de l'enchère : {{ produit.date_fin }}
+                        </p>
 
-                {% endif %}
+                    {% endif %}
 
                 {% else %}
 
-                <p>
-                    Prix : {{ produit.prix }} $
-                </p>
+                    <p>
+                        Prix : {{ produit.prix }} $
+                    </p>
 
                 {% endif %}
 
             </div>
 
 
-            <div class="p-2 mb-3">
+            <div class="p-2 mb-3 details-description">
 
                 <p>
                     {{ produit.description }}
@@ -68,97 +79,146 @@
 
                 {% if not est_disponible %}
 
-                <p class="text-danger">
-                    Ce produit n'est plus disponible.
-                </p>
+                    <p class="text-danger">
+                        Ce produit n'est plus disponible.
+                    </p>
 
-                {% elif est_connecte %}
+                {% elif not est_connecte %}
 
-                {% if produit.id_statut == 2 and not est_vendeur %}
+                    <a
+                        href="/compte/authentification"
+                        class="button btn-vintage"
+                    >
+                        Connectez-vous
+                    </a>
 
-                <a href="{{ url_for('produits.miser_produit', id=produit.id_produit) }}" class="button">
-                    Enchérir
-                </a>
+                {% elif not est_vendeur %}
 
-                {% elif produit.id_statut == 1 and not est_vendeur %}
+                    {% if produit.id_statut == 2 %}
 
-                <form method="POST" action="/panier/ajouter/{{ produit.id_produit }}">
+                        <a
+                            href="{{ url_for('produits.miser_produit', id=produit.id_produit) }}"
+                            class="button btn-vintage"
+                        >
+                            Enchérir
+                        </a>
 
-                    {{ form.hidden_tag() }}
+                    {% elif produit.id_statut == 1 %}
 
-                    <button type="submit" class="button">
-                        Ajouter au panier
-                    </button>
+                        <form
+                            method="POST"
+                            action="/panier/ajouter/{{ produit.id_produit }}"
+                        >
 
-                </form>
+                            {{ form.hidden_tag() }}
 
-                {% endif %}
+                            <button
+                                type="submit"
+                                class="button btn-vintage"
+                            >
+                                Ajouter au panier
+                            </button>
+
+                        </form>
+
+                    {% endif %}
 
                 {% endif %}
 
 
                 {% if est_connecte and produit.id_vendeur == session.id_utilisateur %}
 
-                <a href="/produits/{{ id }}/modifier" class="button">
-                    Modifier
-                </a>
+                    <a
+                        href="/produits/{{ id }}/modifier"
+                        class="button btn-vintage-secondaire"
+                    >
+                        Modifier
+                    </a>
 
 
-                <button type="button" class="button bouton-supprimer" data-bs-toggle="modal"
-                    data-bs-target="#modal-archiver">
-                    Supprimer
-                </button>
+                    <button
+                        type="button"
+                        class="button bouton-supprimer btn-vintage-danger"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modal-archiver"
+                    >
+                        Supprimer
+                    </button>
 
 
-                <div class="modal fade" id="modal-archiver" tabindex="-1">
+                    <div
+                        class="modal fade"
+                        id="modal-archiver"
+                        tabindex="-1"
+                        aria-labelledby="modal-archiver-label"
+                        aria-hidden="true"
+                    >
 
-                    <div class="modal-dialog">
+                        <div class="modal-dialog">
 
-                        <div class="modal-content">
+                            <div class="modal-content">
 
-                            <div class="modal-header">
+                                <div class="modal-header">
 
-                                <h5 class="modal-title" id="modal-archiver-label">
-                                    Confirmer la suppression
-                                </h5>
+                                    <h5
+                                        class="modal-title"
+                                        id="modal-archiver-label"
+                                    >
+                                        Confirmer la suppression
+                                    </h5>
 
-                                <button type="button" class="btn-close" data-bs-dismiss="modal">
-                                </button>
-
-                            </div>
-
-
-                            <div class="modal-body">
-
-                                Êtes-vous sûr de vouloir supprimer ce produit ?
-
-                            </div>
-
-
-                            <div class="modal-footer">
-
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                    Annuler
-                                </button>
-
-
-                                <form method="POST" action="/produits/{{ id }}/archiver">
-
-                                    {{ form_archiver.hidden_tag() }}
-
-                                    <button type="submit" class="btn btn-danger">
-                                        Supprimer
+                                    <button
+                                        type="button"
+                                        class="btn-close"
+                                        data-bs-dismiss="modal"
+                                        aria-label="Fermer"
+                                    >
                                     </button>
 
-                                </form>
+                                </div>
+
+
+                                <div class="modal-body">
+
+                                    Êtes-vous sûr de vouloir supprimer ce produit ?
+
+                                </div>
+
+
+                                <div class="modal-footer">
+
+                                    <button
+                                        type="button"
+                                        class="btn btn-secondary"
+                                        data-bs-dismiss="modal"
+                                    >
+                                        Annuler
+                                    </button>
+
+
+                                    <form
+                                        method="POST"
+                                        action="/produits/{{ id }}/archiver"
+                                    >
+
+                                        {{ form_archiver.hidden_tag() }}
+
+                                        <button
+                                            type="submit"
+                                            class="btn btn-danger"
+                                        >
+                                            Supprimer
+                                        </button>
+
+                                    </form>
+
+                                </div>
 
                             </div>
 
                         </div>
 
                     </div>
-
-                </div>
 
                 {% endif %}
 

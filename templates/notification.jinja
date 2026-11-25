@@ -2,195 +2,298 @@
 
 {% block contenu %}
 
-<section class="container my-4">
-    <div>
-        <h2>Notification d'échange</h2>
+<section class="container my-4 page-vintage">
 
-        <ul class="liste-mes-produits">
+    <div class="notification-section">
+
+        <h2>
+            Notifications d'échange
+        </h2>
+
+        <div class="liste-notifications">
 
             {% for notif in notifications_echange %}
 
-            {% if session['nom'] == notif.offrant and notif.approuve != None %}
+                {% if session['nom'] == notif.offrant and notif.approuve != None %}
 
-            <li class="carte-produit affichage_notif">
+                    <div class="notification-vintage">
 
-                <div class="notif-detail">
+                        <div class="notif-detail">
 
-                {% if notif.id_notif in notifications_non_lues %}
-                    <span class="badge-nouvelle">Nouveau</span>
+                            {% if notif.id_notif in notifications_non_lues %}
+
+                                <span class="badge-nouvelle">
+                                    Nouveau
+                                </span>
+
+                            {% endif %}
+
+                            <p>
+                                Produit demandé :
+                                <a href="/produits/{{ notif.id_produit }}">
+                                    {{ notif.echange_nom }}
+                                </a>
+                            </p>
+
+                            <p>
+                                Votre produit offert :
+                                <a href="/produits/{{ notif.id_produit_offert }}">
+                                    {{ notif.offert_nom }}
+                                </a>
+                            </p>
+
+                            {% if notif.approuve == 1 %}
+
+                                <p class="alert theme-success" role="alert">
+                                    Votre demande d'échange a été approuvée !
+                                </p>
+
+                            {% elif notif.approuve == 0 %}
+
+                                <p class="alert theme-danger" role="alert">
+                                    Votre demande d'échange a été refusée !
+                                </p>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                {% elif session['nom'] == notif.proprio %}
+
+                    <div class="notification-vintage">
+
+                        <div class="notif-detail">
+
+                            {% if notif.id_notif in notifications_non_lues %}
+
+                                <span class="badge-nouvelle">
+                                    Nouveau
+                                </span>
+
+                            {% endif %}
+
+                            <p>
+                                <strong>{{ notif.offrant }}</strong>
+                                vous propose un échange.
+                            </p>
+
+                            <p>
+                                Votre produit :
+                                <a href="/produits/{{ notif.id_produit }}">
+                                    {{ notif.echange_nom }}
+                                </a>
+                            </p>
+
+                            <p>
+                                Produit offert :
+                                <a href="/produits/{{ notif.id_produit_offert }}">
+                                    {{ notif.offert_nom }}
+                                </a>
+                            </p>
+
+                            {% if notif.approuve == 1 %}
+
+                                <p class="alert theme-success" role="alert">
+                                    Vous avez accepté cet échange.
+                                </p>
+
+                            {% elif notif.approuve == 0 %}
+
+                                <p class="alert theme-danger" role="alert">
+                                    Vous avez refusé cet échange.
+                                </p>
+
+                            {% endif %}
+
+                        </div>
+
+                        {% if notif.approuve == None %}
+
+                            <div class="actions-notification">
+
+                                <a
+                                    class="btn-accepter"
+                                    href="/compte/accepter_echange/{{ notif.id_proposition }}/oui"
+                                    id="echange_accepter"
+                                    value="oui"
+                                >
+                                    Accepter
+                                </a>
+
+                                <a
+                                    class="btn-refuser"
+                                    href="/compte/accepter_echange/{{ notif.id_proposition }}/non"
+                                    id="echange_refuser"
+                                    value="non"
+                                >
+                                    Refuser
+                                </a>
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
                 {% endif %}
 
-                    <p id="nom_offrant">
-                        <strong>{{ notif.offrant }}</strong>
-                    </p>
+            {% else %}
 
-                    <p>
-                        Votre produit:
-                        <a href="/produits/{{ notif.id_produit }}">
-                            {{ notif.echange_nom }}
-                        </a>
-                    </p>
-
-                    <p>
-                        Le produit offert:
-                        <a href="/produits/{{ notif.id_produit_offert }}">
-                            {{ notif.offert_nom }}
-                        </a>
-                    </p>
-
-                    {% if notif.approuve == 1 %}
-
-                    <p class="alert theme-success" role="alert">
-                        Votre demande d'échange à été approuvé!
-                    </p>
-
-                    {% elif notif.approuve == 0 %}
-
-                    <p class="alert theme-danger" role="alert">
-                        Votre demande d'échange à été refusé!
-                    </p>
-
-                    {% endif %}
-
-                </div>
-
-            </li>
-
-            {% elif session['nom'] == notif.proprio %}
-
-            <li class="carte-produit affichage_notif">
-
-                <div class="notif-detail">
-
-                {% if notif.id_notif in notifications_non_lues %}
-                    <span class="badge-nouvelle">Nouveau</span>
-                {% endif %}
-
-                    <p id="nom_offrant">
-                        <strong>{{ notif.offrant }}</strong>
-                    </p>
-
-                    <p>
-                        Votre produit:
-                        <a href="/produits/{{ notif.id_produit }}">
-                            {{ notif.echange_nom }}
-                        </a>
-                    </p>
-
-                    <p>
-                        Le produit offert:
-                        <a href="/produits/{{ notif.id_produit_offert }}">
-                            {{ notif.offert_nom }}
-                        </a>
-                    </p>
-
-                </div>
-                {% if notif.approuve == None %}
-                <div class="actions">
-
-                    <a class="btn-accepter" href="/compte/accepter_echange/{{ notif.id_proposition }}/oui"
-                        id="echange_accepter" value="oui">
-                        Accepter
-                    </a>
-
-                    <a class="btn-refuser" href="/compte/accepter_echange/{{ notif.id_proposition }}/non"
-                        id="echange_refuser" value="non">
-                        Refuser
-                    </a>
-
-                </div>
-                {% elif notif.approuve == 1 %}
-                <p class="alert theme-success">Vous avez accepté cet échange</p>
-                {% elif notif.approuve == 0 %}
-                <p class="alert theme-danger">Vous avez refusé cet échange</p>
-                {% endif %}
-            </li>
-
-            {% endif %}
+                <p class="aucune-notification">
+                    Vous n'avez aucune notification d'échange.
+                </p>
 
             {% endfor %}
 
-        </ul>
+        </div>
 
     </div>
 
 
-    <div class="mt-5">
+    <div class="notification-section">
 
-        <h2>Notification d'enchère</h2>
+        <h2>
+            Notifications d'enchère
+        </h2>
 
-        <ul class="liste-mes-produits">
+        <div class="liste-notifications">
 
             {% for notif in notifications_enchere %}
 
-            <li class="carte-produit affichage_notif">
+                <div class="notification-vintage">
 
-                <div class="notif-detail">
+                    <div class="notif-detail">
 
-                {% if notif.id_notif in notifications_non_lues %}
-                    <span class="badge-nouvelle">Nouveau</span>
-                {% endif %}
+                        {% if notif.id_notif in notifications_non_lues %}
 
-                    <p>
-                        <strong>
-                            Vous avez remporté l'enchère !
-                        </strong>
-                    </p>
+                            <span class="badge-nouvelle">
+                                Nouveau
+                            </span>
 
-                    <p>
-                        Produit :
-                        <a href="/produits/{{ notif.id_produit }}">
-                            {{ notif.nom_produit }}
-                        </a>
-                    </p>
+                        {% endif %}
 
-                    <p>
-                        Mise gagnante : {{ notif.prix }} $
-                    </p>
+                        {% if notif.type_notif == "proprietaire" %}
+
+                            <p>
+                                Votre enchère pour
+                                <a href="/produits/{{ notif.id_produit }}">
+                                    {{ notif.nom_produit }}
+                                </a>
+                                est terminée.
+                            </p>
+
+                            {% if notif.nom_gagnant %}
+
+                                <p>
+                                    <strong>{{ notif.nom_gagnant }}</strong>
+                                    a remporté votre produit pour
+                                    <strong>{{ notif.prix }} $</strong>.
+                                </p>
+
+                            {% else %}
+
+                                <p>
+                                    Aucun utilisateur n'a remporté cette enchère.
+                                </p>
+
+                            {% endif %}
+
+                        {% elif notif.type_notif == "gagnant" %}
+
+                            <p>
+                                Félicitations ! Vous avez remporté l'enchère pour
+                                <a href="/produits/{{ notif.id_produit }}">
+                                    {{ notif.nom_produit }}
+                                </a>.
+                            </p>
+
+                            <p>
+                                Votre mise gagnante est de
+                                <strong>{{ notif.prix }} $</strong>.
+                            </p>
+
+                        {% endif %}
+
+                    </div>
 
                 </div>
 
-            </li>
-
             {% else %}
 
-            <p>
-                Vous n'avez aucune notification d'enchère
-            </p>
-
-            {% endfor %}
-
-        </ul>
-
-    </div>
-
-    <div>
-        <h2>Notifications d'achat</h2>
-
-        <ul class="liste-mes-produits">
-            {% for notif in notifications_achat %}
-            <li class="carte-produit affichage_notif">
-            <div class="notif-detail">
-
-            {% if notif.id_notification in notifications_non_lues %}
-                <span class="badge-nouvelle">Nouveau</span>
-            {% endif %}
-
-                <p>
-                    Votre produit
-                    <a href="{{ url_for('produits.details_produit', id=notif.id_produit) }}">
-                        {{ notif.nom_produit }}
-                    </a>
-                    a été acheté par {{ notif.nom_acheteur }} pour {{ notif.prix_achat }} $.
+                <p class="aucune-notification">
+                    Vous n'avez aucune notification d'enchère.
                 </p>
-            </div>
-            </li>
-            {% else %}
-            <li class="list-unstyled">Vous n'avez aucune notification d'achat</li>
-            {% endfor %}
-        </ul>
-    </div>
-</section>
 
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+
+    <div class="notification-section">
+
+        <h2>
+            Notifications d'achat
+        </h2>
+
+        <div class="liste-notifications">
+
+            {% for notif in notifications_achat %}
+
+                <div class="notification-vintage notification-achat">
+
+                    <div class="notification-icone">
+
+                        <i class="bi bi-bag-check"></i>
+
+                    </div>
+
+                    <div class="notification-contenu">
+
+                        {% if notif.id_notification in notifications_non_lues %}
+
+                            <div>
+
+                                <span class="badge-nouvelle">
+                                    Nouveau
+                                </span>
+
+                            </div>
+
+                        {% endif %}
+
+                        <p>
+                            Votre produit
+                            <a href="{{ url_for('produits.details_produit', id=notif.id_produit) }}">
+                                {{ notif.nom_produit }}
+                            </a>
+                            a été acheté par
+                            <strong>{{ notif.nom_acheteur }}</strong>.
+                        </p>
+
+                        <p class="notification-prix">
+                            {{ notif.prix_achat }} $
+                        </p>
+
+                    </div>
+
+                </div>
+
+            {% else %}
+
+                <p class="aucune-notification">
+                    Vous n'avez aucune notification d'achat.
+                </p>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
 
 {% endblock %}

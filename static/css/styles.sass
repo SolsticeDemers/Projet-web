@@ -1,165 +1,1016 @@
 @use "bootstrap"
 
-$bleu: #323550
-$gris: #7E7B85
-$vert: #B0E6C7
-$creme: #F9F8F3
-$orange: #DE7452
+
+$bleu: #363229
+$vert: #4FBB9A
+$creme: #E0CD94
+$orange: #EFA18E
+$brun: #804E37
+
 $blanc: #FFFFFF
 $noir: #111111
-$gris-fonce: #5F5C67
+
+$gris: #804E37
+$gris-fonce: #363229
+
 $danger: #C0392B
-$success: #2bc041
+$success: #4FBB9A
+
 
 *
     box-sizing: border-box
 
+
 body
     margin: 0
     font-family: Arial, sans-serif
-    background: $creme
+    background: $blanc
     color: $noir
+    min-height: 100vh
+    display: flex
+    flex-direction: column
+
 
 a
     text-decoration: none
     color: inherit
 
-header
-    background: $bleu
-    color: $creme
+
+label.required::after
+    content: " *"
+    color: red
+    font-weight: bold
+
+
+.header-transparent
+    width: 100%
+    position: absolute
+    top: 0
+    left: 0
+    z-index: 20
+    background: transparent
+    color: $blanc
+
+
+.header-normal
+    width: 100%
     position: relative
-    z-index: 5
+    z-index: 20
+    background: $bleu
+    color: $blanc
+
+header
+    width: 100%
+    position: absolute
+    top: 0
+    left: 0
+    z-index: 20
+    background: transparent
+    color: $blanc
+
 
 .navigation
     width: 100%
     min-height: 105px
     padding: 20px 55px
     display: grid
-    grid-template-columns: 250px minmax(0, 1fr) max-content
+    grid-template-columns: 250px 1fr 300px
     align-items: center
     gap: 40px
+    background: transparent
+
+
+.logo
+    display: flex
+    align-items: center
+    overflow: visible
+
 
 .logo img
-    max-width: 3000px
-    max-height: 200px
+    width: 180px
+    max-width: none
+    max-height: none
     object-fit: contain
+    transform: scale(1.5)
+    transform-origin: left center
 
-.recherche
+.page-vintage
     width: 100%
-    max-width: 850px
-    margin: auto
-    display: flex
+    min-height: 650px
+    padding: 70px 6% 100px
+    background: $blanc
+    color: $noir
 
-    input
-        flex: 1
-        padding: 16px 22px
-        border: 0
-        border-radius: 28px 0 0 28px
-        font-size: 16px
+
+.titre-page-vintage
+    margin: 0 0 40px
+    font: 46px Georgia, serif
+    font-weight: bold
+    color: $bleu
+
+
+.sous-titre-vintage
+    margin-bottom: 25px
+    font: 32px Georgia, serif
+    font-weight: bold
+    color: $bleu
+
+
+.btn-vintage
+    min-width: 160px
+    height: 52px
+    padding: 0 25px
+    border: 0
+    display: inline-flex
+    align-items: center
+    justify-content: center
+    background: $creme
+    color: $noir
+    font-size: 15px
+    font-weight: bold
+    cursor: pointer
+
+    clip-path: polygon(
+        12% 0%,
+        88% 0%,
+        100% 50%,
+        88% 100%,
+        12% 100%,
+        0% 50%
+    )
+
+    &:hover
+        background: $bleu
+        color: $creme
+
+
+.btn-vintage-secondaire
+    min-width: 150px
+    height: 48px
+    padding: 0 22px
+    border: 1px solid $brun
+    display: inline-flex
+    align-items: center
+    justify-content: center
+    background: transparent
+    color: $brun
+    font-weight: bold
+    cursor: pointer
+
+    clip-path: polygon(
+        12% 0%,
+        88% 0%,
+        100% 50%,
+        88% 100%,
+        12% 100%,
+        0% 50%
+    )
+
+    &:hover
+        background: $brun
+        color: $blanc
+
+
+.btn-vintage-danger
+    min-width: 140px
+    height: 48px
+    padding: 0 22px
+    border: 0
+    display: inline-flex
+    align-items: center
+    justify-content: center
+    background: $orange
+    color: $noir
+    font-weight: bold
+    cursor: pointer
+
+    clip-path: polygon(
+        12% 0%,
+        88% 0%,
+        100% 50%,
+        88% 100%,
+        12% 100%,
+        0% 50%
+    )
+
+    &:hover
+        background: $danger
+        color: $blanc
+
+
+.btn-vintage-accepter
+    min-width: 130px
+    height: 46px
+    padding: 0 20px
+    border: 0
+    display: inline-flex
+    align-items: center
+    justify-content: center
+    background: $vert
+    color: $noir
+    font-weight: bold
+
+    clip-path: polygon(
+        12% 0%,
+        88% 0%,
+        100% 50%,
+        88% 100%,
+        12% 100%,
+        0% 50%
+    )
+
+    &:hover
+        background: $bleu
+        color: $blanc
+
+
+.lien-vintage
+    color: $brun
+    font-weight: bold
+    text-decoration: underline
+    text-underline-offset: 4px
+
+    &:hover
+        color: $creme
+
+
+.formulaire-vintage
+    max-width: 650px
+    margin: auto
+
+    .form-label
+        margin-bottom: 8px
+        color: $noir
+        font-weight: 500
+
+    .form-control
+        min-height: 48px
+        border: 1px solid #ced4da
+        border-radius: 6px
+        background: $blanc
+        color: $noir
+
+        &:focus
+            border-color: $brun
+            box-shadow: 0 0 0 .2rem rgba(128, 78, 55, .15)
+
+
+.profil-vintage
+    width: 100%
+    padding: 50px
+    display: flex
+    align-items: center
+    gap: 50px
+    border: 1px solid rgba(0, 0, 0, .08)
+    background: $blanc
+    box-shadow: 0 12px 30px rgba(0, 0, 0, .08)
+
+
+.profil-vintage .profil-avatar
+    width: 170px
+    height: 170px
+    border: 3px solid $creme
+
+
+.profil-informations
+    flex: 1
+
+    h3
+        margin-bottom: 20px
+        font: 36px Georgia, serif
+        font-weight: bold
+        color: $bleu
+
+    p
+        margin-bottom: 10px
+
+
+.profil-actions
+    display: flex
+    flex-direction: column
+    gap: 15px
+
+
+.details-produit-vintage
+    max-width: 1250px
+    margin: auto
+    display: grid
+    grid-template-columns: 1fr 1fr
+    gap: 70px
+    align-items: center
+
+
+.details-image-vintage
+    width: 100%
+    min-height: 550px
+
+    img
+        width: 100%
+        height: 550px
+        object-fit: cover
+
+
+.details-info-vintage
+    h2
+        margin-bottom: 5px
+        font: 46px Georgia, serif
+        font-weight: bold
+        color: $bleu
+
+
+.details-vendeur
+    margin-bottom: 35px
+    color: $brun
+    font-weight: bold
+
+
+.details-prix
+    margin-bottom: 30px
+    font-size: 32px
+    font-weight: bold
+    color: $bleu
+
+
+.details-description
+    margin-bottom: 40px
+    line-height: 1.7
+    font-size: 17px
+
+
+.panier-total
+    margin-top: 50px
+    display: flex
+    justify-content: flex-end
+    align-items: center
+    gap: 30px
+
+
+.panier-total .prix
+    margin: 0
+    font-size: 28px
+
+
+.notification-section
+    max-width: 1100px
+    margin: 60px auto
+
+    h2
+        margin: 0 0 28px
+        font: bold 36px Georgia, serif
+        color: $bleu
+
+
+.liste-notifications
+    display: flex
+    flex-direction: column
+    gap: 18px
+
+
+.notification-vintage
+    width: 100%
+    min-height: 0
+    padding: 25px 30px
+    display: flex
+    align-items: center
+    justify-content: space-between
+    gap: 25px
+    background: $blanc
+    border-radius: 16px
+    box-shadow: 0 7px 22px rgba(0, 0, 0, .09)
+
+    p
+        margin: 5px 0
+        line-height: 1.5
+
+    a
+        color: $brun
+        font-weight: bold
+        text-decoration: underline
+        text-underline-offset: 3px
+
+        &:hover
+            color: $bleu
+
+
+.notification-achat
+    display: grid
+    grid-template-columns: 55px 1fr
+    min-height: 115px
+
+
+.notification-icone
+    width: 48px
+    height: 48px
+    display: flex
+    align-items: center
+    justify-content: center
+    background: $creme
+    color: $bleu
+    font-size: 22px
+    clip-path: polygon(15% 0%, 85% 0%, 100% 50%, 85% 100%, 15% 100%, 0% 50%)
+
+
+.notification-contenu
+    display: flex
+    flex-direction: column
+    justify-content: center
+
+
+.notification-titre
+    margin-bottom: 7px !important
+    font-size: 18px
+    color: $bleu
+
+
+.notification-prix
+    margin-top: 8px !important
+    font-size: 20px
+    font-weight: bold
+    color: $brun
+
+
+
+
+.actions-notification
+    display: flex
+    align-items: center
+    gap: 12px
+
+
+.aucune-notification
+    color: #777
+
+
+.image-actuelle
+    width: 220px
+    height: 220px
+    object-fit: cover
+    border: 1px solid #ddd
+    background: $blanc
+
+.page-compte
+    width: 100%
+    min-height: 700px
+    padding: 48px 0 80px
+    background: #F9F8F3
+    color: $noir
+
+    h2
+        color: $noir
+        font-size: 32px
+        font-weight: 500
+
+
+.page-compte .form-label
+    color: $noir
+    font-size: 16px
+
+
+.page-compte .form-control
+    width: 100%
+    padding: 10px 12px
+    font-size: 16px
+    color: $noir
+    background: $blanc
+    border: 1px solid #ced4da
+    border-radius: 6px
+
+    &:focus
+        border-color: #323550
+        outline: 0
+        box-shadow: 0 0 0 .25rem rgba(50, 53, 80, .25)
+
+    &.is-invalid
+        border-color: #C0392B
+
+    &.is-valid
+        border-color: #B0E6C7
+
+
+.invalid-feedback
+    color: #C0392B
+    font-size: 14px
+
+
+.actions-compte
+    margin-bottom: 10px
 
     button
-        padding: 0 30px
-        border: 0
-        border-radius: 0 28px 28px 0
-        background: $gris
-        color: $blanc
+        min-width: 170px
+        height: 54px
+        padding: 0 26px
+        border: 1px solid #363229
+        background: #E0CD94
+        color: #111111
+        font-size: 16px
+        font-weight: 600
+        cursor: pointer
+        display: inline-flex
+        align-items: center
+        justify-content: center
+        clip-path: polygon(12% 0, 88% 0, 100% 50%, 88% 100%, 12% 100%, 0 50%)
+
+        &:hover
+            background: #363229
+            color: #E0CD94
+            border-color: #363229
+
+
+.lien-compte
+    color: #E0CD94
+    font-weight: 700
+    text-decoration: underline
+    text-underline-offset: 4px
+
+
+    &:hover
+        color: #111111
+
+.recherche-navigation
+    display: flex
+    justify-content: center
+    align-items: center
+
+
+.bouton-loupe
+    border: 0
+    background: transparent
+    color: $blanc
+    font-size: 28px
+    cursor: pointer
+
+    &:hover
+        color: $creme
+
 
 .connexion
     text-align: right
 
     a
+        padding: 12px 22px
         border: 1px solid $creme
         border-radius: 25px
-        padding: 12px 22px
+        background: transparent
         color: $creme
+
+        &:hover
+            background: $creme
+            color: $noir
+
 
 .connecter
     display: flex
     align-items: center
     justify-content: flex-end
-    gap: 10px
+    gap: 20px
 
     a
         white-space: nowrap
+
 
 .btn_deconnection
     max-height: 50px
     min-width: 170px
 
-.hero
-    min-height: calc(100vh - 105px)
-    padding: 130px 40px 90px
+
+.icone-panier
+    color: $creme
+    font-size: 1.5rem
     text-align: center
-    background-color: $bleu
-    background-image: linear-gradient(rgba(50,53,80,.72), rgba(50,53,80,.72)), url("#")
-    background-size: cover
-    background-position: center
-    background-attachment: fixed
-    color: $creme
-    position: sticky
-    top: 0
-    z-index: 0
 
-.hero h1
-    margin: 0
-    font: 86px Georgia, serif
+    &:hover
+        color: $blanc
+
+
+.nb-articles
+    margin-left: 4px
+    font-size: 1rem
+    font-weight: bold
     color: $creme
 
-.hero-texte p
-    font-size: 20px
 
-.vendeurs-populaires
-    margin-top: 100px
-    display: flex
-    justify-content: center
-    gap: 40px
+#btn_notification
+    display: inline-block
 
-.vendeur-card
-    width: 230px
-    min-height: 220px
-    padding: 25px
-    border-radius: 18px
-    background: $creme
+
+#img_notif
+    max-height: 45px
+    text-align: right
+
+
+.section-recherche
+    width: 100%
+    padding: 100px 6% 130px
+    background: $blanc
     color: $noir
 
-    img
-        width: 120px
-        height: 120px
-        border-radius: 50%
+
+.entete-recherche
+    max-width: 1300px
+    margin: auto
+    padding-bottom: 90px
+
+
+    h1
+        margin: 0 0 45px
+        font: 52px Georgia, serif
+        font-weight: bold
+        color: $bleu
+
+
+.form-recherche-page
+    width: 100%
+
+
+.barre-recherche-page
+    width: 100%
+    display: flex
+    align-items: center
+    border-bottom: 2px solid $bleu
+
+
+    input
+        width: 100%
+        padding: 18px 5px
+        border: 0
+        background: transparent
+        color: $noir
+        font-size: 22px
+        outline: none
+
+
+        &::placeholder
+            color: #777
+
+
+    button
+        width: 65px
+        height: 65px
+        border: 0
+        background: transparent
+        color: $bleu
+        font-size: 27px
+        cursor: pointer
+
+
+        &:hover
+            color: $brun
+
+
+.filtres-recherche
+    margin-top: 35px
+    display: flex
+    align-items: flex-end
+    gap: 20px
+
+
+.filtre-prix,
+.filtre-tri
+    display: flex
+    flex-direction: column
+    gap: 8px
+
+
+    label
+        font-size: 13px
+        font-weight: bold
+        color: $bleu
+
+
+    input,
+    select
+        height: 48px
+        padding: 0 15px
+        border: 1px solid $bleu
+        background: $blanc
+        color: $noir
+        outline: none
+
+
+.filtre-prix
+    width: 160px
+
+
+.filtre-tri
+    width: 220px
+
+
+.bouton-filtrer
+    min-width: 150px
+    height: 48px
+    padding: 0 25px
+    border: 0
+    background: $bleu
+    color: $blanc
+    font-weight: bold
+    cursor: pointer
+
+    clip-path: polygon(
+        12% 0%,
+        88% 0%,
+        100% 50%,
+        88% 100%,
+        12% 100%,
+        0% 50%
+    )
+
+
+    &:hover
+        background: $creme
+        color: $noir
+
+
+.resultats-recherche
+    max-width: 1300px
+    margin: auto
+
+
+.aucun-produit
+    font-size: 18px
+    color: $bleu
+
+
+.pagination-recherche
+    margin-top: 90px
+
+
+.pagination-contenu
+    display: flex
+    justify-content: center
+    align-items: center
+    gap: 28px
+
+
+.bouton-pagination
+    width: 48px
+    height: 48px
+    display: flex
+    align-items: center
+    justify-content: center
+    position: relative
+    color: $bleu
+    font-size: 31px
+
+
+    .icone-hover
+        display: none
+
+
+    &:hover
+        color: $brun
+
+
+        .icone-normal
+            display: none
+
+
+        .icone-hover
+            display: inline-block
+
+
+.numero-page
+    min-width: 55px
+    height: 55px
+    display: flex
+    align-items: center
+    justify-content: center
+    background: $creme
+    color: $noir
+    font-size: 18px
+    font-weight: bold
+
+    clip-path: polygon(
+        15% 0%,
+        85% 0%,
+        100% 50%,
+        85% 100%,
+        15% 100%,
+        0% 50%
+    )
+
+
+.pagination-desactive
+    opacity: .25
+    cursor: default
+
+.hero-carousel
+    width: 100%
+    height: 100vh
+
+
+#carouselExampleControls
+    width: 100%
+    height: 100%
+
+
+.carousel-inner
+    width: 100%
+    height: 100%
+
+
+.carousel-item
+    width: 100%
+    height: 100vh
+    min-height: 650px
+    position: relative
+
+    > img
+        width: 100%
+        height: 100%
         object-fit: cover
 
-    h3
+
+.carousel-filtre
+    position: absolute
+    inset: 0
+    background: rgba(0, 0, 0, .48)
+
+
+.carousel-contenu
+    position: absolute
+    top: 50%
+    left: 50%
+    transform: translate(-50%, -50%)
+    z-index: 2
+    width: 85%
+    max-width: 1100px
+    text-align: center
+    color: $blanc
+
+    h1
+        margin: 0 0 20px
+        font: 72px Georgia, serif
+        font-weight: bold
+
+    p
+        max-width: 700px
+        margin: 0 auto 35px
         font-size: 20px
-        margin-bottom: 0
+        line-height: 1.5
+
+
+.carousel-control-prev,
+.carousel-control-next
+    z-index: 3
+
+
+.bouton-hexagone
+    width: 200px
+    height: 68px
+    margin: auto
+    display: flex
+    align-items: center
+    justify-content: center
+    background: $creme
+    color: $noir
+    font-size: 15px
+    font-weight: bold
+    text-transform: uppercase
+    clip-path: polygon(
+        15% 0%,
+        85% 0%,
+        100% 50%,
+        85% 100%,
+        15% 100%,
+        0% 50%
+    )
+
+    &:hover
+        background: $noir
+        color: $creme
+
+
+.nouveau
+    width: 100%
+    min-height: 300px
+    padding: 300px 30px 70px 30px
+
+    align-items: center
+    color: $bleu
+    text-align: center
+
+
+    h2
+        font: 40px Georgia, serif
+        font-weight: bold
+
+
+.separateur-accueil
+    width: 100%
+    min-height: 300px
+    padding: 300px 30px 70px 30px
+    justify-content: center
+    background: $blanc
+    display: flex
+    align-items: center
+    color: $bleu
+    text-align: center
+
+
+    h2
+        margin: 0
+        font: 40px Georgia, serif
+        font-weight: bold
+
+
+.section-video
+    width: 100%
+    height: 90vh
+    min-height: 600px
+    position: relative
+    overflow: hidden
+    background: $noir
+
+
+.video-accueil
+    width: 100%
+    height: 100%
+    display: block
+    object-fit: cover
+
+
+.video-filtre
+    position: absolute
+    inset: 0
+    background: rgba(0, 0, 0, .12)
+    pointer-events: none
+
+
+.video-contenu
+    position: absolute
+    right: 60px
+    bottom: 50px
+    z-index: 2
+
+
+.bouton-panier-video
+    width: 220px
+    margin: 0
+
 
 .section-produits
     width: 100%
     padding: 90px 6%
-    background: $creme
+    background: $blanc
     color: $noir
     position: relative
     z-index: 2
 
-.section-produits h2
+
+.titre-section
     max-width: 1500px
-    margin: 0 auto 35px
-    font: 46px Georgia, serif
+    margin: 0 auto 45px
+
+
+.titre-section h2
+    margin: 0
+    font: 52px Georgia, serif
+    font-weight: bold
+    color: $bleu
+.titre-etoiles-nosproduits
+    margin-top: 10px
+    font-size: 27px
+    letter-spacing: 8px
+
+    .e1
+        color: $vert
+    .e2
+        color: $brun
+    .e3
+        color: $orange
+
+
+.titre-etoiles-enchere
+    margin-top: 10px
+    color: $orange
+    font-size: 27px
+    letter-spacing: 8px
+
+.titre-etoiles
+    margin-top: 10px
+    color: $creme
+    font-size: 27px
+    letter-spacing: 8px
+
 
 .grille-produits
-    max-width: 1500px
+    max-width: 1300px
     margin: auto
     display: grid
-    grid-template-columns: repeat(4, 1fr)
-    gap: 30px
+    grid-template-columns: repeat(3, 1fr)
+    gap: 35px
+
 
 .carte-produit
     background: $blanc
     border-radius: 18px
     overflow: hidden
-    box-shadow: 0 7px 20px rgba(0,0,0,.08)
+    border: 1px solid rgba(0, 0, 0, .05)
+    box-shadow: 0 14px 35px rgba(0, 0, 0, .16)
+
 
 .image-produit
-    height: 280px
+    height: 300px
     position: relative
     background: $vert
 
@@ -167,6 +1018,7 @@ header
         width: 100%
         height: 100%
         object-fit: cover
+
 
 .badge-statut
     position: absolute
@@ -177,18 +1029,26 @@ header
     color: $blanc
     font-size: 12px
 
+
 .badge-vente
     background: $vert
     color: $noir
 
+
 .badge-enchere
     background: $orange
+    color: $noir
+
 
 .badge-echange
     background: $bleu
+    color: $blanc
+
 
 .badge-vendu
-    background: $gris
+    background: $brun
+    color: $blanc
+
 
 .badge-statut-notif
     margin: 15px 0
@@ -197,73 +1057,91 @@ header
     color: $blanc
     font-size: 12px
 
+
 .contenu-produit
-    padding: 22px
+    padding: 25px
 
     h3
         min-height: 48px
+        margin-top: 0
         font-size: 20px
+
 
 .prix
     font-size: 23px
     font-weight: bold
+    color: $bleu
+
 
 .actions
     display: flex
-    gap: 10px
+    align-items: center
+    gap: 14px
 
     form
         display: contents
 
-    button,
-    a
-        padding: 12px 18px
-        border: 0
-        border-radius: 8px
-        text-align: center
 
-    button
-        background: $bleu
+.btn-action-produit
+    min-width: 125px
+    height: 48px
+    padding: 0 24px
+    border: 0
+    display: flex
+    align-items: center
+    justify-content: center
+    background: $bleu
+    color: $blanc
+    font-size: 15px
+    font-weight: bold
+    cursor: pointer
+
+    clip-path: polygon(
+        12% 0%,
+        88% 0%,
+        100% 50%,
+        88% 100%,
+        12% 100%,
+        0% 50%
+    )
+
+    &:hover
+        background: $creme
+        color: $noir
+
+
+.btn-details-produit
+    position: relative
+    isolation: isolate
+    display: inline-flex
+    align-items: center
+    justify-content: center
+    min-width: 110px
+    height: 48px
+    padding: 0 20px
+    border: 0
+    border-radius: 0
+    background: $brun
+    color: $brun
+    font-size: 14px
+    font-weight: bold
+    text-decoration: none
+    clip-path: polygon(12% 0%, 88% 0%, 100% 50%, 88% 100%, 12% 100%, 0% 50%)
+
+    &::before
+        content: ""
+        position: absolute
+        inset: 1.5px
+        background: $blanc
+        clip-path: polygon(12% 0%, 88% 0%, 100% 50%, 88% 100%, 12% 100%, 0% 50%)
+        z-index: -1
+
+    &:hover
         color: $blanc
 
-        &:hover
-            background: $gris
+        &::before
+            background: $brun
 
-    .bouton-secondaire
-        background: $gris
-        color: $blanc
-
-    a
-        background: $gris
-        color: $blanc
-
-    .btn-modifier
-        background: $gris
-
-        &:hover
-            background: $gris-fonce
-
-    .btn-supprimer
-        background: $bleu
-
-        &:hover
-            background: $danger
-
-    .bouton-supprimer
-        background: $orange
-        color: $blanc
-
-    .btn-accepter
-        background: $gris
-
-        &:hover
-            background: $success
-
-    .btn-refuser
-        background: $gris
-
-        &:hover
-            background: $danger
 
 .produit-vedette
     width: 100%
@@ -274,6 +1152,7 @@ header
     color: $blanc
     position: relative
     z-index: 2
+
 
 .vedette-info
     padding: 90px 7%
@@ -286,50 +1165,294 @@ header
         display: inline-block
 
     .prix
-        color: $vert
+        color: $creme
         font-size: 32px
+
 
 .vedette-image
     min-height: 550px
-    background: $gris
+    background: $brun
 
     img
         width: 100%
         height: 100%
         object-fit: cover
 
-.voir-plus
-    margin-top: 100px
 
-footer
+.voir-plus
+    margin-top: 80px
+    display: flex
+    justify-content: center
+    align-items: center
+
+
+.bouton-voir-plus
+    width: 220px
+    height: 68px
+    margin: 0
+
+    background: $creme
+    color: $noir
+
+    font-weight: bold
+
+    &:hover
+        background: $noir
+        color: $creme
+
+
+.section-vendeurs
+    width: 100%
+    padding: 25px
+    background: $blanc
+    color: $noir
     position: relative
     z-index: 2
-    padding: 30px
-    background: $bleu
-    color: $creme
-    text-align: center
 
-@media (max-width: 900px)
-    .navigation
-        grid-template-columns: 1fr
 
-    .connexion
+.cadre-vendeurs
+    width: 100%
+    min-height: 700px
+
+    padding: 90px 6% 120px
+
+    position: relative
+
+    display: flex
+    flex-direction: column
+    align-items: center
+
+    background: $blanc
+
+    border: 1px solid $noir
+
+    clip-path: polygon(
+        2% 0%,
+        98% 0%,
+        100% 5%,
+        100% 95%,
+        98% 100%,
+        2% 100%,
+        0% 95%,
+        0% 5%
+    )
+
+    h2
+        margin: 0 0 70px
+
+        font: 52px Georgia, serif
+        font-weight: bold
+
         text-align: center
 
-    .grille-produits
-        grid-template-columns: repeat(2, 1fr)
+        color: $noir
 
-    .produit-vedette
-        grid-template-columns: 1fr
 
-    .connecter
+.vendeurs-populaires
+    width: 100%
+    max-width: 1100px
+
+    display: flex
+    justify-content: center
+    align-items: flex-start
+
+    gap: 100px
+
+
+.vendeur-card
+    width: 220px
+
+    display: flex
+    flex-direction: column
+    align-items: center
+
+    background: transparent
+
+    text-align: center
+
+    img
+        width: 170px
+        height: 170px
+
+        object-fit: cover
+
+        border-radius: 50%
+
+
+.nom-vendeur
+    margin-top: 22px
+
+    color: $noir
+
+    font-size: 20px
+    font-weight: bold
+
+    text-decoration: none
+    text-underline-offset: 6px
+
+    &:hover
+        color: $noir
+        text-decoration: underline
+
+
+.separateur-vendeurs
+    width: 100%
+    max-width: 900px
+
+    height: 40px
+
+    margin: 80px auto 40px
+
+    position: relative
+
+    display: flex
+    align-items: center
+    justify-content: center
+
+    &::before
+        content: ""
+
+        position: absolute
+
+        left: 0
+        top: 50%
+
+        width: 100%
+        height: 1px
+
+        background: $noir
+
+    span
+        width: 17px
+        height: 17px
+
+        position: relative
+        z-index: 2
+
+        display: block
+
+        background: $blanc
+
+        border: 1px solid $noir
+
+        transform: rotate(45deg)
+
+
+.voir-utilisateurs
+    display: flex
+    justify-content: center
+    align-items: center
+
+
+.bouton-utilisateurs
+    position: relative
+    isolation: isolate
+    display: inline-flex
+    align-items: center
+    justify-content: center
+    width: 285px
+    height: 62px
+    background: #000000
+    color: #000000
+    border: 0
+    font-size: 14px
+    font-weight: bold
+    text-decoration: none
+    text-transform: uppercase
+    clip-path: polygon(10% 0%, 90% 0%, 100% 50%, 90% 100%, 10% 100%, 0% 50%)
+
+    &::before
+        content: ""
+        position: absolute
+        inset: 1.5px
+        background: #FFFFFF
+        clip-path: polygon(10% 0%, 90% 0%, 100% 50%, 90% 100%, 10% 100%, 0% 50%)
+        z-index: -1
+
+    &:hover
+        color: #FFFFFF
+
+        &::before
+            background: #000000
+
+
+footer.footer
+    position: relative
+    overflow: hidden
+    width: 100%
+    position: relative
+    flex-shrink: 0
+    margin-top: auto
+    padding: 70px 30px 40px
+    background: $bleu
+    color: $blanc
+    text-align: center
+
+    h2
+        margin-bottom: 15px
+        font: bold 42px Georgia, serif
+        color: $creme
+
+    .footer-description
+        margin-bottom: 15px
+        font-size: 17px
+
+    .footer-liens
+        display: flex
         justify-content: center
-        flex-wrap: wrap
+        gap: 40px
+        margin: 35px 0 60px
+
+        a
+            color: $creme
+            font-size: 15px
+            font-weight: bold
+            text-decoration: none
+
+            &:hover
+                color: $blanc
+                text-decoration: underline
+
+    .footer-reseaux
+        display: flex
+        justify-content: center
+        align-items: center
+        gap: 30px
+        margin-bottom: 30px
+
+        a
+            color: $blanc
+            font-size: 25px
+
+            &:hover
+                color: $creme
+
+    .footer-copyright
+        margin: 0
+        color: $creme
+        font-size: 14px
+
+    .footer-etoile
+        position: absolute
+        top: 50%
+        transform: translateY(-50%)
+        font-size: 230px
+        color: $creme
+        line-height: 1
+        pointer-events: none
+
+    .gauche
+        left: 5%
+
+    .droite
+        right: 5%
+
 
 .liste-mes-produits
     display: flex
     flex-direction: column
     gap: 20px
+
 
 .carte-mon-produit
     display: grid
@@ -343,31 +1466,34 @@ footer
     .actions
         padding: 22px
 
+
 p
     a
         color: blue
         text-decoration: underline
+
 
 .choix-badge
     position: static
     display: inline-block
     margin-right: 8px
     cursor: pointer
-    opacity: 0.6
+    opacity: .6
     border: 2px solid transparent
+
 
 .btn-check:checked + .choix-badge
     opacity: 1
     border-color: $noir
 
+
 .btn-check:focus-visible + .choix-badge
     outline: 2px solid $noir
+
 
 .image-actuelle
     max-width: 300px
 
-
-// Section formulaires //
 
 .form-conteneur
     max-width: 540px
@@ -377,32 +1503,35 @@ p
     h1
         margin-bottom: 1.5rem
 
+
 .formulaire
     display: grid
     gap: 1.5rem
+
 
 .form-groupe
     margin-bottom: 1rem
 
     label
         display: inline-block
-        margin-bottom: 0.5rem
+        margin-bottom: .5rem
+
 
 .form-champ
     display: block
     width: 100%
-    padding: 0.375rem 0.75rem
+    padding: .375rem .75rem
     font-size: 1rem
     line-height: 1.5
     color: $noir
     background-color: $blanc
     border: 1px solid #ced4da
-    border-radius: 0.375rem
+    border-radius: .375rem
 
     &:focus
-        border-color: $bleu
+        border-color: $vert
         outline: 0
-        box-shadow: 0 0 0 0.25rem rgba(50, 53, 80, 0.25)
+        box-shadow: 0 0 0 .25rem rgba(79, 187, 154, .25)
 
     &.is-invalid
         border-color: $danger
@@ -410,11 +1539,13 @@ p
     &.is-valid
         border-color: $vert
 
+
 .form-erreur
-    margin-top: 0.25rem
+    margin-top: .25rem
     margin-bottom: 0
-    font-size: 0.875rem
+    font-size: .875rem
     color: $danger
+
 
 .form-actions
     display: flex
@@ -431,44 +1562,336 @@ p
         cursor: pointer
 
         &:hover
-            background: $gris-fonce
+            background: $brun
+
 
 .form-apercu-image
     display: block
     max-width: 300px
-    margin-bottom: 0.5rem
+    margin-bottom: .5rem
     border-radius: 8px
     border: 1px solid #ced4da
-    padding: 0.25rem
+    padding: .25rem
     background: $blanc
+.page-profil
+    background: $blanc
+    color: $bleu
 
-.icone-panier
-    color: $creme
-    font-size: 1.5rem
+    .profil-entete
+        display: grid
+        grid-template-columns: auto auto
+        justify-content: center
+        align-items: center
+        gap: 35px
+        margin: 70px auto 80px
+
+    .profil-avatar
+        width: 190px
+        height: 190px
+        object-fit: cover
+        border-radius: 50%
+        border: 2px solid #804E37
+
+    .profil-informations
+        h3
+            margin: 0 0 5px
+            font: bold 42px Georgia, serif
+            color: $bleu
+
+        p
+            margin: 10px 0
+            font-size: 17px
+
+    .lien-modifier-profil
+        display: inline-block
+        margin-bottom: 15px
+        color: $bleu
+        font-size: 14px
+        font-weight: bold
+        text-decoration: none
+
+        &:hover
+            text-decoration: underline
+            text-underline-offset: 4px
+
+    .profil-actions
+        grid-column: 1 / -1
+        display: grid
+        grid-template-columns: repeat(2, 250px)
+        justify-content: center
+        gap: 15px 20px
+        margin: 20px auto 0
+
+        .bouton-secondaire
+            position: relative
+            isolation: isolate
+            display: flex
+            align-items: center
+            justify-content: center
+            width: 100%
+            height: 55px
+            padding: 0 25px
+            border: 0
+            border-radius: 0
+            background: #000000
+            color: #000000
+            font-size: 15px
+            font-weight: bold
+            text-decoration: none
+            clip-path: polygon(12% 0%, 88% 0%, 100% 50%, 88% 100%, 12% 100%, 0% 50%)
+
+            &::before
+                content: ""
+                position: absolute
+                inset: 1.5px
+                background: #FFFFFF
+                clip-path: polygon(12% 0%, 88% 0%, 100% 50%, 88% 100%, 12% 100%, 0% 50%)
+                z-index: -1
+
+            &:hover:not(:disabled)
+                color: #FFFFFF
+
+                &::before
+                    background: #000000
+
+            &:disabled
+                opacity: .45
+                cursor: not-allowed
+
+    .titre-mes-produits
+        margin: 60px 0 70px
+        text-align: center
+        font: bold 46px Georgia, serif
+        color: $bleu
+
+    .liste-mes-produits
+        width: 100%
+        max-width: 1350px
+        margin: auto
+        display: flex
+        flex-direction: column
+        gap: 25px
+
+    .carte-mon-produit
+        width: 92%
+        margin: auto
+        display: grid
+        grid-template-columns: 250px 1fr auto
+        align-items: center
+        background: $blanc
+        box-shadow: none
+        border: 0
+        border-radius: 0
+        min-height: 200px
+        height: auto
+
+        .image-produit
+            height: 200px
+            border-radius: 12px
+            overflow: hidden
+
+            img
+                width: 100%
+                height: 100%
+                object-fit: cover
+
+        .contenu-produit
+            padding: 25px
+
+            h3
+                min-height: 0
+                margin-bottom: 20px
+                font-size: 20px
+                font-weight: bold
+
+            p
+                line-height: 1.5
+
+            .prix
+                font-size: 24px
+                font-weight: bold
+
+        .actions
+            display: flex
+            align-items: center
+            gap: 20px
+            padding: 20px
+
+            .btn-modifier
+                padding: 0
+                border: 0
+                background: transparent
+                color: $bleu
+                font-size: 15px
+                font-weight: bold
+                text-decoration: none
+
+                &:hover
+                    background: transparent
+                    text-decoration: underline
+                    text-underline-offset: 4px
+
+            .btn-supprimer
+                min-width: 145px
+                height: 48px
+                padding: 0 20px
+                border: 0
+                border-radius: 0
+                background: #EFA18E
+                color: $noir
+                font-size: 14px
+                font-weight: bold
+                clip-path: polygon(12% 0%, 88% 0%, 100% 50%, 88% 100%, 12% 100%, 0% 50%)
+
+                &:hover
+                    background: $danger
+                    color: $blanc
+
+    .separateur-produits-profil
+        width: 100%
+        margin: 20px auto
+        display: flex
+        align-items: center
+        justify-content: center
+
+        &::before,
+        &::after
+            content: ""
+            flex: 1
+            height: 1px
+            background: $bleu
+
+        span
+            width: 17px
+            height: 17px
+            flex-shrink: 0
+            border: 1px solid $bleu
+            background: $blanc
+            transform: rotate(45deg)
+
+    .aucun-produit
+        text-align: center
+
+.page-vintage > .titre-page-vintage,
+.page-vintage .titre-page-vintage
     text-align: center
+    margin: 50px auto 50px
 
-    &:hover
-        color: $orange
+
+.liste-mes-produits
+    max-width: 1100px
+    margin: auto
+    display: flex
+    flex-direction: column
+    gap: 20px
+
 
 .ligne-panier
+    width: 100%
+    min-height: 195px
+    height: 195px
     display: grid
-    grid-template-columns: 250px 1fr auto
-    align-items: center
-    height: 200px
+    grid-template-columns: 220px 1fr 180px
+    align-items: stretch
+    background: $blanc
+    overflow: hidden
+    border-radius: 18px
+    box-shadow: 0 7px 20px rgba(0, 0, 0, .10)
+
 
     .image-produit
-        height: 100%
+        width: 220px
+        height: 195px
+        margin: 0
+        padding: 0
+        overflow: hidden
+        background: $blanc
+        border-radius: 18px 0 0 18px
+
+
+        a
+            width: 100%
+            height: 100%
+            display: block
+
+
+        img
+            width: 100%
+            height: 100%
+            display: block
+            object-fit: cover
+            object-position: center
+
+
+    .contenu-produit
+        padding: 25px
+        display: flex
+        flex-direction: column
+        justify-content: center
+
+
+        h3
+            min-height: 0
+            margin: 0 0 15px
+            font-size: 20px
+            color: $noir
+
+
+        p
+            margin: 0 0 12px
+            line-height: 1.5
+
+
+        .prix
+            margin: 5px 0 0
+            font-size: 22px
+            font-weight: bold
+            color: $bleu
+
 
     .actions
-        padding: 22px
+        padding: 25px
+        display: flex
+        align-items: center
+        justify-content: center
 
-.nb-articles
-    margin-left: 4px
-    font-size: 1rem
-    font-weight: bold
-    color: $creme
 
-// Profil //
+        form
+            display: block
+
+
+        button
+            min-width: 135px
+            height: 48px
+            padding: 0 22px
+            border: 0
+            background: $orange
+            color: $noir
+            font-weight: bold
+            cursor: pointer
+            clip-path: polygon(12% 0%, 88% 0%, 100% 50%, 88% 100%, 12% 100%, 0% 50%)
+
+
+            &:hover
+                background: $danger
+                color: $blanc
+
+
+.panier-total
+    max-width: 1100px
+    margin: 35px auto 0
+    display: flex
+    align-items: center
+    justify-content: flex-end
+    gap: 25px
+
+
+    .prix
+        margin: 0
+        font: bold 27px Georgia, serif
+        color: $bleu
+
+
 .profil-entete
     display: flex
     align-items: center
@@ -476,19 +1899,23 @@ p
     gap: 2rem
     margin-top: 1.5rem
 
+
 .profil-avatar
     width: 150px
     height: 150px
     object-fit: cover
     border-radius: 50%
-    border: 2px solid $gris
+    border: 2px solid $brun
+
 
 .profil-bouton-modifier
     padding: 12px 18px
     border: 0
     border-radius: 8px
-    background: $gris
+    background: $brun
     color: $blanc
+
+
 .lien-creer-compte
     color: $bleu
     font-weight: bold
@@ -496,18 +1923,26 @@ p
     text-underline-offset: 3px
 
     &:hover
-        color: $gris-fonce
+        color: $brun
 
     &:focus-visible
         outline: 2px solid $bleu
         outline-offset: 3px
 
 
-// Section notifications //
+.lien-modifier-profil
+    color: $bleu
+    font-size: 14px
+    font-weight: bold
+    text-decoration: underline
+    text-underline-offset: 3px
 
-#img_notif
-    max-height: 50px
-    text-align: right
+    &:hover
+        color: $brun
+
+    &:focus-visible
+        outline: 2px solid $bleu
+        outline-offset: 3px
 
 .affichage_notif
     display: flex
@@ -526,7 +1961,7 @@ p
         color: $noir
 
         &:hover
-            color: $gris
+            color: $brun
 
 .badge-nouvelle
     display: inline-block
@@ -547,20 +1982,6 @@ p
     background-color: #f8d7da !important
     border: 1px solid #f1aeb5 !important
 
-.lien-modifier-profil
-    color: $bleu
-    font-size: 14px
-    font-weight: bold
-    text-decoration: underline
-    text-underline-offset: 3px
-
-    &:hover
-        color: $gris-fonce
-
-    &:focus-visible
-        outline: 2px solid $bleu
-        outline-offset: 3px
-
 .connexion a.icone-action
     position: relative
     display: flex
@@ -573,6 +1994,10 @@ p
     border: 0
     font-size: 1.4rem
 
+    &:hover
+        background: transparent
+        color: $blanc
+
 .badge-compteur
     position: absolute
     top: -5px
@@ -584,7 +2009,7 @@ p
     align-items: center
     justify-content: center
     background: #d32f2f
-    color: white
+    color: $blanc
     border-radius: 50%
     font-size: 0.75rem
     font-weight: bold
@@ -593,8 +2018,41 @@ p
         display: none
 
 .lien-profil-public
-    color: $gris
+    color: $brun
     text-decoration: underline
 
     &:hover
-        color: $gris-fonce
+        color: $bleu
+
+.actions-notification,
+.affichage_notif .actions
+    .btn-accepter,
+    .btn-refuser
+        min-width: 130px
+        height: 46px
+        padding: 0 20px
+        border: 0
+        display: inline-flex
+        align-items: center
+        justify-content: center
+        color: $noir
+        font-weight: bold
+        text-decoration: none
+        clip-path: polygon(12% 0%, 88% 0%, 100% 50%, 88% 100%, 12% 100%, 0% 50%)
+
+    .btn-accepter
+        background: $vert
+
+        &:hover
+            background: $bleu
+            color: $blanc
+
+    .btn-refuser
+        background: $orange
+
+        &:hover
+            background: $danger
+            color: $blanc
+
+main
+    flex: 1

@@ -147,22 +147,36 @@ def miser_produit(id):
             produit["id_vendeur"]
         )
 
-        if request.method == "POST":
+       
+        if (
+            produit["id_vendeur"]
+            == session["id_utilisateur"]
+        ):
+            erreur = (
+                "Vous ne pouvez pas miser "
+                "sur votre propre produit."
+            )
+
+        elif request.method == "POST":
+
             mise = request.form.get(
                 "mise",
                 type=float
             )
 
             if mise is None:
+
                 erreur = "Veuillez entrer une mise."
 
             elif mise <= float(produit["prix"]):
+
                 erreur = (
                     "La mise doit être supérieure "
                     "au prix actuel."
                 )
 
             else:
+
                 bd.ajouter_mise(
                     curseur,
                     id,
@@ -191,11 +205,14 @@ def miser_produit(id):
     )
 
     if os.path.exists(chemin_image):
+
         img_source = (
             current_app.config["ROUTE_IMAGES"]
             + nom_image
         )
+
     else:
+
         img_source = url_for(
             "static",
             filename="images/default.png"
