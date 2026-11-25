@@ -23,7 +23,8 @@ def voir_panier():
 
     for p in produits:
         nom_image = "produit_" + str(p["id_produit"]) + ".png"
-        chemin_image = os.path.join(current_app.config["CHEMIN_IMAGES"], nom_image)
+        chemin_image = os.path.join(
+            current_app.config["CHEMIN_IMAGES"], nom_image)
 
         if os.path.exists(chemin_image):
             p["src"] = current_app.config["ROUTE_IMAGES"] + nom_image
@@ -36,7 +37,7 @@ def voir_panier():
             est_indisponible = True
 
     return render_template("panier.jinja", produits=produits, total=total,
-        est_indisponible=est_indisponible, form=PanierForm(), achat_reussi=achat_reussi)
+                           est_indisponible=est_indisponible, form=PanierForm(), achat_reussi=achat_reussi)
 
 
 @bp_panier.route("/ajouter/<int:id>", methods=["POST"])
@@ -48,12 +49,21 @@ def ajouter(id):
         abort(400)
 
     with bd.creer_curseur() as curseur:
-        produit = bd.get_produit(curseur, id)
+        produit = bd.get_produit_pour_panier(curseur, id)
+
         if produit is None or produit["archive"] or produit["id_statut"] == 4:
             abort(404)
+
         if produit["id_vendeur"] == session["id_utilisateur"]:
             abort(403)
-        bd.ajouter_au_panier(curseur, session["id_utilisateur"], id)
+
+        achat = bd.get_achat_par_produit(curseur, id)
+
+        if achat is None:
+            bd.ajouter_au_panier(curseur, session["id_utilisateur"], id)
+
+        elif achat["id_acheteur"] != session["id_utilisateur"] or achat["paye"]:
+            abort(409, "Ce produit n'est plus disponible.")
 
     return redirect(url_for("panier.voir_panier"))
 
