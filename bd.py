@@ -52,7 +52,7 @@ def creer_curseur():
 
 
 def get_nouveaux_produits(curseur):
-    """Permet d'obtenir les 4 produits les plus récents"""
+    """Permet d'obtenir les 6 produits les plus récents"""
 
     curseur.execute("""
         SELECT
@@ -69,7 +69,7 @@ def get_nouveaux_produits(curseur):
         WHERE s.nom_statut <> 'Vendu'
         AND p.archive = FALSE
         ORDER BY p.date DESC
-        LIMIT 4
+        LIMIT 6
     """)
 
     return curseur.fetchall()
@@ -100,7 +100,7 @@ def get_produit_aleatoire(curseur):
 
 
 def get_produits_aleatoires(curseur):
-    """Permet d'obtenir 4 produits au hasard"""
+    """Permet d'obtenir 9 produits au hasard"""
 
     curseur.execute("""
         SELECT
@@ -117,7 +117,7 @@ def get_produits_aleatoires(curseur):
         WHERE s.nom_statut <> 'Vendu'
         AND p.archive = FALSE
         ORDER BY RAND()
-        LIMIT 4
+        LIMIT 9
     """)
 
     return curseur.fetchall()
@@ -134,24 +134,18 @@ def get_utilisateurs_populaires(curseur):
             u.nom,
             COUNT(a.id_achat) AS nb_ventes,
             COALESCE(SUM(a.prix_achat), 0) AS vente_totale
-
         FROM utilisateur u
-
         LEFT JOIN produit p
             ON u.id_utilisateur = p.id_vendeur
-
         LEFT JOIN achat a
             ON p.id_produit = a.id_produit
             AND a.paye = TRUE
-
         GROUP BY
             u.id_utilisateur,
             u.nom
-
         ORDER BY
             nb_ventes DESC,
             vente_totale DESC
-
         LIMIT 3
     """)
 
@@ -194,12 +188,9 @@ def get_produits(
             p.date,
             p.id_vendeur,
             s.nom_statut
-
         FROM produit p
-
         JOIN statut_produit s
             ON p.id_statut = s.id_statut
-
         WHERE p.prix BETWEEN %(min)s AND %(max)s
         AND s.nom_statut <> 'Vendu'
         AND p.archive = FALSE
@@ -256,18 +247,14 @@ def get_produits_recherche_filtre(
             p.date,
             p.id_vendeur,
             s.nom_statut
-
         FROM produit p
-
         JOIN statut_produit s
             ON p.id_statut = s.id_statut
-
         WHERE (
             p.nom LIKE %(mot_cle)s
             OR p.description LIKE %(mot_cle)s
             AND s.nom_statut <> 'Vendu'
         )
-
         AND p.prix BETWEEN %(min)s AND %(max)s
         AND s.nom_statut <> 'Vendu'
         AND p.archive = FALSE
@@ -315,10 +302,12 @@ def get_produit_by_id(curseur, id_produit):
 
     curseur.execute("""
         SELECT *
-        FROM produit WHERE id_produit=%(id_produit)s
-             """, {
-        'id_produit': id_produit,
+        FROM produit
+        WHERE id_produit = %(id_produit)s
+    """, {
+        "id_produit": id_produit
     })
+
     return curseur.fetchone()
 
 
@@ -328,10 +317,12 @@ def get_vendeur(curseur, id_utilisateur):
 
     curseur.execute("""
         SELECT *
-        FROM utilisateur WHERE id_utilisateur=%(id_utilisateur)s
-             """, {
-        'id_utilisateur': id_utilisateur,
+        FROM utilisateur
+        WHERE id_utilisateur = %(id_utilisateur)s
+    """, {
+        "id_utilisateur": id_utilisateur
     })
+
     return curseur.fetchone()
 
 
@@ -362,7 +353,7 @@ def inserer_utilisateur_bd(curseur, nom, courriel, mdp):
 
 
 def get_nom_unique(curseur, nom):
-    """Vérifie l'existance d'un nom"""
+    """Vérifie l'existence d'un nom"""
 
     curseur.execute("""
         SELECT
@@ -379,7 +370,7 @@ def get_nom_unique(curseur, nom):
 
 
 def get_courriel_unique(curseur, courriel):
-    """Vérifie l'existance d'un courriel"""
+    """Vérifie l'existence d'un courriel"""
 
     curseur.execute("""
         SELECT
@@ -413,8 +404,7 @@ def get_nom_utiliser(curseur):
 def get_produits_par_vendeur(curseur, id_vendeur):
     """Retourne la liste des produits pour un vendeur donné"""
 
-    curseur.execute(
-        """
+    curseur.execute("""
         SELECT
             p.id_produit,
             p.nom,
@@ -426,17 +416,16 @@ def get_produits_par_vendeur(curseur, id_vendeur):
             ON p.id_statut = s.id_statut
         WHERE p.id_vendeur = %(id_vendeur)s
         AND p.archive = FALSE
-        """,
-        {
-            'id_vendeur': id_vendeur
-        }
-    )
+    """, {
+        "id_vendeur": id_vendeur
+    })
 
     return curseur.fetchall()
 
 
 def get_enchere_future(curseur):
-    """Permet d'obtenir les 4 prochains produits mis aux enchères"""
+    """Permet d'obtenir les 3 prochains produits mis aux enchères"""
+
     curseur.execute("""
         SELECT
             p.id_produit,
@@ -448,10 +437,11 @@ def get_enchere_future(curseur):
         FROM produit p
         JOIN statut_produit s
             ON p.id_statut = s.id_statut
-        WHERE s.nom_statut = 'Aux enchères' AND NOW() < p.date
+        WHERE s.nom_statut = 'Aux enchères'
+        AND NOW() < p.date
         AND p.archive = FALSE
         ORDER BY p.date ASC
-        LIMIT 4
+        LIMIT 3
     """)
 
     return curseur.fetchall()
@@ -459,30 +449,58 @@ def get_enchere_future(curseur):
 
 def ajouter_produit(curseur, id_vendeur, nom, description, prix, id_statut):
     """Ajouter un produit dans la bd"""
-    curseur.execute("INSERT INTO produit (id_vendeur, nom, description, prix, id_statut, date) "
-                    "VALUES(%(id_vendeur)s, %(nom)s, %(description)s, %(prix)s, %(id_statut)s, CURDATE());", {
-                        'id_vendeur': id_vendeur,
-                        'nom': nom,
-                        'description': description,
-                        'prix': prix,
-                        'id_statut': id_statut
-                    })
+
+    curseur.execute("""
+        INSERT INTO produit (
+            id_vendeur,
+            nom,
+            description,
+            prix,
+            id_statut,
+            date
+        )
+        VALUES (
+            %(id_vendeur)s,
+            %(nom)s,
+            %(description)s,
+            %(prix)s,
+            %(id_statut)s,
+            CURDATE()
+        )
+    """, {
+        "id_vendeur": id_vendeur,
+        "nom": nom,
+        "description": description,
+        "prix": prix,
+        "id_statut": id_statut
+    })
+
     return curseur.lastrowid
 
 
 def get_statuts(curseur):
     """Retourne tous les statuts de produit"""
-    curseur.execute("SELECT id_statut, nom_statut FROM statut_produit")
+
+    curseur.execute("""
+        SELECT id_statut, nom_statut
+        FROM statut_produit
+    """)
+
     return curseur.fetchall()
 
 
 
 def get_statut_by_Id(curseur, id):
     """Retourne le nom du statut de produit"""
-    curseur.execute("SELECT nom_statut FROM statut_produit WHERE id_statut = %(id)s;",
-                    {
-                        'id': id
-                    })
+
+    curseur.execute("""
+        SELECT nom_statut
+        FROM statut_produit
+        WHERE id_statut = %(id)s
+    """, {
+        "id": id
+    })
+
     return curseur.fetchone()
 
 
@@ -490,32 +508,42 @@ def get_statut_by_Id(curseur, id):
 def archiver_produit(curseur, id_produit):
     """Archive un produit"""
 
-    curseur.execute(
-        """
+    curseur.execute("""
         UPDATE produit
         SET archive = TRUE
         WHERE id_produit = %(id_produit)s
-        """,
-        {
-            "id_produit": id_produit
-        }
-    )
+    """, {
+        "id_produit": id_produit
+    })
 
 
 def ajouter_au_panier(curseur, id_acheteur, id_produit):
     """Permet d'ajouter un produit au panier"""
-    curseur.execute(
-        "INSERT INTO achat "
-        "(id_produit, id_acheteur, prix_achat, date_achat, paye) "
-        "SELECT id_produit, %(id_acheteur)s, prix, CURDATE(), FALSE "
-        "FROM produit WHERE id_produit = %(id_produit)s",
-        {
-            "id_acheteur": id_acheteur,
-            "id_produit": id_produit
-        }
-    )
+
+    curseur.execute("""
+        INSERT INTO achat (
+            id_produit,
+            id_acheteur,
+            prix_achat,
+            date_achat,
+            paye
+        )
+        SELECT
+            id_produit,
+            %(id_acheteur)s,
+            prix,
+            CURDATE(),
+            FALSE
+        FROM produit
+        WHERE id_produit = %(id_produit)s
+    """, {
+        "id_acheteur": id_acheteur,
+        "id_produit": id_produit
+    })
+
 
 def get_produit_pour_panier(curseur, id_produit):
+
     curseur.execute("""
         SELECT *
         FROM produit
@@ -529,6 +557,7 @@ def get_produit_pour_panier(curseur, id_produit):
 
 
 def get_achat_par_produit(curseur, id_produit):
+
     curseur.execute("""
         SELECT id_acheteur, paye
         FROM achat
@@ -543,94 +572,110 @@ def get_achat_par_produit(curseur, id_produit):
 
 def supprimer_du_panier(curseur, id_acheteur, id_produit):
     """Permet de retirer un produit du panier"""
-    curseur.execute(
-        "DELETE FROM achat "
-        "WHERE id_acheteur = %(id_acheteur)s "
-        "AND id_produit = %(id_produit)s "
-        "AND id_produit = %(id_produit)s "
-        "AND paye = FALSE",
-        {
-            "id_acheteur": id_acheteur,
-            "id_produit": id_produit
-        }
-    )
+
+    curseur.execute("""
+        DELETE FROM achat
+        WHERE id_acheteur = %(id_acheteur)s
+        AND id_produit = %(id_produit)s
+        AND paye = FALSE
+    """, {
+        "id_acheteur": id_acheteur,
+        "id_produit": id_produit
+    })
 
 
 
 def get_panier(curseur, id_acheteur):
     """Permet de retourner les produits dans le panier"""
+
     curseur.execute("""
-        SELECT p.id_produit, p.description, p.nom, p.prix, p.archive, p.id_statut
+        SELECT
+            p.id_produit,
+            p.description,
+            p.nom,
+            p.prix,
+            p.archive,
+            p.id_statut
         FROM achat a
-        JOIN produit p ON a.id_produit = p.id_produit
+        JOIN produit p
+            ON a.id_produit = p.id_produit
         WHERE a.id_acheteur = %(id_acheteur)s
-        AND a.paye = FALSE""",
-                    {
-                        "id_acheteur": id_acheteur
-                    })
+        AND a.paye = FALSE
+    """, {
+        "id_acheteur": id_acheteur
+    })
+
     return curseur.fetchall()
 
 
 
 def confirmer_achat(curseur, id_acheteur, id_produit, prix):
     """Permet de confirmer l'achat d'un produit du panier"""
-    curseur.execute(
-        "UPDATE achat SET paye = TRUE, prix_achat = %(prix)s, "
-        "date_achat = CURDATE() "
-        "WHERE id_acheteur = %(id_acheteur)s "
-        "AND id_produit = %(id_produit)s "
-        "WHERE id_acheteur = %(id_acheteur)s "
-        "AND id_produit = %(id_produit)s "
-        "AND paye = FALSE",
-        {
-            "id_acheteur": id_acheteur,
-            "id_produit": id_produit,
-            "prix": prix
-        }
-    )
+
+    curseur.execute("""
+        UPDATE achat
+        SET paye = TRUE,
+            prix_achat = %(prix)s,
+            date_achat = CURDATE()
+        WHERE id_acheteur = %(id_acheteur)s
+        AND id_produit = %(id_produit)s
+        AND paye = FALSE
+    """, {
+        "id_acheteur": id_acheteur,
+        "id_produit": id_produit,
+        "prix": prix
+    })
+
     return curseur.rowcount
 
 
 
 def marquer_vendu(curseur, id_produit):
     """Change le statut du produit pour Vendu"""
-    curseur.execute(
-        "UPDATE produit SET id_statut = 4 "
-        "WHERE id_produit = %(id_produit)s",
-        {
-            "id_produit": id_produit
-        }
-    )
+
+    curseur.execute("""
+        UPDATE produit
+        SET id_statut = 4
+        WHERE id_produit = %(id_produit)s
+    """, {
+        "id_produit": id_produit
+    })
+
 
 
 
 def get_nb_articles_panier(curseur, id_acheteur):
     """Permet de compter les produits dans le panier"""
-    curseur.execute(
-        "SELECT COUNT(*) AS nb FROM achat "
-        "WHERE id_acheteur = %(id_acheteur)s "
-        "AND paye = FALSE",
-        {
-            "id_acheteur": id_acheteur
-        }
-    )
+
+    curseur.execute("""
+        SELECT COUNT(*) AS nb
+        FROM achat
+        WHERE id_acheteur = %(id_acheteur)s
+        AND paye = FALSE
+    """, {
+        "id_acheteur": id_acheteur
+    })
+
     return curseur.fetchone()["nb"]
 
 
 def modifier_produit(curseur, id_produit, nom, description, prix, id_statut):
     """Modifier un produit dans la bd"""
-    curseur.execute(
-        "UPDATE produit SET nom = %(nom)s, description = %(description)s, "
-        "prix = %(prix)s, id_statut = %(id_statut)s "
-        "WHERE id_produit = %(id_produit)s",
-        {
-            "id_produit": id_produit,
-            "nom": nom,
-            "description": description,
-            "prix": prix,
-            "id_statut": id_statut
-        }
-    )
+
+    curseur.execute("""
+        UPDATE produit
+        SET nom = %(nom)s,
+            description = %(description)s,
+            prix = %(prix)s,
+            id_statut = %(id_statut)s
+        WHERE id_produit = %(id_produit)s
+    """, {
+        "id_produit": id_produit,
+        "nom": nom,
+        "description": description,
+        "prix": prix,
+        "id_statut": id_statut
+    })
 
 
 def modifier_utilisateur(curseur, id_utilisateur, nom, courriel):
@@ -662,36 +707,49 @@ def modifier_mot_de_passe(curseur, id_utilisateur, mot_de_passe):
 
 
 def get_notification(curseur, id_utilisateur):
+
     curseur.execute("""
         SELECT *
         FROM notification
         WHERE id_destinataire = %(id_utilisateur)s
-          AND (
-              notif_vue = 0
-              OR date_lecture > DATE_SUB(NOW(), INTERVAL 15 DAY)
-          )
-        ORDER BY date DESC""",
-        {
-            "id_utilisateur": id_utilisateur
-        })
+        AND (
+            notif_vue = 0
+            OR date_lecture > DATE_SUB(NOW(), INTERVAL 15 DAY)
+        )
+        ORDER BY date DESC
+    """, {
+        "id_utilisateur": id_utilisateur
+    })
 
     return curseur.fetchall()
 
 
 
 def get_utilisateur_name(curseur, id):
-    curseur.execute("SELECT nom FROM utilisateur WHERE id_utilisateur = %(id)s;",
-                    {
-                        'id': id
-                    })
+
+    curseur.execute("""
+        SELECT nom
+        FROM utilisateur
+        WHERE id_utilisateur = %(id)s
+    """, {
+        "id": id
+    })
+
     return curseur.fetchone()
 
+
+
+
 def update_offer(curseur, id_proposition, approuve):
-    curseur.execute("UPDATE `echange` SET `approuver`= %(approuve)s WHERE id_echange = %(id)s;",
-                    {
-                        'id': id_proposition,
-                        'approuve': approuve
-                    })
+
+    curseur.execute("""
+        UPDATE echange
+        SET approuver = %(approuve)s
+        WHERE id_echange = %(id)s
+    """, {
+        "id": id_proposition,
+        "approuve": approuve
+    })
 
 
 def create_echange(curseur, id_produit_echange, id_proprio, id_utilisateur, id_produit_offert):
@@ -713,39 +771,68 @@ def create_notif(curseur, id):
                     })
     return curseur.lastrowid
 
+
+
 def create_notif_offrant(curseur, id):
-    """Notification de la réponse à demande d'échange"""
-    curseur.execute("INSERT INTO `notification`( `id_destinataire`, `id_statut`, `notif_vue`, `date`)"
-                    " VALUES ((SELECT e.id_utilisateur FROM notification_echange n JOIN echange e ON n.id_echange = e.id_echange WHERE e.id_echange = %(id)s)"
-                    ", 3 , 0, CURRENT_DATE);", {
-                        'id': id
-                    })
+
+    curseur.execute("""
+        INSERT INTO notification (
+            id_destinataire,
+            id_statut,
+            notif_vue,
+            date
+        )
+        VALUES (
+            (
+                SELECT e.id_utilisateur
+                FROM notification_echange n
+                JOIN echange e
+                    ON n.id_echange = e.id_echange
+                WHERE e.id_echange = %(id)s
+            ),
+            3,
+            0,
+            CURRENT_DATE
+        )
+    """, {
+        "id": id
+    })
+
     return curseur.lastrowid
 
 
 
 def create_notif_echange(curseur, id_echange, id_notification):
-    curseur.execute("INSERT INTO `notification_echange` (`id_notification`, `id_echange`) VALUES (%(id_notification)s, %(id_echange)s);", {
-        'id_notification': id_notification,
-        'id_echange': id_echange
+
+    curseur.execute("""
+        INSERT INTO notification_echange (
+            id_notification,
+            id_echange
+        )
+        VALUES (
+            %(id_notification)s,
+            %(id_echange)s
+        )
+    """, {
+        "id_notification": id_notification,
+        "id_echange": id_echange
     })
 
 
 def get_notif_echange(curseur, id):
 
     curseur.execute("""
-        SELECT
-        e.*
+        SELECT e.*
         FROM notification n
         JOIN notification_echange j
             ON n.id_notification = j.id_notification
         JOIN echange e
             ON j.id_echange = e.id_echange
-        WHERE n.id_notification =  %(id)s
-    """,
-                    {
-                        'id': id
-                    })
+        WHERE n.id_notification = %(id)s
+    """, {
+        "id": id
+    })
+
     return curseur.fetchone()
 
 def get_echange_existant(curseur, produit, id_utilisateur, produit_offert):
@@ -764,55 +851,76 @@ def get_echange_existant(curseur, produit, id_utilisateur, produit_offert):
     return curseur.fetchone()
 
 
+
 def get_nouvelle_notification(curseur, id_utilisateur):
-    curseur.execute("SELECT * FROM notification WHERE id_destinataire = %(id_utilisateur)s and notif_vue = 0;",
-                    {
-                        'id_utilisateur': id_utilisateur
-                    })
+
+    curseur.execute("""
+        SELECT *
+        FROM notification
+        WHERE id_destinataire = %(id_utilisateur)s
+        AND notif_vue = 0
+    """, {
+        "id_utilisateur": id_utilisateur
+    })
+
     return curseur.fetchall()
 
 
 
 def update_notification(curseur, id_proposition, vue):
+
     curseur.execute("""
         UPDATE notification
-        SET notif_vue = %(vue)s, date_lecture = NOW()
+        SET notif_vue = %(vue)s,
+            date_lecture = NOW()
         WHERE id_notification = %(id)s
-          AND notif_vue = 0""",
-          {
-            "id": id_proposition,
-            "vue": vue
-        })
+        AND notif_vue = 0
+    """, {
+        "id": id_proposition,
+        "vue": vue
+    })
 
 
 def get_achat_paye(curseur, id_acheteur, id_produit):
     """Trouver l'achat payé et le vendeur qui lui correspond"""
+
     curseur.execute("""
-        SELECT a.id_achat, p.id_vendeur
+        SELECT
+            a.id_achat,
+            p.id_vendeur
         FROM achat a
-        JOIN produit p ON p.id_produit = a.id_produit
+        JOIN produit p
+            ON p.id_produit = a.id_produit
         WHERE a.id_acheteur = %(id_acheteur)s
-          AND a.id_produit = %(id_produit)s
-          AND a.paye = TRUE
+        AND a.id_produit = %(id_produit)s
+        AND a.paye = TRUE
     """, {
         "id_acheteur": id_acheteur,
         "id_produit": id_produit
     })
+
     return curseur.fetchone()
 
 
 def creer_notification_achat(curseur, id_vendeur):
     """Créer une notification pour le vendeur que son produit est vendu"""
 
-    curseur.execute("""INSERT INTO notification
-        (
-            id_destinataire, id_statut, notif_vue, date
+    curseur.execute("""
+        INSERT INTO notification (
+            id_destinataire,
+            id_statut,
+            notif_vue,
+            date
         )
-        VALUES (%(id_vendeur)s, 1, 0, CURRENT_DATE)""",
-                    {
-                        "id_vendeur": id_vendeur
-                    }
-                    )
+        VALUES (
+            %(id_vendeur)s,
+            1,
+            0,
+            CURRENT_DATE
+        )
+    """, {
+        "id_vendeur": id_vendeur
+    })
 
     return curseur.lastrowid
 
@@ -820,18 +928,26 @@ def creer_notification_achat(curseur, id_vendeur):
 def lier_notification_achat(curseur, id_notification, id_achat):
     """Permet de lier une notification à un achat"""
 
-    curseur.execute("INSERT INTO notification_achat (id_notification, id_achat) "
-                    "VALUES (%(id_notification)s, %(id_achat)s)",
-                    {
-                        'id_notification': id_notification,
-                        'id_achat': id_achat
-                    })
+    curseur.execute("""
+        INSERT INTO notification_achat (
+            id_notification,
+            id_achat
+        )
+        VALUES (
+            %(id_notification)s,
+            %(id_achat)s
+        )
+    """, {
+        "id_notification": id_notification,
+        "id_achat": id_achat
+    })
 
 
 def get_notifications_achat(curseur, id_utilisateur):
-    """Retourne les notifications de vente non lues."""
+    """Retourne les notifications de vente non lues ou récemment lues"""
 
-    curseur.execute("""SELECT
+    curseur.execute("""
+        SELECT
             n.id_notification,
             p.id_produit,
             p.nom AS nom_produit,
@@ -839,24 +955,53 @@ def get_notifications_achat(curseur, id_utilisateur):
             u.id_utilisateur AS id_acheteur,
             u.nom AS nom_acheteur
         FROM notification n
-
         JOIN notification_achat na
-        ON na.id_notification = n.id_notification
+            ON na.id_notification = n.id_notification
         JOIN achat a
-        ON a.id_achat = na.id_achat
+            ON a.id_achat = na.id_achat
         JOIN produit p
-        ON p.id_produit = a.id_produit
+            ON p.id_produit = a.id_produit
         JOIN utilisateur u
-        ON u.id_utilisateur = a.id_acheteur
-
+            ON u.id_utilisateur = a.id_acheteur
         WHERE n.id_destinataire = %(id_utilisateur)s
-        AND (n.notif_vue = 0 OR n.date_lecture > DATE_SUB(NOW(), INTERVAL 15 DAY)
-)
-        ORDER BY n.date DESC""",
-                    {
-                        "id_utilisateur": id_utilisateur
-                    }
-                    )
+        AND (
+            n.notif_vue = 0
+            OR n.date_lecture > DATE_SUB(NOW(), INTERVAL 15 DAY)
+        )
+        ORDER BY n.date DESC
+    """, {
+        "id_utilisateur": id_utilisateur
+    })
+
+    return curseur.fetchall()
+
+
+def get_notifications_achat_non_lues(curseur, id_utilisateur):
+    """Retourne les notifications de vente non lues."""
+
+    curseur.execute("""
+        SELECT
+            n.id_notification,
+            p.id_produit,
+            p.nom AS nom_produit,
+            a.prix_achat,
+            u.id_utilisateur AS id_acheteur,
+            u.nom AS nom_acheteur
+        FROM notification n
+        JOIN notification_achat na
+            ON na.id_notification = n.id_notification
+        JOIN achat a
+            ON a.id_achat = na.id_achat
+        JOIN produit p
+            ON p.id_produit = a.id_produit
+        JOIN utilisateur u
+            ON u.id_utilisateur = a.id_acheteur
+        WHERE n.id_destinataire = %(id_utilisateur)s
+        AND n.notif_vue = 0
+        ORDER BY n.date DESC
+    """, {
+        "id_utilisateur": id_utilisateur
+    })
 
     return curseur.fetchall()
 
@@ -969,6 +1114,29 @@ def create_notif_gagnant(curseur, id_utilisateur):
     return curseur.lastrowid
 
 
+def create_notif_proprietaire_enchere(curseur, id_proprietaire):
+    """Crée une notification pour le propriétaire lorsque l'enchère est terminée"""
+
+    curseur.execute("""
+        INSERT INTO notification (
+            id_destinataire,
+            id_statut,
+            notif_vue,
+            date
+        )
+        VALUES (
+            %(id_proprietaire)s,
+            2,
+            0,
+            CURRENT_DATE
+        )
+    """, {
+        "id_proprietaire": id_proprietaire
+    })
+
+    return curseur.lastrowid
+
+
 def create_notif_enchere(curseur, id_notification, id_produit):
     """Relie une notification à une enchère"""
 
@@ -1004,30 +1172,36 @@ def get_notif_enchere(curseur, id_notification):
 
 
 def get_historique_encheres(curseur, id_utilisateur, tri="recent"):
-    """Retourne les enchères gagnées par l'utilisateur"""
+    """Retourne les enchères réellement gagnées par l'utilisateur"""
 
     if tri == "ancien":
         ordre = "ORDER BY p.date_fin ASC"
+
     elif tri == "prix_croissant":
         ordre = "ORDER BY p.prix ASC"
+
     elif tri == "prix_decroissant":
         ordre = "ORDER BY p.prix DESC"
+
     else:
         ordre = "ORDER BY p.date_fin DESC"
 
     requete = """
-        SELECT
+        SELECT DISTINCT
             p.id_produit,
             p.nom,
             p.prix,
             p.date_fin
-        FROM notification n
-        JOIN notification_enchere ne
-            ON n.id_notification = ne.id_notification
-        JOIN produit p
-            ON ne.id_produit = p.id_produit
-        WHERE n.id_destinataire = %(id_utilisateur)s
-        AND n.id_statut = 2
+        FROM produit p
+        JOIN mise m
+            ON m.id_produit = p.id_produit
+        WHERE m.id_utilisateur = %(id_utilisateur)s
+        AND p.id_statut = 4
+        AND m.montant = (
+            SELECT MAX(m2.montant)
+            FROM mise m2
+            WHERE m2.id_produit = p.id_produit
+        )
     """ + ordre
 
     curseur.execute(requete, {
@@ -1042,10 +1216,13 @@ def get_historique_achats(curseur, id_utilisateur, tri="recent"):
 
     if tri == "ancien":
         ordre = "ORDER BY a.date_achat ASC"
+
     elif tri == "prix_croissant":
         ordre = "ORDER BY a.prix_achat ASC"
+
     elif tri == "prix_decroissant":
         ordre = "ORDER BY a.prix_achat DESC"
+
     else:
         ordre = "ORDER BY a.date_achat DESC"
 
@@ -1067,6 +1244,7 @@ def get_historique_achats(curseur, id_utilisateur, tri="recent"):
     })
 
     return curseur.fetchall()
+
 
 def get_historique_echanges(curseur, id_utilisateur):
     """Retourne l'historique des échanges"""
@@ -1091,14 +1269,14 @@ def get_historique_echanges(curseur, id_utilisateur):
                 ELSE e.id_utilisateur
             END
         WHERE e.approuver = 1
-          AND (
-              e.id_utilisateur = %(id_utilisateur)s
-              OR e.proprio = %(id_utilisateur)s
-          )
-        ORDER BY e.id_echange DESC""",
-        {
-            "id_utilisateur": id_utilisateur
-        })
+        AND (
+            e.id_utilisateur = %(id_utilisateur)s
+            OR e.proprio = %(id_utilisateur)s
+        )
+        ORDER BY e.id_echange DESC
+    """, {
+        "id_utilisateur": id_utilisateur
+    })
 
     return curseur.fetchall()
 

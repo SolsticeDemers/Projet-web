@@ -11,9 +11,15 @@
         {{ titre }} | Vintage Market
     </title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/styles.css') }}"
+    >
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
 
     <style>
         label.required::after {
@@ -25,36 +31,53 @@
 
 </head>
 
-
 <body>
 
-    <header>
+    <header
+        class="
+            {% if nav_transparente|default(false) %}
+                header-transparent
+            {% else %}
+                header-normal
+            {% endif %}
+        "
+    >
 
         <nav class="navigation container-fluid">
 
             <a href="/" class="logo">
 
-                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Vintage Market">
+                <img
+                    src="{{ url_for('static', filename='images/logo.png') }}"
+                    alt="Vintage Market"
+                >
 
             </a>
 
+            <div class="recherche-navigation">
 
-            <form action="/produits/recherche" method="get" class="recherche">
+                <a
+                    href="{{ url_for('recherche_produits') }}"
+                    class="bouton-loupe"
+                    aria-label="Rechercher"
+                >
 
-                <input type="search" name="mot_cle" placeholder="Rechercher un produit">
+                    <i class="bi bi-search"></i>
 
-                <button type="submit">
-                    Rechercher
-                </button>
+                </a>
 
-            </form>
-
+            </div>
 
             {% if session.get('id_utilisateur') %}
 
                 <div class="connexion connecter">
 
-                    <a href="/panier/" class="icone-action" title="Mon panier" aria-label="Mon panier">
+                    <a
+                        href="/panier/"
+                        class="icone-action"
+                        title="Mon panier"
+                        aria-label="Mon panier"
+                    >
 
                         <i class="bi bi-cart3" aria-hidden="true"></i>
 
@@ -77,15 +100,21 @@
 
                     </a>
 
-
-                    <a href="/compte/profil" class="icone-action" title="Mon profil" aria-label="Mon profil">
+                    <a
+                        href="/compte/profil"
+                        class="icone-action"
+                        title="Mon profil"
+                        aria-label="Mon profil"
+                    >
 
                         <i class="bi bi-person-circle" aria-hidden="true"></i>
 
                     </a>
 
-
-                    <a href="/compte/deconnection" class="btn_deconnection">
+                    <a
+                        href="/compte/deconnection"
+                        class="btn_deconnection"
+                    >
 
                         Se déconnecter
 
@@ -98,9 +127,7 @@
                 <div class="connexion">
 
                     <a href="/compte/authentification">
-
                         Se connecter
-
                     </a>
 
                 </div>
@@ -111,7 +138,6 @@
 
     </header>
 
-
     <main>
 
         {% block contenu %}
@@ -120,15 +146,83 @@
 
     </main>
 
-
     <footer class="footer">
 
-        <p>
-            Vintage Market © 2026
+        <i class="bi bi-asterisk footer-etoile gauche"></i>
+
+        <i class="bi bi-asterisk footer-etoile droite"></i>
+
+        <h2>Vintage Market</h2>
+
+        <p class="footer-description">
+            Des objets uniques, des histoires que l'on veut échanger
+        </p>
+
+        <div class="footer-liens">
+
+            <a href="/">
+                Accueil
+            </a>
+
+            <a href="{{ url_for('recherche_produits') }}">
+                Nos produits
+            </a>
+
+            <a href="/compte/creer_compte">
+                Nous rejoindre
+            </a>
+
+        </div>
+
+        <div class="footer-reseaux">
+
+            <a
+                href="https://www.instagram.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+            >
+                <i class="bi bi-instagram"></i>
+            </a>
+
+            <a
+                href="https://www.facebook.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+            >
+                <i class="bi bi-facebook"></i>
+            </a>
+
+            <a
+                href="https://www.tiktok.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="TikTok"
+            >
+                <i class="bi bi-tiktok"></i>
+            </a>
+
+            <a
+                href="https://www.youtube.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="YouTube"
+            >
+                <i class="bi bi-youtube"></i>
+            </a>
+
+        </div>
+
+        <p class="footer-description">
+            Achetez, échangez et redonnez vie aux objets d'exception
+        </p>
+
+        <p class="footer-copyright">
+            © 2026 Vintage Market. Tous droits réservés.
         </p>
 
     </footer>
-
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 

@@ -30,11 +30,14 @@ app.config["CHEMIN_IMAGES"] = os.path.join(
 
 @app.before_request
 def verifier_encheres_terminees():
-    """Vérifie les enchères terminées et crée la notification du gagnant"""
+    """Vérifie les enchères terminées
+    et crée les notifications"""
 
     with bd.creer_curseur() as curseur:
 
-        encheres = bd.get_encheres_terminees(curseur)
+        encheres = bd.get_encheres_terminees(
+            curseur
+        )
 
         for produit in encheres:
 
@@ -55,6 +58,19 @@ def verifier_encheres_terminees():
                     id_notification,
                     produit["id_produit"]
                 )
+
+            id_notification_proprio = (
+                bd.create_notif_proprietaire_enchere(
+                    curseur,
+                    produit["id_vendeur"]
+                )
+            )
+
+            bd.create_notif_enchere(
+                curseur,
+                id_notification_proprio,
+                produit["id_produit"]
+            )
 
             bd.marquer_vendu(
                 curseur,
@@ -162,14 +178,16 @@ def index():
                 + nom_image
             )
 
-    response = make_response(
-        render_template("index.jinja",
-                        titre="Accueil",
-                        nouveaux_produits=nouveaux_produits,
-                        encheres_futures=encheres_futures,
-                        vendeurs=vendeurs,
-                        produit_du_jour=produit_du_jour,
-                        produits_aleatoires=produits_aleatoires)
+
+    return render_template(
+        "index.jinja",
+        titre="Accueil",
+        nouveaux_produits=nouveaux_produits,
+        encheres_futures=encheres_futures,
+        vendeurs=vendeurs,
+        produit_du_jour=produit_du_jour,
+        produits_aleatoires=produits_aleatoires,
+        nav_transparente=True
     )
 
     response.set_cookie('mode_echange', 'False')

@@ -2,19 +2,13 @@
 
 {% block contenu %}
 
-<section class="container my-4">
+<section class="container my-4 page-profil">
 
     <div class="profil-entete">
 
         <div class="d-flex flex-column align-items-center">
 
             <img src="{{ image_vendeur }}" alt="Image de profil de {{ utilisateur.nom }}" class="profil-avatar">
-
-            <div>
-                <a href="{{ url_for('compte.modifier_profil') }}" class="lien-modifier-profil">
-                    Modifier mon profil
-                </a>
-            </div>
 
         </div>
 
@@ -24,6 +18,13 @@
             <h3>
                 {{ utilisateur.nom }}
             </h3>
+
+            <a
+                href="{{ url_for('compte.modifier_profil') }}"
+                class="lien-modifier-profil"
+            >
+                Modifier mon profil
+            </a>
 
             <p>
                 <strong>Nom d'utilisateur :</strong>
@@ -38,27 +39,34 @@
         </div>
 
 
-        <div class="actions flex-column ms-auto">
+        <div class="actions profil-actions">
 
             <a
                 href="{{ url_for('notification.notification') }}"
-                class="button"
+                class="bouton-secondaire"
             >
-                Mes notifications
+                <span>Mes notifications</span>
             </a>
 
             <a
                 href="{{ url_for('produits.mes_encheres') }}"
-                class="button"
+                class="bouton-secondaire"
             >
-                Mes enchères
+                <span>Mes enchères misées</span>
             </a>
 
             <a
-                href="{{ url_for('produits.transactions') }}"
-                class="button"
+    href="{{ url_for('produits.transactions') }}"
+    class="bouton-secondaire"
+>
+    <span>Mes transactions</span>
+</a>
+
+            <a
+                href="/produits/ajouter_produit"
+                class="bouton-secondaire"
             >
-                Mes transactions
+                <span>Ajouter un produit</span>
             </a>
 
         </div>
@@ -68,23 +76,12 @@
 </section>
 
 
-<section class="container my-4">
 
-    <div class="d-flex justify-content-between align-items-center gap-3 mb-4">
+<section class="container my-4 page-profil">
 
-        <h2 class="m-5">
-            Mes produits
-        </h2>
-
-        <div class="actions">
-
-            <a href="/produits/ajouter_produit" class="button">
-                Ajouter un produit
-            </a>
-
-        </div>
-
-    </div>
+    <h2 class="titre-mes-produits">
+        Mes produits
+    </h2>
 
 
     {% if produits %}
@@ -195,17 +192,26 @@
                 
             </div>
 
-        </div>
-        {% endif %}
-        {% endfor %}
+                </div>
+
+
+                {% if not loop.last %}
+
+                    <div class="separateur-produits-profil">
+                        <span></span>
+                    </div>
+
+                {% endif %}
+
+            {% endfor %}
 
     </div>
 
     {% else %}
 
-    <p>
-        Vous n'avez ajouté aucun produit.
-    </p>
+        <p class="aucun-produit">
+            Vous n'avez ajouté aucun produit.
+        </p>
 
     {% endif %}
 
