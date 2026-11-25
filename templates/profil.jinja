@@ -25,6 +25,7 @@
 
         </div>
 
+
         <div class="profil-informations">
 
             <h3>
@@ -43,17 +44,27 @@
 
         </div>
 
+
         <div class="actions flex-column ms-auto">
 
             <a
+                href="{{ url_for('compte.notification') }}"
+                class="button"
+            >
+                Mes notifications
+            </a>
+
+            <a
                 href="{{ url_for('produits.mes_encheres') }}"
-                class="button">
+                class="button"
+            >
                 Mes enchères
             </a>
 
             <a
                 href="{{ url_for('produits.transactions') }}"
-                class="button">
+                class="button"
+            >
                 Mes transactions
             </a>
 
@@ -135,12 +146,16 @@
 
                     <div class="actions">
 
-                        <a
-                            href="{{ url_for('produits.modifier_produit', id=produit.id_produit) }}"
-                            class="btn-modifier"
-                        >
-                            Modifier
-                        </a>
+                        {% if produit.nom_statut != 'Vendu' %}
+
+                            <a
+                                href="{{ url_for('produits.modifier_produit', id=produit.id_produit) }}"
+                                class="btn-modifier"
+                            >
+                                Modifier
+                            </a>
+
+                        {% endif %}
 
                         <form
                             action="{{ url_for('produits.archiver_produit', id=produit.id_produit) }}"

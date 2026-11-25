@@ -513,3 +513,54 @@ def accepter_echange(id_proposition, approuve):
         id_notification = bd.create_notif_offrant(curseur, id_proposition)
         bd.create_notif_echange(curseur, id_proposition, id_notification)
     return redirect("/compte/notification", code=303)
+
+@bp_compte.route("/profil/<int:id_utilisateur>")
+def profil_public(id_utilisateur):
+    """Affiche le profil public d'un vendeur."""
+
+    with bd.creer_curseur() as curseur:
+        utilisateur = bd.get_vendeur(curseur, id_utilisateur)
+
+        if utilisateur is None:
+            abort(404)
+
+        produits = bd.get_produits_par_vendeur(curseur, id_utilisateur)
+
+    codes_statut = {
+        "En vente": "vente",
+        "Aux enchères": "enchere",
+        "À échanger": "echange",
+        "Vendu": "vendu"
+    }
+
+    for produit in produits:
+        produit["code_statut"] = codes_statut.get(produit["nom_statut"], "")
+
+        nom_image = f"produit_{produit['id_produit']}.png"
+        chemin_image = os.path.join(
+            current_app.config["CHEMIN_IMAGES"],
+            nom_image
+        )
+
+        if os.path.exists(chemin_image):
+            produit["src"] = current_app.config["ROUTE_IMAGES"] + nom_image
+        else:
+            produit["src"] = url_for("static", filename="images/default.png")
+
+    nom_image_vendeur = f"vendeur_{id_utilisateur}.png"
+    chemin_image_vendeur = os.path.join(
+        current_app.config["CHEMIN_IMAGES"],
+        nom_image_vendeur
+    )
+
+    if os.path.exists(chemin_image_vendeur):
+        image_vendeur = current_app.config["ROUTE_IMAGES"] + nom_image_vendeur
+    else:
+        image_vendeur = url_for("static", filename="images/default_user.png")
+
+    return render_template(
+        "profil_public.jinja",
+        utilisateur=utilisateur,
+        produits=produits,
+        image_vendeur=image_vendeur
+    )

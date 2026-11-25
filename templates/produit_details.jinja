@@ -8,11 +8,7 @@
 
         <div class="col-md-6">
 
-            <img
-                src="{{ img_source }}"
-                alt="{{ produit.nom }}"
-                class="img-fluid"
-            >
+            <img src="{{ img_source }}" alt="{{ produit.nom }}" class="img-fluid">
 
         </div>
 
@@ -25,9 +21,9 @@
                     {{ produit.nom }}
                 </h2>
 
-                <p class="px-3 pb-2 mb-0 text-muted">
-                    {{ vendeur.nom }}
-                </p>
+                <a href="{{ url_for('compte.profil_public', id_utilisateur=vendeur.id_utilisateur) }}"
+                    class="lien-profil-public">{{ vendeur.nom }}
+                </a>
 
             </div>
 
@@ -36,23 +32,23 @@
 
                 {% if produit.id_statut == 2 %}
 
-                    <p>
-                        Mise actuelle : {{ produit.prix }} $
-                    </p>
+                <p>
+                    Mise actuelle : {{ produit.prix }} $
+                </p>
 
-                    {% if produit.date_fin %}
+                {% if produit.date_fin %}
 
-                        <p>
-                            Fin de l'enchère : {{ produit.date_fin }}
-                        </p>
+                <p>
+                    Fin de l'enchère : {{ produit.date_fin }}
+                </p>
 
-                    {% endif %}
+                {% endif %}
 
                 {% else %}
 
-                    <p>
-                        Prix : {{ produit.prix }} $
-                    </p>
+                <p>
+                    Prix : {{ produit.prix }} $
+                </p>
 
                 {% endif %}
 
@@ -72,134 +68,97 @@
 
                 {% if not est_disponible %}
 
-                    <p class="text-danger">
-                        Ce produit n'est plus disponible.
-                    </p>
+                <p class="text-danger">
+                    Ce produit n'est plus disponible.
+                </p>
 
                 {% elif est_connecte %}
 
-                    {% if produit.id_statut == 2 and not est_vendeur %}
+                {% if produit.id_statut == 2 and not est_vendeur %}
 
-                        <a
-                            href="{{ url_for('produits.miser_produit', id=produit.id_produit) }}"
-                            class="button"
-                        >
-                            Enchérir
-                        </a>
+                <a href="{{ url_for('produits.miser_produit', id=produit.id_produit) }}" class="button">
+                    Enchérir
+                </a>
 
-                    {% elif produit.id_statut == 1 and not est_vendeur %}
+                {% elif produit.id_statut == 1 and not est_vendeur %}
 
-                        <form
-                            method="POST"
-                            action="/panier/ajouter/{{ produit.id_produit }}"
-                        >
+                <form method="POST" action="/panier/ajouter/{{ produit.id_produit }}">
 
-                            {{ form.hidden_tag() }}
+                    {{ form.hidden_tag() }}
 
-                            <button
-                                type="submit"
-                                class="button"
-                            >
-                                Ajouter au panier
-                            </button>
+                    <button type="submit" class="button">
+                        Ajouter au panier
+                    </button>
 
-                        </form>
+                </form>
 
-                    {% endif %}
+                {% endif %}
 
                 {% endif %}
 
 
                 {% if est_connecte and produit.id_vendeur == session.id_utilisateur %}
 
-                    <a
-                        href="/produits/{{ id }}/modifier"
-                        class="button"
-                    >
-                        Modifier
-                    </a>
+                <a href="/produits/{{ id }}/modifier" class="button">
+                    Modifier
+                </a>
 
 
-                    <button
-                        type="button"
-                        class="button bouton-supprimer"
-                        data-bs-toggle="modal"
-                        data-bs-target="#modal-archiver"
-                    >
-                        Supprimer
-                    </button>
+                <button type="button" class="button bouton-supprimer" data-bs-toggle="modal"
+                    data-bs-target="#modal-archiver">
+                    Supprimer
+                </button>
 
 
-                    <div
-                        class="modal fade"
-                        id="modal-archiver"
-                        tabindex="-1"
-                    >
+                <div class="modal fade" id="modal-archiver" tabindex="-1">
 
-                        <div class="modal-dialog">
+                    <div class="modal-dialog">
 
-                            <div class="modal-content">
+                        <div class="modal-content">
 
-                                <div class="modal-header">
+                            <div class="modal-header">
 
-                                    <h5
-                                        class="modal-title"
-                                        id="modal-archiver-label"
-                                    >
-                                        Confirmer la suppression
-                                    </h5>
+                                <h5 class="modal-title" id="modal-archiver-label">
+                                    Confirmer la suppression
+                                </h5>
 
-                                    <button
-                                        type="button"
-                                        class="btn-close"
-                                        data-bs-dismiss="modal"
-                                    >
+                                <button type="button" class="btn-close" data-bs-dismiss="modal">
+                                </button>
+
+                            </div>
+
+
+                            <div class="modal-body">
+
+                                Êtes-vous sûr de vouloir supprimer ce produit ?
+
+                            </div>
+
+
+                            <div class="modal-footer">
+
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                    Annuler
+                                </button>
+
+
+                                <form method="POST" action="/produits/{{ id }}/archiver">
+
+                                    {{ form_archiver.hidden_tag() }}
+
+                                    <button type="submit" class="btn btn-danger">
+                                        Supprimer
                                     </button>
 
-                                </div>
-
-
-                                <div class="modal-body">
-
-                                    Êtes-vous sûr de vouloir supprimer ce produit ?
-
-                                </div>
-
-
-                                <div class="modal-footer">
-
-                                    <button
-                                        type="button"
-                                        class="btn btn-secondary"
-                                        data-bs-dismiss="modal"
-                                    >
-                                        Annuler
-                                    </button>
-
-
-                                    <form
-                                        method="POST"
-                                        action="/produits/{{ id }}/archiver"
-                                    >
-
-                                        {{ form_archiver.hidden_tag() }}
-
-                                        <button
-                                            type="submit"
-                                            class="btn btn-danger"
-                                        >
-                                            Supprimer
-                                        </button>
-
-                                    </form>
-
-                                </div>
+                                </form>
 
                             </div>
 
                         </div>
 
                     </div>
+
+                </div>
 
                 {% endif %}
 
