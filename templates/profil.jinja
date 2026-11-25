@@ -2,7 +2,7 @@
 
 {% block contenu %}
 
-<section class="container my-4">
+<section class="container my-4 page-profil">
 
     <div class="profil-entete">
 
@@ -14,21 +14,19 @@
                 class="profil-avatar"
             >
 
-            <div>
-                <a
-                    href="{{ url_for('compte.modifier_profil') }}"
-                    class="lien-modifier-profil"
-                >
-                    Modifier mon profil
-                </a>
-            </div>
-
         </div>
 
 
         <div class="profil-informations">
 
             <h3>{{ utilisateur.nom }}</h3>
+
+            <a
+                href="{{ url_for('compte.modifier_profil') }}"
+                class="lien-modifier-profil"
+            >
+                Modifier mon profil
+            </a>
 
             <p>
                 <strong>Nom d'utilisateur :</strong>
@@ -43,29 +41,31 @@
         </div>
 
 
-        <div class="actions flex-column ms-auto">
+        <div class="actions profil-actions">
 
             <a
                 href="{{ url_for('compte.notification') }}"
                 class="bouton-secondaire"
             >
-                Mes notifications
+                <span>Mes notifications</span>
             </a>
 
             <a
                 href="{{ url_for('produits.mes_encheres') }}"
                 class="bouton-secondaire"
             >
-                Mes enchères
+                <span>Mes enchères misées</span>
             </a>
 
-            <button
-                type="button"
+            <a href="{{ url_for('produits.historique_encheres') }}" class="bouton-secondaire">
+    <span>Mes transactions</span>
+</a>
+            <a
+                href="/produits/ajouter_produit"
                 class="bouton-secondaire"
-                disabled
             >
-                Mes transactions
-            </button>
+                <span>Ajouter un produit</span>
+            </a>
 
         </div>
 
@@ -75,121 +75,107 @@
 
 
 
-<section class="container my-4">
+<section class="container my-4 page-profil">
 
-    <div class="d-flex justify-content-between align-items-center gap-3 mb-4">
-
-        <h2 class="m-5">
-            Mes produits
-        </h2>
-
-
-        <div class="actions">
-
-            <a
-                href="/produits/ajouter_produit"
-                class="button"
-            >
-                Ajouter un produit
-            </a>
-
-        </div>
-
-    </div>
+    <h2 class="titre-mes-produits">
+        Mes produits
+    </h2>
 
 
     {% if produits %}
 
-    <div class="liste-mes-produits">
+        <div class="liste-mes-produits">
+
+            {% for produit in produits %}
+
+                <div class="carte-produit carte-mon-produit">
+
+                    <div class="image-produit">
+
+                        <a href="/produits/{{ produit.id_produit }}">
+
+                            <img
+                                src="{{ produit.src or url_for('static', filename='images/default.png') }}"
+                                alt="{{ produit.nom }}"
+                            >
+
+                        </a>
+
+                        <span class="badge-statut badge-{{ produit.code_statut }}">
+                            {{ produit.nom_statut }}
+                        </span>
+
+                    </div>
 
 
-        {% for produit in produits %}
+                    <div class="contenu-produit">
 
-        <div class="carte-produit carte-mon-produit">
+                        <h3>
 
+                            <a href="/produits/{{ produit.id_produit }}">
+                                {{ produit.nom }}
+                            </a>
 
-            <div class="image-produit">
+                        </h3>
 
-                <a href="/produits/{{ produit.id_produit }}">
+                        <p>
+                            {{ produit.description }}
+                        </p>
 
-                    <img
-                        src="{{ produit.src or url_for('static', filename='images/default.png') }}"
-                        alt="{{ produit.nom }}"
-                    >
+                        <p class="prix">
+                            {{ produit.prix }} $
+                        </p>
 
-                </a>
-
-
-                <span class="badge-statut badge-{{ produit.code_statut }}">
-                    {{ produit.nom_statut }}
-                </span>
-
-            </div>
+                    </div>
 
 
-            <div class="contenu-produit">
+                    <div class="actions">
 
-                <h3>
+                        <a
+                            href="{{ url_for('produits.modifier_produit', id=produit.id_produit) }}"
+                            class="btn-modifier"
+                        >
+                            Modifier
+                        </a>
 
-                    <a href="/produits/{{ produit.id_produit }}">
-                        {{ produit.nom }}
-                    </a>
+                        <form
+                            action="{{ url_for('produits.archiver_produit', id=produit.id_produit) }}"
+                            method="post"
+                        >
 
-                </h3>
+                            {{ form_archiver.hidden_tag() }}
 
+                            <button
+                                type="submit"
+                                class="btn-supprimer"
+                            >
+                                Supprimer
+                            </button>
 
-                <p>
-                    {{ produit.description }}
-                </p>
+                        </form>
 
+                    </div>
 
-                <p class="prix">
-                    {{ produit.prix }} $
-                </p>
-
-            </div>
-
-
-            <div class="actions">
-
-                <a
-                    href="{{ url_for('produits.modifier_produit', id=produit.id_produit) }}"
-                    class="btn-modifier"
-                >
-                    Modifier
-                </a>
+                </div>
 
 
-                <form
-                    action="{{ url_for('produits.archiver_produit', id=produit.id_produit) }}"
-                    method="post"
-                >
+                {% if not loop.last %}
 
-                    {{ form_archiver.hidden_tag() }}
+                    <div class="separateur-produits-profil">
+                        <span></span>
+                    </div>
 
-                    <button
-                        type="submit"
-                        class="btn-supprimer"
-                    >
-                        Supprimer
-                    </button>
+                {% endif %}
 
-                </form>
-
-            </div>
+            {% endfor %}
 
         </div>
 
-        {% endfor %}
-
-    </div>
-
-
     {% else %}
 
-    <p>
-        Vous n'avez ajouté aucun produit.
-    </p>
+        <p class="aucun-produit">
+            Vous n'avez ajouté aucun produit.
+        </p>
 
     {% endif %}
 

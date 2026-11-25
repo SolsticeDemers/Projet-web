@@ -12461,6 +12461,9 @@ body {
   font-family: Arial, sans-serif;
   background: #FFFFFF;
   color: #111111;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 a {
@@ -13480,22 +13483,36 @@ header {
 }
 
 .btn-details-produit {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   min-width: 110px;
   height: 48px;
   padding: 0 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid #804E37;
-  background: transparent;
+  border: 0;
+  border-radius: 0;
+  background: #804E37;
   color: #804E37;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: bold;
+  text-decoration: none;
   clip-path: polygon(12% 0%, 88% 0%, 100% 50%, 88% 100%, 12% 100%, 0% 50%);
 }
+.btn-details-produit::before {
+  content: "";
+  position: absolute;
+  inset: 1.5px;
+  background: #FFFFFF;
+  clip-path: polygon(12% 0%, 88% 0%, 100% 50%, 88% 100%, 12% 100%, 0% 50%);
+  z-index: -1;
+}
 .btn-details-produit:hover {
-  background: #804E37;
   color: #FFFFFF;
+}
+.btn-details-produit:hover::before {
+  background: #804E37;
 }
 
 .produit-vedette {
@@ -13659,32 +13676,107 @@ header {
 }
 
 .bouton-utilisateurs {
-  min-width: 280px;
-  height: 62px;
-  padding: 0 35px;
-  display: flex;
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #FFFFFF;
-  color: #111111;
-  border: 1px solid #111111;
+  width: 285px;
+  height: 62px;
+  background: #000000;
+  color: #000000;
+  border: 0;
   font-size: 14px;
   font-weight: bold;
+  text-decoration: none;
   text-transform: uppercase;
   clip-path: polygon(10% 0%, 90% 0%, 100% 50%, 90% 100%, 10% 100%, 0% 50%);
 }
+.bouton-utilisateurs::before {
+  content: "";
+  position: absolute;
+  inset: 1.5px;
+  background: #FFFFFF;
+  clip-path: polygon(10% 0%, 90% 0%, 100% 50%, 90% 100%, 10% 100%, 0% 50%);
+  z-index: -1;
+}
 .bouton-utilisateurs:hover {
-  background: #111111;
   color: #FFFFFF;
 }
+.bouton-utilisateurs:hover::before {
+  background: #000000;
+}
 
-footer {
+footer.footer {
   position: relative;
-  z-index: 2;
-  padding: 30px;
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+  flex-shrink: 0;
+  margin-top: auto;
+  padding: 70px 30px 40px;
   background: #363229;
-  color: #E0CD94;
+  color: #FFFFFF;
   text-align: center;
+}
+footer.footer h2 {
+  margin-bottom: 15px;
+  font: bold 42px Georgia, serif;
+  color: #E0CD94;
+}
+footer.footer .footer-description {
+  margin-bottom: 15px;
+  font-size: 17px;
+}
+footer.footer .footer-liens {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin: 35px 0 60px;
+}
+footer.footer .footer-liens a {
+  color: #E0CD94;
+  font-size: 15px;
+  font-weight: bold;
+  text-decoration: none;
+}
+footer.footer .footer-liens a:hover {
+  color: #FFFFFF;
+  text-decoration: underline;
+}
+footer.footer .footer-reseaux {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+footer.footer .footer-reseaux a {
+  color: #FFFFFF;
+  font-size: 25px;
+}
+footer.footer .footer-reseaux a:hover {
+  color: #E0CD94;
+}
+footer.footer .footer-copyright {
+  margin: 0;
+  color: #E0CD94;
+  font-size: 14px;
+}
+footer.footer .footer-etoile {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 230px;
+  color: #E0CD94;
+  line-height: 1;
+  pointer-events: none;
+}
+footer.footer .gauche {
+  left: 5%;
+}
+footer.footer .droite {
+  right: 5%;
 }
 
 .liste-mes-produits {
@@ -13811,6 +13903,206 @@ p a {
   border: 1px solid #ced4da;
   padding: 0.25rem;
   background: #FFFFFF;
+}
+
+.page-profil {
+  background: #FFFFFF;
+  color: #363229;
+}
+.page-profil .profil-entete {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: center;
+  align-items: center;
+  gap: 35px;
+  margin: 70px auto 80px;
+}
+.page-profil .profil-avatar {
+  width: 190px;
+  height: 190px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #804E37;
+}
+.page-profil .profil-informations h3 {
+  margin: 0 0 5px;
+  font: bold 42px Georgia, serif;
+  color: #363229;
+}
+.page-profil .profil-informations p {
+  margin: 10px 0;
+  font-size: 17px;
+}
+.page-profil .lien-modifier-profil {
+  display: inline-block;
+  margin-bottom: 15px;
+  color: #363229;
+  font-size: 14px;
+  font-weight: bold;
+  text-decoration: none;
+}
+.page-profil .lien-modifier-profil:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.page-profil .profil-actions {
+  grid-column: 1/-1;
+  display: grid;
+  grid-template-columns: repeat(2, 250px);
+  justify-content: center;
+  gap: 15px 20px;
+  margin: 20px auto 0;
+}
+.page-profil .profil-actions .bouton-secondaire {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 55px;
+  padding: 0 25px;
+  border: 0;
+  border-radius: 0;
+  background: #000000;
+  color: #000000;
+  font-size: 15px;
+  font-weight: bold;
+  text-decoration: none;
+  clip-path: polygon(12% 0%, 88% 0%, 100% 50%, 88% 100%, 12% 100%, 0% 50%);
+}
+.page-profil .profil-actions .bouton-secondaire::before {
+  content: "";
+  position: absolute;
+  inset: 1.5px;
+  background: #FFFFFF;
+  clip-path: polygon(12% 0%, 88% 0%, 100% 50%, 88% 100%, 12% 100%, 0% 50%);
+  z-index: -1;
+}
+.page-profil .profil-actions .bouton-secondaire:hover:not(:disabled) {
+  color: #FFFFFF;
+}
+.page-profil .profil-actions .bouton-secondaire:hover:not(:disabled)::before {
+  background: #000000;
+}
+.page-profil .profil-actions .bouton-secondaire:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.page-profil .titre-mes-produits {
+  margin: 60px 0 70px;
+  text-align: center;
+  font: bold 46px Georgia, serif;
+  color: #363229;
+}
+.page-profil .liste-mes-produits {
+  width: 100%;
+  max-width: 1350px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+.page-profil .carte-mon-produit {
+  width: 92%;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 250px 1fr auto;
+  align-items: center;
+  background: #FFFFFF;
+  box-shadow: none;
+  border: 0;
+  border-radius: 0;
+  min-height: 200px;
+  height: auto;
+}
+.page-profil .carte-mon-produit .image-produit {
+  height: 200px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.page-profil .carte-mon-produit .image-produit img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+.page-profil .carte-mon-produit .contenu-produit {
+  padding: 25px;
+}
+.page-profil .carte-mon-produit .contenu-produit h3 {
+  min-height: 0;
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: bold;
+}
+.page-profil .carte-mon-produit .contenu-produit p {
+  line-height: 1.5;
+}
+.page-profil .carte-mon-produit .contenu-produit .prix {
+  font-size: 24px;
+  font-weight: bold;
+}
+.page-profil .carte-mon-produit .actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+}
+.page-profil .carte-mon-produit .actions .btn-modifier {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #363229;
+  font-size: 15px;
+  font-weight: bold;
+  text-decoration: none;
+}
+.page-profil .carte-mon-produit .actions .btn-modifier:hover {
+  background: transparent;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.page-profil .carte-mon-produit .actions .btn-supprimer {
+  min-width: 145px;
+  height: 48px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 0;
+  background: #EFA18E;
+  color: #111111;
+  font-size: 14px;
+  font-weight: bold;
+  clip-path: polygon(12% 0%, 88% 0%, 100% 50%, 88% 100%, 12% 100%, 0% 50%);
+}
+.page-profil .carte-mon-produit .actions .btn-supprimer:hover {
+  background: #C0392B;
+  color: #FFFFFF;
+}
+.page-profil .separateur-produits-profil {
+  width: 100%;
+  margin: 20px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.page-profil .separateur-produits-profil::before, .page-profil .separateur-produits-profil::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #363229;
+}
+.page-profil .separateur-produits-profil span {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  border: 1px solid #363229;
+  background: #FFFFFF;
+  transform: rotate(45deg);
+}
+.page-profil .aucun-produit {
+  text-align: center;
 }
 
 .page-vintage > .titre-page-vintage,

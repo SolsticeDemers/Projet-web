@@ -26,6 +26,9 @@ body
     font-family: Arial, sans-serif
     background: $blanc
     color: $noir
+    min-height: 100vh
+    display: flex
+    flex-direction: column
 
 
 a
@@ -1105,34 +1108,36 @@ header
 
 
 .btn-details-produit
+    position: relative
+    isolation: isolate
+    display: inline-flex
+    align-items: center
+    justify-content: center
     min-width: 110px
     height: 48px
     padding: 0 20px
-
-    display: flex
-    align-items: center
-    justify-content: center
-
-    border: 2px solid $brun
-
-    background: transparent
+    border: 0
+    border-radius: 0
+    background: $brun
     color: $brun
-
-    font-size: 15px
+    font-size: 14px
     font-weight: bold
+    text-decoration: none
+    clip-path: polygon(12% 0%, 88% 0%, 100% 50%, 88% 100%, 12% 100%, 0% 50%)
 
-    clip-path: polygon(
-        12% 0%,
-        88% 0%,
-        100% 50%,
-        88% 100%,
-        12% 100%,
-        0% 50%
-    )
+    &::before
+        content: ""
+        position: absolute
+        inset: 1.5px
+        background: $blanc
+        clip-path: polygon(12% 0%, 88% 0%, 100% 50%, 88% 100%, 12% 100%, 0% 50%)
+        z-index: -1
 
     &:hover
-        background: $brun
         color: $blanc
+
+        &::before
+            background: $brun
 
 
 .produit-vedette
@@ -1337,47 +1342,107 @@ header
 
 
 .bouton-utilisateurs
-    min-width: 280px
-    height: 62px
-
-    padding: 0 35px
-
-    display: flex
+    position: relative
+    isolation: isolate
+    display: inline-flex
     align-items: center
     justify-content: center
-
-    background: $blanc
-
-    color: $noir
-
-    border: 1px solid $noir
-
+    width: 285px
+    height: 62px
+    background: #000000
+    color: #000000
+    border: 0
     font-size: 14px
     font-weight: bold
-
+    text-decoration: none
     text-transform: uppercase
+    clip-path: polygon(10% 0%, 90% 0%, 100% 50%, 90% 100%, 10% 100%, 0% 50%)
 
-    clip-path: polygon(
-        10% 0%,
-        90% 0%,
-        100% 50%,
-        90% 100%,
-        10% 100%,
-        0% 50%
-    )
+    &::before
+        content: ""
+        position: absolute
+        inset: 1.5px
+        background: #FFFFFF
+        clip-path: polygon(10% 0%, 90% 0%, 100% 50%, 90% 100%, 10% 100%, 0% 50%)
+        z-index: -1
 
     &:hover
-        background: $noir
-        color: $blanc
+        color: #FFFFFF
+
+        &::before
+            background: #000000
 
 
-footer
+footer.footer
     position: relative
-    z-index: 2
-    padding: 30px
+    overflow: hidden
+    width: 100%
+    position: relative
+    flex-shrink: 0
+    margin-top: auto
+    padding: 70px 30px 40px
     background: $bleu
-    color: $creme
+    color: $blanc
     text-align: center
+
+    h2
+        margin-bottom: 15px
+        font: bold 42px Georgia, serif
+        color: $creme
+
+    .footer-description
+        margin-bottom: 15px
+        font-size: 17px
+
+    .footer-liens
+        display: flex
+        justify-content: center
+        gap: 40px
+        margin: 35px 0 60px
+
+        a
+            color: $creme
+            font-size: 15px
+            font-weight: bold
+            text-decoration: none
+
+            &:hover
+                color: $blanc
+                text-decoration: underline
+
+    .footer-reseaux
+        display: flex
+        justify-content: center
+        align-items: center
+        gap: 30px
+        margin-bottom: 30px
+
+        a
+            color: $blanc
+            font-size: 25px
+
+            &:hover
+                color: $creme
+
+    .footer-copyright
+        margin: 0
+        color: $creme
+        font-size: 14px
+
+    .footer-etoile
+        position: absolute
+        top: 50%
+        transform: translateY(-50%)
+        font-size: 230px
+        color: $creme
+        line-height: 1
+        pointer-events: none
+
+    .gauche
+        left: 5%
+
+    .droite
+        right: 5%
 
 
 .liste-mes-produits
@@ -1505,9 +1570,204 @@ p
     border: 1px solid #ced4da
     padding: .25rem
     background: $blanc
+.page-profil
+    background: $blanc
+    color: $bleu
 
+    .profil-entete
+        display: grid
+        grid-template-columns: auto auto
+        justify-content: center
+        align-items: center
+        gap: 35px
+        margin: 70px auto 80px
 
-// Panier
+    .profil-avatar
+        width: 190px
+        height: 190px
+        object-fit: cover
+        border-radius: 50%
+        border: 2px solid #804E37
+
+    .profil-informations
+        h3
+            margin: 0 0 5px
+            font: bold 42px Georgia, serif
+            color: $bleu
+
+        p
+            margin: 10px 0
+            font-size: 17px
+
+    .lien-modifier-profil
+        display: inline-block
+        margin-bottom: 15px
+        color: $bleu
+        font-size: 14px
+        font-weight: bold
+        text-decoration: none
+
+        &:hover
+            text-decoration: underline
+            text-underline-offset: 4px
+
+    .profil-actions
+        grid-column: 1 / -1
+        display: grid
+        grid-template-columns: repeat(2, 250px)
+        justify-content: center
+        gap: 15px 20px
+        margin: 20px auto 0
+
+        .bouton-secondaire
+            position: relative
+            isolation: isolate
+            display: flex
+            align-items: center
+            justify-content: center
+            width: 100%
+            height: 55px
+            padding: 0 25px
+            border: 0
+            border-radius: 0
+            background: #000000
+            color: #000000
+            font-size: 15px
+            font-weight: bold
+            text-decoration: none
+            clip-path: polygon(12% 0%, 88% 0%, 100% 50%, 88% 100%, 12% 100%, 0% 50%)
+
+            &::before
+                content: ""
+                position: absolute
+                inset: 1.5px
+                background: #FFFFFF
+                clip-path: polygon(12% 0%, 88% 0%, 100% 50%, 88% 100%, 12% 100%, 0% 50%)
+                z-index: -1
+
+            &:hover:not(:disabled)
+                color: #FFFFFF
+
+                &::before
+                    background: #000000
+
+            &:disabled
+                opacity: .45
+                cursor: not-allowed
+
+    .titre-mes-produits
+        margin: 60px 0 70px
+        text-align: center
+        font: bold 46px Georgia, serif
+        color: $bleu
+
+    .liste-mes-produits
+        width: 100%
+        max-width: 1350px
+        margin: auto
+        display: flex
+        flex-direction: column
+        gap: 25px
+
+    .carte-mon-produit
+        width: 92%
+        margin: auto
+        display: grid
+        grid-template-columns: 250px 1fr auto
+        align-items: center
+        background: $blanc
+        box-shadow: none
+        border: 0
+        border-radius: 0
+        min-height: 200px
+        height: auto
+
+        .image-produit
+            height: 200px
+            border-radius: 12px
+            overflow: hidden
+
+            img
+                width: 100%
+                height: 100%
+                object-fit: cover
+
+        .contenu-produit
+            padding: 25px
+
+            h3
+                min-height: 0
+                margin-bottom: 20px
+                font-size: 20px
+                font-weight: bold
+
+            p
+                line-height: 1.5
+
+            .prix
+                font-size: 24px
+                font-weight: bold
+
+        .actions
+            display: flex
+            align-items: center
+            gap: 20px
+            padding: 20px
+
+            .btn-modifier
+                padding: 0
+                border: 0
+                background: transparent
+                color: $bleu
+                font-size: 15px
+                font-weight: bold
+                text-decoration: none
+
+                &:hover
+                    background: transparent
+                    text-decoration: underline
+                    text-underline-offset: 4px
+
+            .btn-supprimer
+                min-width: 145px
+                height: 48px
+                padding: 0 20px
+                border: 0
+                border-radius: 0
+                background: #EFA18E
+                color: $noir
+                font-size: 14px
+                font-weight: bold
+                clip-path: polygon(12% 0%, 88% 0%, 100% 50%, 88% 100%, 12% 100%, 0% 50%)
+
+                &:hover
+                    background: $danger
+                    color: $blanc
+
+    .separateur-produits-profil
+        width: 100%
+        margin: 20px auto
+        display: flex
+        align-items: center
+        justify-content: center
+
+        &::before,
+        &::after
+            content: ""
+            flex: 1
+            height: 1px
+            background: $bleu
+
+        span
+            width: 17px
+            height: 17px
+            flex-shrink: 0
+            border: 1px solid $bleu
+            background: $blanc
+            transform: rotate(45deg)
+
+    .aucun-produit
+        text-align: center
 
 .page-vintage > .titre-page-vintage,
 .page-vintage .titre-page-vintage
