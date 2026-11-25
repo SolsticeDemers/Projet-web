@@ -13007,6 +13007,11 @@ p a {
   outline-offset: 3px;
 }
 
+#img_notif {
+  max-height: 50px;
+  text-align: right;
+}
+
 .affichage_notif {
   display: flex;
   flex-wrap: wrap;
@@ -13014,15 +13019,19 @@ p a {
   gap: 20px;
   padding: 24px;
   text-align: left;
+  height: auto;
 }
 
-.notif-detail {
+.notif-detail,
+#notif_detail {
   flex: 1 1 280px;
 }
-.notif-detail a {
+.notif-detail a,
+#notif_detail a {
   color: #111111;
 }
-.notif-detail a:hover {
+.notif-detail a:hover,
+#notif_detail a:hover {
   color: #7E7B85;
 }
 
@@ -13094,4 +13103,12 @@ p a {
 }
 .badge-compteur:empty {
   display: none;
+}
+
+.lien-profil-public {
+  color: #7E7B85;
+  text-decoration: underline;
+}
+.lien-profil-public:hover {
+  color: #5F5C67;
 }/*# sourceMappingURL=styles.css.map */

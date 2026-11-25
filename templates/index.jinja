@@ -19,8 +19,7 @@
 
         {% for vendeur in vendeurs %}
 
-
-        <div class="vendeur-card">
+        <a href="{{ url_for('compte.profil_public', id_utilisateur=vendeur.id_utilisateur) }}" class="vendeur-card">
 
             <img src="{{ url_for('static', filename='images/utiles/vendeur_' ~ vendeur.id_utilisateur ~ '.png') }}"
                 alt="{{ vendeur.nom }}">
@@ -30,9 +29,7 @@
                 {{ vendeur.nom }}
             </h3>
 
-
-        </div>
-
+        </a>
 
         {% endfor %}
 
@@ -60,8 +57,9 @@
 
                 {% if produit.src %}
 
-
-                <img src="{{ produit.src }}" alt="{{ produit.nom }}">
+                <a href="/produits/{{ produit.id_produit }}">
+                    <img src="{{ produit.src }}" alt="{{ produit.nom }}">
+                </a>
 
                 {% endif %}
 
@@ -174,8 +172,9 @@
 
                 {% if produit.src %}
 
-
-                <img src="{{ produit.src }}" alt="{{ produit.nom }}">
+                <a href="/produits/{{ produit.id_produit }}">
+                    <img src="{{ produit.src }}" alt="{{ produit.nom }}">
+                </a>
 
                 {% endif %}
 
@@ -356,7 +355,9 @@
 
         {% if produit_du_jour.src %}
 
-        <img src="{{ produit_du_jour.src }}" alt="{{ produit_du_jour.nom }}">
+        <a href="/produits/{{ produit_du_jour.id_produit }}">
+            <img src="{{ produit_du_jour.src }}" alt="{{ produit_du_jour.nom }}">
+        </a>
 
         {% endif %}
 
@@ -388,8 +389,9 @@
                 {% if produit.src %}
 
 
-                <img src="{{ produit.src }}" alt="{{ produit.nom }}">
-
+                <a href="/produits/{{ produit.id_produit }}">
+                    <img src="{{ produit.src }}" alt="{{ produit.nom }}">
+                </a>
 
                 {% endif %}
 

@@ -1,0 +1,72 @@
+{% extends "_modele.jinja" %}
+
+{% block contenu %}
+
+<section class="container my-4">
+
+    <div class="profil-entete">
+
+        <div class="d-flex flex-column align-items-center">
+            <img src="{{ image_vendeur }}" alt="Image de profil de {{ utilisateur.nom }}" class="profil-avatar">
+        </div>
+
+        <div class="profil-informations">
+            <h3>{{ utilisateur.nom }}</h3>
+
+            <div class="actions">
+                <a href="mailto:{{ utilisateur.courriel }}" class="button">
+                    Me contacter
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+<section class="container my-4">
+
+    <h2 class="m-5">Produits de {{ utilisateur.nom }}</h2>
+
+    {% if produits %}
+
+    <div class="liste-mes-produits">
+
+        {% for produit in produits %}
+
+        <div class="carte-produit carte-mon-produit">
+
+            <div class="image-produit">
+                <a href="/produits/{{ produit.id_produit }}">
+                    <img src="{{ produit.src }}" alt="{{ produit.nom }}">
+                </a>
+
+                <span class="badge-statut badge-{{ produit.code_statut }}">
+                    {{ produit.nom_statut }}
+                </span>
+            </div>
+
+            <div class="contenu-produit">
+                <h3>
+                    <a href="/produits/{{ produit.id_produit }}">
+                        {{ produit.nom }}
+                    </a>
+                </h3>
+
+                <p>{{ produit.description }}</p>
+                <p class="prix">{{ produit.prix }} $</p>
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+    <p>Ce vendeur n'a aucun produit à afficher.</p>
+    {% endif %}
+
+</section>
+
+{% endblock %}

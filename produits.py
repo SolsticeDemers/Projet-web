@@ -324,6 +324,9 @@ def modifier_produit(id):
     if produit['id_vendeur'] != session['id_utilisateur']:
         abort(403)
 
+    if produit['id_statut'] == 4:
+        abort(403, "Un produit vendu ne peut pas être modifié.")
+
     nom_image = f"produit_{id}.png"
 
     chemin_image = os.path.join(

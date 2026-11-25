@@ -37,6 +37,9 @@ def nom_unique():
 @bp_api.route("/verifNotif")
 def verif_nouvelle_notif():
 
+    if 'id_utilisateur' not in session:
+        return jsonify({"erreur": "Connexion requise"}), 401
+
     with bd.creer_curseur() as curseur:
         nouvelle_notif = bd.get_nouvelle_notification(
             curseur, session['id_utilisateur'])

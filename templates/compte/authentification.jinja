@@ -12,12 +12,26 @@
                     <label for="nom" class="form-label">
                         Nom d'utilisateur ou courriel :
                     </label>
-                    <input type="text" name="nom" id="nom" class="form-control">
+                    <input type="text" name="nom" id="nom" class="form-control {{ classe_nom | default('') }}"
+                        value="{{ nom | default('') }}">
+
+                    {% if erreur_nom %}
+                    <div id="erreur-nom" class="invalid-feedback">
+                        {{ erreur_nom }}
+                    </div>
+                    {% endif %}
                 </div>
 
                 <div class="mb-3">
                     <label for="mdp" class="form-label">Mot de passe :</label>
-                    <input type="text" name="mdp" id="mdp" class="form-control">
+                    <input type="password" name="mdp" id="mdp"
+                        class="form-control {{ classe_mdp | default('') }}">
+
+                    {% if erreur_mdp %}
+                    <div id="erreur-mdp" class="invalid-feedback">
+                        {{ erreur_mdp }}
+                    </div>
+                    {% endif %}
                 </div>
 
                 <div class="actions d-flex justify-content-end">

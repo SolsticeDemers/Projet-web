@@ -512,6 +512,10 @@ p
 
 // Section notifications //
 
+#img_notif
+    max-height: 50px
+    text-align: right
+
 .affichage_notif
     display: flex
     flex-wrap: wrap
@@ -519,8 +523,10 @@ p
     gap: 20px
     padding: 24px
     text-align: left
+    height: auto
 
-.notif-detail
+.notif-detail,
+#notif_detail
     flex: 1 1 280px
 
     a
@@ -592,3 +598,10 @@ p
 
     &:empty
         display: none
+
+.lien-profil-public
+    color: $gris
+    text-decoration: underline
+
+    &:hover
+        color: $gris-fonce
