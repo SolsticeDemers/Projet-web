@@ -12932,6 +12932,13 @@ p a {
   background: #FFFFFF;
 }
 
+#f_echange input {
+  width: 355px;
+}
+#f_echange label {
+  margin-left: 3px;
+}
+
 .icone-panier {
   color: #F9F8F3;
   font-size: 1.5rem;
