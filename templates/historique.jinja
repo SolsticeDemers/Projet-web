@@ -1,0 +1,209 @@
+{% extends "_modele.jinja" %}
+
+{% block contenu %}
+
+<div class="container my-5">
+
+    <h2 class="mb-4">
+        Historique des transactions
+    </h2>
+
+    <form method="GET" class="mb-4">
+
+        <label for="tri" class="form-label">
+            Trier par
+        </label>
+
+        <select name="tri" id="tri" class="form-select" onchange="this.form.submit()">
+
+            <option value="recent" {% if tri=="recent" %}selected{% endif %}>
+                Plus récent
+            </option>
+
+            <option value="ancien" {% if tri=="ancien" %}selected{% endif %}>
+                Plus ancien
+            </option>
+
+            <option value="prix_croissant" {% if tri=="prix_croissant" %}selected{% endif %}>
+                Prix croissant
+            </option>
+
+            <option value="prix_decroissant" {% if tri=="prix_decroissant" %}selected{% endif %}>
+                Prix décroissant
+            </option>
+
+        </select>
+
+    </form>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="border rounded p-4">
+
+                <h3 class="mb-4">Achats</h3>
+                <hr>
+
+                {% for achat in achats %}
+
+                <a href="/produits/{{ achat.id_produit }}"
+                   class="row align-items-center py-3 border-bottom lien-transaction">
+
+                    <div class="col-md-2">
+                        <img src="{{ achat.src }}"
+                             alt="{{ achat.nom }}"
+                             class="img-fluid rounded image-transaction">
+                    </div>
+
+                    <div class="col-md-10">
+                        <h4>{{ achat.nom }}</h4>
+                        <p class="mb-1">Prix payé : {{ achat.prix_achat }} $</p>
+                        <p class="mb-0 text-muted">
+                            Date d'achat : {{ achat.date_achat }}
+                        </p>
+                    </div>
+
+                </a>
+
+                {% else %}
+                <p>Vous n'avez effectué aucun achat.</p>
+                {% endfor %}
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row mt-4">
+    <div class="col-12">
+        <div class="border rounded p-4">
+
+            <h3 class="mb-4">Échanges</h3>
+            <hr>
+
+            {% for echange in echanges %}
+
+            <div class="py-3 border-bottom">
+
+                <h4>Échange avec {{ echange.nom_partenaire }}</h4>
+
+                {% if echange.approuver == 1 %}
+                <p class="text-success">Statut : accepté</p>
+                {% elif echange.approuver == 0 %}
+                <p class="text-danger">Statut : refusé</p>
+                {% endif %}
+
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+
+                        {% if echange.produit_propose %}
+                        <a href="/produits/{{ echange.produit_propose.id_produit }}"
+                           class="row align-items-center h-100 p-2 lien-transaction">
+
+                            <div class="col-4">
+                                <img src="{{ echange.produit_propose.src }}"
+                                     alt="{{ echange.produit_propose.nom }}"
+                                     class="img-fluid rounded image-transaction">
+                            </div>
+
+                            <div class="col-8">
+                                {% if echange.approuver == 1 %}
+                                <h5>Produit échangé</h5>
+                                {% else %}
+                                <h5>Votre produit proposé</h5>
+                                {% endif %}
+                                <p class="mb-0">{{ echange.produit_propose.nom }}</p>
+                            </div>
+
+                        </a>
+                        {% else %}
+                        <p class="text-muted">Votre produit n'est pas disponible.</p>
+                        {% endif %}
+
+                    </div>
+
+                    <div class="col-md-6 border-start">
+
+                        {% if echange.produit_autre %}
+                        <a href="/produits/{{ echange.produit_autre.id_produit }}"
+                           class="row align-items-center h-100 p-2 lien-transaction">
+
+                            <div class="col-4">
+                                <img src="{{ echange.produit_autre.src }}"
+                                     alt="{{ echange.produit_autre.nom }}"
+                                     class="img-fluid rounded image-transaction">
+                            </div>
+
+                            <div class="col-8">
+                                {% if echange.approuver == 1 %}
+                                <h5>Produit reçu</h5>
+                                {% else %}
+                                <h5>Produit proposé en échange</h5>
+                                {% endif %}
+                                <p class="mb-0">{{ echange.produit_autre.nom }}</p>
+                            </div>
+
+                        </a>
+                        {% else %}
+                        <p class="text-muted">Le produit n'est pas disponible.</p>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+            </div>
+
+            {% else %}
+            <p>Vous n'avez aucun échange accepté ou refusé.</p>
+            {% endfor %}
+
+        </div>
+    </div>
+</div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="border rounded p-4">
+
+                <h3 class="mb-4">Enchères gagnées</h3>
+                <hr>
+
+                {% for produit in encheres %}
+
+                <a href="/produits/{{ produit.id_produit }}"
+                   class="row align-items-center py-3 border-bottom lien-transaction">
+
+                    <div class="col-md-2">
+                        {% if produit.src %}
+                        <img src="{{ produit.src }}"
+                             alt="{{ produit.nom }}"
+                             class="img-fluid rounded image-transaction">
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-10">
+                        <h4>{{ produit.nom }}</h4>
+
+                        <p class="mb-1">
+                            Prix final : <strong>{{ produit.prix }} $</strong>
+                        </p>
+
+                        {% if produit.date_fin %}
+                        <p class="mb-0 text-muted">
+                            Date de fin : {{ produit.date_fin }}
+                        </p>
+                        {% endif %}
+                    </div>
+
+                </a>
+
+                {% else %}
+                <p class="text-muted">Vous n'avez remporté aucune enchère.</p>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
