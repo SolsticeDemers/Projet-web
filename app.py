@@ -1,12 +1,13 @@
 import os
 
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session, make_response
 import bd
 from compte import bp_compte
 from produits import bp_produits
 from panier import bp_panier
 from forms import PanierForm
 from api import bp_api
+from notification import bp_notification
 
 
 app = Flask(__name__, static_url_path='')
@@ -14,6 +15,7 @@ app.register_blueprint(bp_compte, url_prefix='/compte')
 app.register_blueprint(bp_produits, url_prefix='/produits')
 app.register_blueprint(bp_panier, url_prefix='/panier')
 app.register_blueprint(bp_api, url_prefix='/api')
+app.register_blueprint(bp_notification, url_prefix='/notification')
 app.secret_key = os.getenv("SECRET_SESSION")
 
 app.config["ROUTE_IMAGES"] = "/images/utiles/"
@@ -24,6 +26,7 @@ app.config["CHEMIN_IMAGES"] = os.path.join(
     "images",
     "utiles"
 )
+
 
 @app.before_request
 def verifier_encheres_terminees():
@@ -87,7 +90,6 @@ def index():
 
         encheres_futures = bd.get_enchere_future(curseur)
 
-
     for produit in nouveaux_produits:
 
         produit["src"] = None
@@ -128,10 +130,9 @@ def index():
         if os.path.exists(chemin_image):
 
             produit["src"] = (
-            app.config["ROUTE_IMAGES"]
-            + nom_image
-        )
-
+                app.config["ROUTE_IMAGES"]
+                + nom_image
+            )
 
     for produit in produits_aleatoires:
 
@@ -154,7 +155,6 @@ def index():
                 app.config["ROUTE_IMAGES"]
                 + nom_image
             )
-
 
     if produit_du_jour is not None:
 
@@ -190,6 +190,11 @@ def index():
         nav_transparente=True
     )
 
+    response.set_cookie('mode_echange', 'False')
+
+    return response
+
+
 @app.route("/produits/recherche")
 def recherche_produits():
     """Permet de rechercher et trier les produits"""
@@ -220,27 +225,21 @@ def recherche_produits():
         type=int
     )
 
-
     if page is None or page < 1:
         page = 1
-
 
     prix_min_affichage = prix_min
     prix_max_affichage = prix_max
 
-
     if prix_min is None:
         prix_min = 0
-
 
     if prix_max is None:
         prix_max = 999999999
 
-
     if prix_max < prix_min:
         prix_max = prix_min
         prix_max_affichage = prix_min
-
 
     if tri == "nom_DESC":
 
@@ -262,11 +261,9 @@ def recherche_produits():
         trier_par = "nom"
         ordre = "ASC"
 
-
     limite = 12
 
     offset = (page - 1) * limite
-
 
     with bd.creer_curseur() as curseur:
 
@@ -295,10 +292,8 @@ def recherche_produits():
                 ordre
             )
 
-
     if produits is None:
         produits = []
-
 
     for produit in produits:
 
@@ -322,7 +317,6 @@ def recherche_produits():
                 + nom_image
             )
 
-
     return render_template(
         "recherche.jinja",
         titre="Recherche de produits",
@@ -335,6 +329,7 @@ def recherche_produits():
         limite=limite
     )
 
+
 @app.context_processor
 def compter_nb_articles():
     """Ajoute le nombre d'articles du panier à tous les gabarits"""
@@ -342,7 +337,8 @@ def compter_nb_articles():
 
     if "id_utilisateur" in session:
         with bd.creer_curseur() as curseur:
-            nb_articles = bd.get_nb_articles_panier(curseur, session["id_utilisateur"])
+            nb_articles = bd.get_nb_articles_panier(
+                curseur, session["id_utilisateur"])
 
     return {"nb_articles": nb_articles, "form_panier": PanierForm()}
 
@@ -396,6 +392,6 @@ def erreur_500(e):
         message="Le serveur a rencontré une erreur"
     ), 500
 
+
 if __name__ == "__main__":
     app.run(debug=True)
-

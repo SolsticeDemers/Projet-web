@@ -332,6 +332,8 @@ def profil():
                 filename="images/default_user.png"
             )
 
+       
+
         return render_template(
             'profil.jinja',
             produits=produits,

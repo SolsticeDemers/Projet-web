@@ -61,6 +61,7 @@ def get_nouveaux_produits(curseur):
             p.description,
             p.prix,
             p.date,
+            p.id_vendeur,
             s.nom_statut
         FROM produit p
         JOIN statut_produit s
@@ -84,6 +85,7 @@ def get_produit_aleatoire(curseur):
             p.description,
             p.prix,
             p.date,
+            p.id_vendeur,
             s.nom_statut
         FROM produit p
         JOIN statut_produit s
@@ -107,6 +109,7 @@ def get_produits_aleatoires(curseur):
             p.description,
             p.prix,
             p.date,
+            p.id_vendeur,
             s.nom_statut
         FROM produit p
         JOIN statut_produit s
@@ -118,6 +121,8 @@ def get_produits_aleatoires(curseur):
     """)
 
     return curseur.fetchall()
+
+
 
 
 def get_utilisateurs_populaires(curseur):
@@ -181,6 +186,7 @@ def get_produits(
             p.description,
             p.prix,
             p.date,
+            p.id_vendeur,
             s.nom_statut
         FROM produit p
         JOIN statut_produit s
@@ -239,6 +245,7 @@ def get_produits_recherche_filtre(
             p.description,
             p.prix,
             p.date,
+            p.id_vendeur,
             s.nom_statut
         FROM produit p
         JOIN statut_produit s
@@ -268,6 +275,7 @@ def get_produits_recherche_filtre(
     return curseur.fetchall()
 
 
+
 def get_utilisateur(curseur, nom, mdp):
     """Permet d'obtenir un utilisateur avec son nom/courriel et mot de passe"""
 
@@ -289,7 +297,7 @@ def get_utilisateur(curseur, nom, mdp):
     return curseur.fetchone()
 
 
-def get_produit(curseur, id_produit):
+def get_produit_by_id(curseur, id_produit):
     """Permet d'obtenir un produit par son identifiant"""
 
     curseur.execute("""
@@ -301,6 +309,7 @@ def get_produit(curseur, id_produit):
     })
 
     return curseur.fetchone()
+
 
 
 def get_vendeur(curseur, id_utilisateur):
@@ -315,6 +324,8 @@ def get_vendeur(curseur, id_utilisateur):
     })
 
     return curseur.fetchone()
+
+
 
 
 def inserer_utilisateur_bd(curseur, nom, courriel, mdp):
@@ -340,6 +351,7 @@ def inserer_utilisateur_bd(curseur, nom, courriel, mdp):
     return curseur.lastrowid
 
 
+
 def get_nom_unique(curseur, nom):
     """Vérifie l'existence d'un nom"""
 
@@ -354,6 +366,7 @@ def get_nom_unique(curseur, nom):
     })
 
     return curseur.fetchone()
+
 
 
 def get_courriel_unique(curseur, courriel):
@@ -372,6 +385,7 @@ def get_courriel_unique(curseur, courriel):
     return curseur.fetchone()
 
 
+
 def get_nom_utiliser(curseur):
     """Dictionnaire de nom et courriel déjà utilisé"""
 
@@ -384,6 +398,7 @@ def get_nom_utiliser(curseur):
     """)
 
     return curseur.fetchall()
+
 
 
 def get_produits_par_vendeur(curseur, id_vendeur):
@@ -474,6 +489,7 @@ def get_statuts(curseur):
     return curseur.fetchall()
 
 
+
 def get_statut_by_Id(curseur, id):
     """Retourne le nom du statut de produit"""
 
@@ -486,6 +502,7 @@ def get_statut_by_Id(curseur, id):
     })
 
     return curseur.fetchone()
+
 
 
 def archiver_produit(curseur, id_produit):
@@ -567,6 +584,7 @@ def supprimer_du_panier(curseur, id_acheteur, id_produit):
     })
 
 
+
 def get_panier(curseur, id_acheteur):
     """Permet de retourner les produits dans le panier"""
 
@@ -590,6 +608,7 @@ def get_panier(curseur, id_acheteur):
     return curseur.fetchall()
 
 
+
 def confirmer_achat(curseur, id_acheteur, id_produit, prix):
     """Permet de confirmer l'achat d'un produit du panier"""
 
@@ -610,6 +629,7 @@ def confirmer_achat(curseur, id_acheteur, id_produit, prix):
     return curseur.rowcount
 
 
+
 def marquer_vendu(curseur, id_produit):
     """Change le statut du produit pour Vendu"""
 
@@ -620,6 +640,8 @@ def marquer_vendu(curseur, id_produit):
     """, {
         "id_produit": id_produit
     })
+
+
 
 
 def get_nb_articles_panier(curseur, id_acheteur):
@@ -702,6 +724,7 @@ def get_notification(curseur, id_utilisateur):
     return curseur.fetchall()
 
 
+
 def get_utilisateur_name(curseur, id):
 
     curseur.execute("""
@@ -715,17 +738,6 @@ def get_utilisateur_name(curseur, id):
     return curseur.fetchone()
 
 
-def get_produit_by_id(curseur, id):
-
-    curseur.execute("""
-        SELECT *
-        FROM produit
-        WHERE id_produit = %(id)s
-    """, {
-        "id": id
-    })
-
-    return curseur.fetchall()
 
 
 def update_offer(curseur, id_proposition, approuve):
@@ -738,6 +750,27 @@ def update_offer(curseur, id_proposition, approuve):
         "id": id_proposition,
         "approuve": approuve
     })
+
+
+def create_echange(curseur, id_produit_echange, id_proprio, id_utilisateur, id_produit_offert):
+    curseur.execute("INSERT INTO `echange`( `proprio`, `id_utilisateur`, `produit`, `produit_offert`, `approuver`)"
+                    " VALUES ( %(id_proprio)s,  %(id_utilisateur)s, %(id_produit_echange)s, %(id_produit_offert)s, NULL);", {
+                        'id_proprio': id_proprio,
+                        'id_utilisateur': id_utilisateur,
+                        'id_produit_echange': id_produit_echange,
+                        'id_produit_offert': id_produit_offert
+                    })
+    return curseur.lastrowid
+
+
+def create_notif(curseur, id):
+    """Notification de la demande d'échange"""
+    curseur.execute("INSERT INTO `notification`( `id_destinataire`, `id_statut`, `notif_vue`, `date`)"
+                    " VALUES (%(id)s, 3 , 0, CURRENT_DATE);", {
+                        'id': id
+                    })
+    return curseur.lastrowid
+
 
 
 def create_notif_offrant(curseur, id):
@@ -766,6 +799,7 @@ def create_notif_offrant(curseur, id):
     })
 
     return curseur.lastrowid
+
 
 
 def create_notif_echange(curseur, id_echange, id_notification):
@@ -801,6 +835,22 @@ def get_notif_echange(curseur, id):
 
     return curseur.fetchone()
 
+def get_echange_existant(curseur, produit, id_utilisateur, produit_offert):
+
+    curseur.execute("""
+        SELECT
+        *
+        FROM echange
+        WHERE produit =  %(produit)s AND id_utilisateur =  %(id_utilisateur)s AND produit_offert =  %(produit_offert)s
+    """,
+                    {
+                        'produit': produit,
+                        'id_utilisateur': id_utilisateur,
+                        'produit_offert': produit_offert
+                    })
+    return curseur.fetchone()
+
+
 
 def get_nouvelle_notification(curseur, id_utilisateur):
 
@@ -814,6 +864,7 @@ def get_nouvelle_notification(curseur, id_utilisateur):
     })
 
     return curseur.fetchall()
+
 
 
 def update_notification(curseur, id_proposition, vue):
@@ -1228,3 +1279,17 @@ def get_historique_echanges(curseur, id_utilisateur):
     })
 
     return curseur.fetchall()
+
+def update_produit_echange(curseur, id, id_utilisateur):
+    curseur.execute("UPDATE `produit` SET `id_vendeur`= %(id_utilisateur)s WHERE id_produit = %(id)s;",
+                    {
+                        'id_utilisateur': id_utilisateur,
+                        'id': id
+                    })
+
+def get_echange_by_id(curseur, id ):
+    curseur.execute("SELECT * FROM echange WHERE id_echange = %(id)s;",
+                        {
+                            'id': id
+                        })
+    return curseur.fetchone()

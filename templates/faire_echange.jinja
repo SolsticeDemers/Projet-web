@@ -1,0 +1,36 @@
+{% extends "_modele.jinja" %}
+
+{% block contenu %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6 col-lg-4">
+            <h2 class="mb-4">Faire une proposition d'échange</h2>
+
+            <form method="POST" action="/notification/creer_echange/{{id_produit_offert}}" novalidate class="d-grid gap-4" id="f_echange">
+                <p class="text-danger">{{message_erreur}}</p>
+                <div class="mb-4 grid">
+                    <label for="nom_produit" class="form-label row">Nom du produit:</label>
+                    <input type="text" class="form-control" name="nom_produit" id="nom_produit" value="{{ nom_produit }}">
+                </div>
+                <div class="mb-3 grid">
+                    <label for="nom_proprio" class="form-label row">Nom du propriétaire:</label>
+                    <input type="text" class="form-control" name="nom_proprio" id="nom_proprio" value="{{ nom_proprio }}">
+                </div>
+                <div class="mb-4">
+                    <label for="nom_produit_offert" class="form-label row">Nom de votre produit:</label>
+                    <input type="text" class="form-control" name="nom_produit_offert" id="nom_produit_offert"
+                        value="{{ nom_produit_offert }}">
+                </div>
+                <div class="actions d-flex justify-content-end mb-5">
+                    <button type="submit" id="echangeSoumis" class="btn btn-primary">
+                        Confirmer l'échange
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

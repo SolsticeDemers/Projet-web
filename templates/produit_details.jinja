@@ -119,8 +119,17 @@
                                 Ajouter au panier
                             </button>
 
-                        </form>
+                    </form>
+                    {% elif produit.id_statut == 3  %}
+                    
 
+                        <a href="/notification/faire_echange/{{ produit.id_produit }}" class="button">
+                            Échanger
+                        </a>
+
+                   
+
+                    {% endif %}
                     {% endif %}
 
                 {% endif %}

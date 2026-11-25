@@ -242,11 +242,9 @@
                         <div class="actions">
 
 
-                            {% if "id_utilisateur" in session %}
-
-
-                                {% if produit.nom_statut == "En vente" %}
-
+                        {% if "id_utilisateur" in session %}
+                            {% if session['id_utilisateur'] != produit.id_vendeur %}
+                            {% if produit.nom_statut == "En vente" %}
 
                                     <form
                                         method="POST"
@@ -280,16 +278,22 @@
 
                                 {% elif produit.nom_statut == "À échanger" %}
 
+                            <form
+                                    method="GET"
+                                    action="/notification/faire_echange/{{ produit.id_produit }}"
+                                >
 
-                                    <button
-                                        class="btn-action-produit"
-                                    >
+                                    {{ form_panier.hidden_tag() }}
+
+                                    <button type="submit">
                                         Échanger
                                     </button>
 
+                                </form>
 
-                                {% endif %}
-
+                        {% endif %}
+                        {% endif %}
+                         {% endif %}
 
                             {% endif %}
 

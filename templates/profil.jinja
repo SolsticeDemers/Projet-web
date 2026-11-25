@@ -8,11 +8,7 @@
 
         <div class="d-flex flex-column align-items-center">
 
-            <img
-                src="{{ image_vendeur }}"
-                alt="Image de profil de {{ utilisateur.nom }}"
-                class="profil-avatar"
-            >
+            <img src="{{ image_vendeur }}" alt="Image de profil de {{ utilisateur.nom }}" class="profil-avatar">
 
         </div>
 
@@ -46,7 +42,7 @@
         <div class="actions profil-actions">
 
             <a
-                href="{{ url_for('compte.notification') }}"
+                href="{{ url_for('notification.notification') }}"
                 class="bouton-secondaire"
             >
                 <span>Mes notifications</span>
@@ -90,81 +86,111 @@
 
     {% if produits %}
 
-        <div class="liste-mes-produits">
+    <div class="liste-mes-produits">
 
-            {% for produit in produits %}
+        {% for produit in produits %}
+        {% if request.cookies.get('mode_echange') == 'True' and produit.nom_statut != "Vendu" %}
 
-                <div class="carte-produit carte-mon-produit">
+        <div class="carte-produit carte-mon-produit">
 
-                    <div class="image-produit">
+            <div class="image-produit">
 
-                        <a href="/produits/{{ produit.id_produit }}">
+                <a href="/produits/{{ produit.id_produit }}">
 
-                            <img
-                                src="{{ produit.src or url_for('static', filename='images/default.png') }}"
-                                alt="{{ produit.nom }}"
-                            >
+                    <img src="{{ produit.src or url_for('static', filename='images/default.png') }}"
+                        alt="{{ produit.nom }}">
 
-                        </a>
+                </a>
 
-                        <span class="badge-statut badge-{{ produit.code_statut }}">
-                            {{ produit.nom_statut }}
-                        </span>
+                <span class="badge-statut badge-{{ produit.code_statut }}">
+                    {{ produit.nom_statut }}
+                </span>
 
-                    </div>
-
-
-                    <div class="contenu-produit">
-
-                        <h3>
-
-                            <a href="/produits/{{ produit.id_produit }}">
-                                {{ produit.nom }}
-                            </a>
-
-                        </h3>
-
-                        <p>
-                            {{ produit.description }}
-                        </p>
-
-                        <p class="prix">
-                            {{ produit.prix }} $
-                        </p>
-
-                    </div>
+            </div>
 
 
-                    <div class="actions">
+            <div class="contenu-produit">
 
-                        {% if produit.nom_statut != 'Vendu' %}
+                <h3>
 
-                            <a
-                                href="{{ url_for('produits.modifier_produit', id=produit.id_produit) }}"
-                                class="btn-modifier"
-                            >
-                                Modifier
-                            </a>
+                    <a href="/produits/{{ produit.id_produit }}">
+                        {{ produit.nom }}
+                    </a>
 
-                        {% endif %}
+                </h3>
 
-                        <form
-                            action="{{ url_for('produits.archiver_produit', id=produit.id_produit) }}"
-                            method="post"
-                        >
+                <p>
+                    {{ produit.description }}
+                </p>
 
-                            {{ form_archiver.hidden_tag() }}
+                <p class="prix">
+                    {{ produit.prix }} $
+                </p>
+            </div>
 
-                            <button
-                                type="submit"
-                                class="btn-supprimer"
-                            >
-                                Supprimer
-                            </button>
+            <div class="actions">
+                
+                <a href="/notification/creer_echange/{{produit.id_produit}}">Choisir</a>
+                
+            </div>
 
-                        </form>
+        </div>
+        {% elif  request.cookies.get('mode_echange') == 'False' %}
+        {# {% else %} #}
+        <div class="carte-produit carte-mon-produit">
 
-                    </div>
+            <div class="image-produit">
+
+                <a href="/produits/{{ produit.id_produit }}">
+
+                    <img src="{{ produit.src or url_for('static', filename='images/default.png') }}"
+                        alt="{{ produit.nom }}">
+
+                </a>
+
+                <span class="badge-statut badge-{{ produit.code_statut }}">
+                    {{ produit.nom_statut }}
+                </span>
+
+            </div>
+
+
+            <div class="contenu-produit">
+
+                <h3>
+
+                    <a href="/produits/{{ produit.id_produit }}">
+                        {{ produit.nom }}
+                    </a>
+
+                </h3>
+
+                <p>
+                    {{ produit.description }}
+                </p>
+
+                <p class="prix">
+                    {{ produit.prix }} $
+                </p>
+            </div>
+
+            <div class="actions">
+                
+                <a href="{{ url_for('produits.modifier_produit', id=produit.id_produit) }}" class="btn-modifier">
+                    Modifier
+                </a>
+
+                <form action="{{ url_for('produits.archiver_produit', id=produit.id_produit) }}" method="post">
+
+                    {{ form_archiver.hidden_tag() }}
+
+                    <button type="submit" class="btn-supprimer">
+                        Supprimer
+                    </button>
+
+                </form>
+                
+            </div>
 
                 </div>
 
@@ -179,7 +205,7 @@
 
             {% endfor %}
 
-        </div>
+    </div>
 
     {% else %}
 
